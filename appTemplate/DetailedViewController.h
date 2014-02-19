@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailedViewController : UIViewController
-@property (strong) NSString *passedString;
+@interface DetailedViewController : UIViewController <UIScrollViewDelegate>
+@property (strong) NSDictionary *data;
 @end

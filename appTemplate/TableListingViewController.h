@@ -11,7 +11,6 @@
 #import "DetailedViewController.h"
 
 @interface TableListingViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate>
-@property (strong) NSArray *roleArray;
-@property (strong) NSString *passString;
+@property (strong) NSMutableArray *roleArray;
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @end

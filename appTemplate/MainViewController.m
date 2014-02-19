@@ -46,12 +46,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (bool)checkLogin
-{
-    bool isLogin = YES;
-    return isLogin;
-}
-
 - (void)setRootViewController:(UIViewController *)VC
 {
     AppDelegate *app = [[UIApplication sharedApplication] delegate];
