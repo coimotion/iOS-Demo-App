@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LoginViewController.h"
 
 @interface DetailedViewController : UIViewController <UIScrollViewDelegate>
 @property (strong) NSDictionary *data;

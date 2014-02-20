@@ -31,11 +31,11 @@
     if (isLogin) {
         TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
         UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-        [self setRootViewController:naviVC];
+        [[appUtil sharedUtil] setRootWindowView:naviVC];
     }
     else {
         LoginViewController *loginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [self setRootViewController:loginVC];
+        [[appUtil sharedUtil] setRootWindowView:loginVC];
     }
     // Do any additional setup after loading the view from its nib.
 }
@@ -45,15 +45,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-- (void)setRootViewController:(UIViewController *)VC
-{
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    app.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    app.window.rootViewController = VC;
-    [app.window makeKeyAndVisible];
-}
-
 
 
 @end

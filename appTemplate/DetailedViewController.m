@@ -26,6 +26,9 @@
 {
     [super viewDidLoad];
     self.title = [data valueForKey:@"name"];
+    
+    UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    self.navigationItem.rightBarButtonItem = anotherButton;
     NSString *imageFilename = [[NSString alloc] init];
     if ([[data valueForKey:@"id"] isEqual:@"1"])
         imageFilename = @"menu1.png";
@@ -49,6 +52,15 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)logout
+{
+    LoginViewController *loginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    app.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    app.window.rootViewController = loginVC;
+    [app.window makeKeyAndVisible];
 }
 
 @end
