@@ -11,7 +11,11 @@
 @implementation appUtil
 
 @synthesize token, userName;
-
+@synthesize accNamePraram;
+@synthesize passwordParam;
+@synthesize baseURLKey;
+@synthesize appCodeKey;
+@synthesize loginURIKey;
 + (id)sharedUtil
 {
     static appUtil *sharedUtil = nil;
@@ -22,13 +26,32 @@
     return sharedUtil;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        accNamePraram = @"accName";
+        passwordParam = @"passwd";
+        baseURLKey = @"baseURL";
+        appCodeKey = @"appCode";
+        loginURIKey = @"loginURI";
+    }
+    return self;
+}
+
 - (void)setRootWindowView:(UIViewController *)VC
 {
     [[[[UIApplication sharedApplication] delegate] window] setRootViewController:VC];
     [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
 }
 
-- (NSMutableDictionary *)getPlistfrom:(NSString *)fileName
+- (NSDictionary *)getSettingsFrom:(NSString *)fileName
+{
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"plist"];
+    NSMutableDictionary *plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+    return plistDict;
+}
+
+- (NSMutableDictionary *)getPlistFrom:(NSString *)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -50,7 +73,7 @@
     return plistDict;
 }
 
-- (bool)savePlist:(NSDictionary *)newPlist
+- (bool)setPlist:(NSDictionary *)newPlist
                to:(NSString *)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

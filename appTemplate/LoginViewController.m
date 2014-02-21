@@ -17,6 +17,7 @@
 @synthesize loginIndicator;
 @synthesize loginButton;
 @synthesize username, password;
+@synthesize loginURL;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,11 +32,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSMutableDictionary *plist = [[NSMutableDictionary alloc] init];
-    plist = [[appUtil sharedUtil] getPlistfrom:@"/demo.plist"];
-    if ([plist objectForKey:@"appCode"] == nil) {
-        [plist setValue:@"demoApp" forKey:@"appCode"];
-    }
+    NSDictionary *plist = [[NSDictionary alloc] init];
+    plist = [[appUtil sharedUtil] getSettingsFrom:@"coimotion"];
+    NSLog(@"baseURL: %@", [plist objectForKey:[[appUtil sharedUtil] baseURLKey]]);
+    loginURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",[plist objectForKey:[[appUtil sharedUtil] baseURLKey]],
+                                                            [plist objectForKey:[[appUtil sharedUtil] appCodeKey]],
+                                                            [plist objectForKey:[[appUtil sharedUtil] loginURIKey]]];
     [loginIndicator stopAnimating];
     // Do any additional setup after loading the view from its nib.
 }
@@ -47,10 +49,9 @@
 }
 
 - (IBAction)login:(id)sender {
-    NSString *URL = @"http://192.168.1.190:3000/demoApp/core/user/login";
-    NSString *parameters = [[NSString alloc] initWithFormat:@"accName=%@&passwd=%@", username.text, password.text];
-    NSLog(@"%@", parameters);
-    NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST" toURL:URL useData:parameters];
+    //NSString *URL = @"http://192.168.1.190:3000/demoApp/core/user/login";
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", [[appUtil sharedUtil] accNamePraram], username.text, [[appUtil sharedUtil] passwordParam], password.text];
+    NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST" toURL:loginURL useData:parameters];
     if (!connection) {
         connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
     }
@@ -68,14 +69,22 @@
         //parse json, save token;
         NSDictionary *loginInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
         NSLog(@"recieved: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
-        if ([loginInfoDic objectForKey:@"token"] != nil) {
+        if ([[loginInfoDic objectForKey:@"errCode"] integerValue] == 0) {
             [[appUtil sharedUtil] setToken:[loginInfoDic objectForKey:@"token"]];
-            TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
+            //TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
+            MapListingViewController *tableListVC = [[MapListingViewController alloc] init];
             UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:tableListVC];
             [[appUtil sharedUtil] setRootWindowView:naviVC];
         }
+        else {
+            password.text = @"";
+            [[[UIAlertView alloc] initWithTitle:@"Login Error"
+                                       message:[loginInfoDic objectForKey:@"message"]
+                                      delegate:nil
+                             cancelButtonTitle:@"Ok"
+                              otherButtonTitles:nil] show];
+        }
     }
-    //[NSThread sleepForTimeInterval:2];
     [self setEnable];
 }
 

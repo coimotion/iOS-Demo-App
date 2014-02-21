@@ -21,7 +21,6 @@
     self = [super initWithStyle:style];
     if (self) {
         self.title = @"Listing";
-        _locationManager = [[CLLocationManager alloc] init];
     }
     return self;
 }
@@ -30,10 +29,10 @@
 {
     [super viewDidLoad];
     _roleArray = [[NSMutableArray alloc] init];
+    _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
-    
     [self getContent];
 }
 

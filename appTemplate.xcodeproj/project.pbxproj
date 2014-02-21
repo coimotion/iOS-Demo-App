@@ -38,6 +38,10 @@
 		0476DF8318B361B000380537 /* DetailedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0476DF8118B361AF00380537 /* DetailedViewController.m */; };
 		0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0476DF8218B361AF00380537 /* DetailedViewController.xib */; };
 		0491F4DA18B5A84B009C8D13 /* appUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 0491F4D918B5A84B009C8D13 /* appUtil.m */; };
+		04DB662718B6D94A003C769F /* coimotion.plist in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662618B6D94A003C769F /* coimotion.plist */; };
+		04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662918B6F804003C769F /* MapListingViewController.m */; };
+		04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662A18B6F804003C769F /* MapListingViewController.xib */; };
+		04DB662F18B702DF003C769F /* mapAnnotaion.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662E18B702DF003C769F /* mapAnnotaion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +95,12 @@
 		0476DF8218B361AF00380537 /* DetailedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailedViewController.xib; sourceTree = "<group>"; };
 		0491F4D818B5A84B009C8D13 /* appUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appUtil.h; sourceTree = "<group>"; };
 		0491F4D918B5A84B009C8D13 /* appUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = appUtil.m; sourceTree = "<group>"; };
+		04DB662618B6D94A003C769F /* coimotion.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = coimotion.plist; sourceTree = "<group>"; };
+		04DB662818B6F804003C769F /* MapListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListingViewController.h; sourceTree = "<group>"; };
+		04DB662918B6F804003C769F /* MapListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListingViewController.m; sourceTree = "<group>"; };
+		04DB662A18B6F804003C769F /* MapListingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapListingViewController.xib; sourceTree = "<group>"; };
+		04DB662D18B702DF003C769F /* mapAnnotaion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapAnnotaion.h; sourceTree = "<group>"; };
+		04DB662E18B702DF003C769F /* mapAnnotaion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapAnnotaion.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +185,11 @@
 				0476DF8218B361AF00380537 /* DetailedViewController.xib */,
 				0491F4D818B5A84B009C8D13 /* appUtil.h */,
 				0491F4D918B5A84B009C8D13 /* appUtil.m */,
+				04DB662818B6F804003C769F /* MapListingViewController.h */,
+				04DB662918B6F804003C769F /* MapListingViewController.m */,
+				04DB662A18B6F804003C769F /* MapListingViewController.xib */,
+				04DB662D18B702DF003C769F /* mapAnnotaion.h */,
+				04DB662E18B702DF003C769F /* mapAnnotaion.m */,
 			);
 			path = appTemplate;
 			sourceTree = "<group>";
@@ -192,6 +207,7 @@
 				0476DF4818B354F600380537 /* Default.png */,
 				0476DF4A18B354F600380537 /* Default@2x.png */,
 				0476DF4C18B354F600380537 /* Default-568h@2x.png */,
+				04DB662618B6D94A003C769F /* coimotion.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -297,6 +313,8 @@
 				043A2D8418B48F5000700D3F /* menu1.png in Resources */,
 				043A2D8518B48F5000700D3F /* menu2.png in Resources */,
 				043A2D8618B48F5000700D3F /* menu3.png in Resources */,
+				04DB662718B6D94A003C769F /* coimotion.plist in Resources */,
+				04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +357,8 @@
 				0476DF7E18B35ABF00380537 /* TableListingViewController.m in Sources */,
 				0476DF8318B361B000380537 /* DetailedViewController.m in Sources */,
 				0491F4DA18B5A84B009C8D13 /* appUtil.m in Sources */,
+				04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */,
+				04DB662F18B702DF003C769F /* mapAnnotaion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
