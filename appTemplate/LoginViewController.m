@@ -34,7 +34,6 @@
     [super viewDidLoad];
     NSDictionary *plist = [[NSDictionary alloc] init];
     plist = [[appUtil sharedUtil] getSettingsFrom:@"coimotion"];
-    NSLog(@"baseURL: %@", [plist objectForKey:[[appUtil sharedUtil] baseURLKey]]);
     loginURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",[plist objectForKey:[[appUtil sharedUtil] baseURLKey]],
                                                             [plist objectForKey:[[appUtil sharedUtil] appCodeKey]],
                                                             [plist objectForKey:[[appUtil sharedUtil] loginURIKey]]];
@@ -49,7 +48,6 @@
 }
 
 - (IBAction)login:(id)sender {
-    //NSString *URL = @"http://192.168.1.190:3000/demoApp/core/user/login";
     NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", [[appUtil sharedUtil] accNamePraram], username.text, [[appUtil sharedUtil] passwordParam], password.text];
     NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST" toURL:loginURL useData:parameters];
     if (!connection) {
@@ -66,15 +64,23 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     if ([[connection accessibilityLabel] isEqualToString:@"login"]) {
-        //parse json, save token;
         NSDictionary *loginInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        NSLog(@"recieved: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
         if ([[loginInfoDic objectForKey:@"errCode"] integerValue] == 0) {
             [[appUtil sharedUtil] setToken:[loginInfoDic objectForKey:@"token"]];
-            //TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
-            MapListingViewController *tableListVC = [[MapListingViewController alloc] init];
-            UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-            [[appUtil sharedUtil] setRootWindowView:naviVC];
+            
+            NSMutableDictionary *plist = [[appUtil sharedUtil] getPlistFrom:@"/app.plist"];
+            [plist setObject:[loginInfoDic objectForKey:@"token"] forKey:@"token"];
+            [[appUtil sharedUtil] setPlist:plist to:@"/app.plist"];
+            
+            TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
+            UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
+            [naviVC1 setTitle:@"Table"];
+            MapListingViewController *mapListVC = [[MapListingViewController alloc] init];
+            UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
+            [naviVC2 setTitle:@"Map"];
+            UITabBarController *tbc = [[UITabBarController alloc] init];
+            [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
+            [[appUtil sharedUtil] setRootWindowView:tbc];
         }
         else {
             password.text = @"";

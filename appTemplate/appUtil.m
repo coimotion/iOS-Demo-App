@@ -11,11 +11,18 @@
 @implementation appUtil
 
 @synthesize token, userName;
+
 @synthesize accNamePraram;
 @synthesize passwordParam;
+@synthesize latParam;
+@synthesize lngParam;
+@synthesize tokenParam;
+
 @synthesize baseURLKey;
 @synthesize appCodeKey;
 @synthesize loginURIKey;
+@synthesize searchURIKey;
+
 + (id)sharedUtil
 {
     static appUtil *sharedUtil = nil;
@@ -31,9 +38,14 @@
     if (self) {
         accNamePraram = @"accName";
         passwordParam = @"passwd";
+        latParam = @"lat";
+        lngParam = @"lng";
+        tokenParam = @"token";
+        
         baseURLKey = @"baseURL";
         appCodeKey = @"appCode";
         loginURIKey = @"loginURI";
+        searchURIKey = @"searchURI";
     }
     return self;
 }

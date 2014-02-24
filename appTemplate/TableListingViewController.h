@@ -13,4 +13,6 @@
 @interface TableListingViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate>
 @property (strong) NSMutableArray *roleArray;
 @property (nonatomic,retain)CLLocationManager* locationManager;
+@property (nonatomic, retain)NSURLConnection *connection;
+@property (strong) NSString *searchURL;
 @end

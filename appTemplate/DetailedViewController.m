@@ -26,7 +26,6 @@
 {
     [super viewDidLoad];
     self.title = [data valueForKey:@"name"];
-    
     UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.navigationItem.rightBarButtonItem = anotherButton;
     NSString *imageFilename = [[NSString alloc] init];

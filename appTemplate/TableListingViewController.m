@@ -15,12 +15,14 @@
 @implementation TableListingViewController
 @synthesize roleArray = _roleArray;
 @synthesize locationManager = _locationManager;
+@synthesize connection = _connection;
+@synthesize searchURL = _searchURL;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"Listing";
+        self.title = @"List View";
     }
     return self;
 }
@@ -28,18 +30,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSDictionary *plist = [[NSDictionary alloc] init];
+    plist = [[appUtil sharedUtil] getSettingsFrom:@"coimotion"];
+    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",[plist objectForKey:[[appUtil sharedUtil] baseURLKey]],
+                  [plist objectForKey:[[appUtil sharedUtil] appCodeKey]],
+                  [plist objectForKey:[[appUtil sharedUtil] searchURIKey]]];
+    
     _roleArray = [[NSMutableArray alloc] init];
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
-    [self getContent];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:YES];
     [_locationManager startUpdatingLocation];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,7 +66,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
@@ -91,6 +94,75 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     [_locationManager stopUpdatingLocation];
+    NSString *lat = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.latitude];
+    NSString *lng = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.longitude];
+    [self searchAtLat:lat Lng:lng];
+}
+
+- (void)searchAtLat:(NSString *)lat Lng:(NSString *)lng
+{
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", [[appUtil sharedUtil] latParam], lat, [[appUtil sharedUtil] lngParam], lng, [[appUtil sharedUtil] tokenParam], [[appUtil sharedUtil] token]];
+    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST"
+                                                                        toURL:_searchURL
+                                                                      useData:parameters];
+    if (!_connection) {
+        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
+    }
+    else {
+        [_connection cancel];
+        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
+    }
+    [_connection setAccessibilityLabel:@"search"];
+}
+
+
+
+- (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+{
+    if ([[_connection accessibilityLabel] isEqualToString:@"search"]) {
+        NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        if ([[searchInfo objectForKey:@"errCode"] integerValue] == 0) {
+            if ([searchInfo objectForKey:@"token"] != nil) {
+                [[appUtil sharedUtil] setToken:[searchInfo objectForKey:@"token"]];
+                NSMutableDictionary *plist = [[appUtil sharedUtil] getPlistFrom:@"/app.plist"];
+                [plist setObject:[searchInfo objectForKey:@"token"] forKey:@"token"];
+                [[appUtil sharedUtil] setPlist:plist to:@"/app.plist"];
+            }
+            
+            [_roleArray removeAllObjects];
+            NSArray *list = [[searchInfo objectForKey:@"value"] objectForKey:@"list"];
+            for (int i = 0; i < [list count]; i++) {
+                NSDictionary *item = [list objectAtIndex:i];
+                NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+                [dic setObject:[item objectForKey:@"title"] forKey:@"name"];
+                [dic setObject:[item objectForKey:@"summary"] forKey:@"branch"];
+                [dic setObject:[item objectForKey:@"addr"] forKey:@"addr"];
+                [dic setObject:[item objectForKey:@"latitude"] forKey:@"lat"];
+                [dic setObject:[item objectForKey:@"longitude"] forKey:@"lng"];
+                
+                if ([[item objectForKey:@"title"] isEqual:@"50嵐"]) {
+                    [dic setObject:@"1" forKey:@"id"];
+                }
+                else if ([[item objectForKey:@"title"] isEqual:@"南傳鮮奶"]) {
+                    [dic setObject:@"2" forKey:@"id"];
+                }
+                else if ([[item objectForKey:@"title"] isEqual:@"鮮茶道"]) {
+                    [dic setObject:@"3" forKey:@"id"];
+                }
+                [_roleArray addObject:dic];
+            }
+            [self.tableView reloadData];
+        }
+        else {
+            [[[UIAlertView alloc] initWithTitle:@"Search Error"
+                                        message:[searchInfo objectForKey:@"message"]
+                                       delegate:nil
+                              cancelButtonTitle:@"Ok"
+                              otherButtonTitles:nil] show];
+            LoginViewController *loginVC = [[LoginViewController alloc] init];
+            [[appUtil sharedUtil] setRootWindowView:loginVC];
+        }
+    }
 }
 
 - (void)getContent
