@@ -13,9 +13,12 @@
 #import "DetailedViewController.h"
 #import "LoginViewController.h"
 
+#define SEARCH_CONNECTION_LABEL @"searchConn"
+#define MAP_TITLE @"地圖顯示"
+
 @interface MapListingViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong) NSMutableArray *roleArray;
+@property (strong) NSMutableArray *dataArray;
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @property (nonatomic, retain)NSMutableArray *annotaions;
 @property (nonatomic, retain)NSURLConnection *connection;

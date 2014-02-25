@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "LoginViewController.h"
-#import "appUtil.h"
+
 
 @interface MainViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;

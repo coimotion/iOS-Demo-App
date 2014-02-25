@@ -13,7 +13,7 @@
 @end
 
 @implementation TableListingViewController
-@synthesize roleArray = _roleArray;
+@synthesize dataArray = _dataArray;
 @synthesize locationManager = _locationManager;
 @synthesize connection = _connection;
 @synthesize searchURL = _searchURL;
@@ -22,7 +22,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"List View";
+        self.title = LIST_TITLE;
     }
     return self;
 }
@@ -30,13 +30,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSDictionary *plist = [[NSDictionary alloc] init];
-    plist = [[appUtil sharedUtil] getSettingsFrom:@"coimotion"];
-    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",[plist objectForKey:[[appUtil sharedUtil] baseURLKey]],
-                  [plist objectForKey:[[appUtil sharedUtil] appCodeKey]],
-                  [plist objectForKey:[[appUtil sharedUtil] searchURIKey]]];
+    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",coiBaseURL, coiAppCode, coiSearchURI];
     
-    _roleArray = [[NSMutableArray alloc] init];
+    _dataArray = [[NSMutableArray alloc] init];
+
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -61,18 +58,18 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [_roleArray count];
+    return [_dataArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"cell";
+    static NSString *CellIdentifier = CELL_IDENTIFIER;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        NSString *title = [[NSString alloc] initWithFormat:@"%@, %@",[_roleArray[indexPath.row] valueForKey:@"name"], [_roleArray[indexPath.row] valueForKey:@"branch"]];
+        NSString *title = [[NSString alloc] initWithFormat:@"%@, %@",[_dataArray[indexPath.row] valueForKey:coiResParams.title], [_dataArray[indexPath.row] valueForKey:coiResParams.summary]];
         cell.textLabel.text = title;
-        cell.detailTextLabel.text = [_roleArray[indexPath.row] valueForKey:@"addr"];
+        cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coiResParams.addr];
     }
     return cell;
 }
@@ -81,7 +78,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *data = _roleArray[indexPath.row];
+    NSDictionary *data = _dataArray[indexPath.row];
     DetailedViewController *detailedVC = [[DetailedViewController alloc] initWithNibName:@"DetailedViewController" bundle:nil];
     detailedVC.data = data;
 
@@ -101,8 +98,8 @@
 
 - (void)searchAtLat:(NSString *)lat Lng:(NSString *)lng
 {
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", [[appUtil sharedUtil] latParam], lat, [[appUtil sharedUtil] lngParam], lng, [[appUtil sharedUtil] tokenParam], [[appUtil sharedUtil] token]];
-    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST"
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, lat, coiReqParams.lng, lng, coiReqParams.token, [[appUtil sharedUtil] token]];
+    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpConnectionByMethod:coiMethodGet
                                                                         toURL:_searchURL
                                                                       useData:parameters];
     if (!_connection) {
@@ -112,62 +109,42 @@
         [_connection cancel];
         _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
     }
-    [_connection setAccessibilityLabel:@"search"];
+    [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
-
-
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
-    if ([[_connection accessibilityLabel] isEqualToString:@"search"]) {
+    if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
         NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        if ([[searchInfo objectForKey:@"errCode"] integerValue] == 0) {
-            if ([searchInfo objectForKey:@"token"] != nil) {
-                [[appUtil sharedUtil] setToken:[searchInfo objectForKey:@"token"]];
-                NSMutableDictionary *plist = [[appUtil sharedUtil] getPlistFrom:@"/app.plist"];
-                [plist setObject:[searchInfo objectForKey:@"token"] forKey:@"token"];
-                [[appUtil sharedUtil] setPlist:plist to:@"/app.plist"];
+        if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {
+            if ([searchInfo objectForKey:coiResParams.token] != nil) {
+                [[appUtil sharedUtil] setToken:[searchInfo objectForKey:coiResParams.token]];
+                [[appUtil sharedUtil] saveObject:[searchInfo objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
             }
             
-            [_roleArray removeAllObjects];
-            NSArray *list = [[searchInfo objectForKey:@"value"] objectForKey:@"list"];
+            [_dataArray removeAllObjects];
+            NSArray *list = [[searchInfo objectForKey:coiResParams.value] objectForKey:coiResParams.list];
             for (int i = 0; i < [list count]; i++) {
-                NSDictionary *item = [list objectAtIndex:i];
-                NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-                [dic setObject:[item objectForKey:@"title"] forKey:@"name"];
-                [dic setObject:[item objectForKey:@"summary"] forKey:@"branch"];
-                [dic setObject:[item objectForKey:@"addr"] forKey:@"addr"];
-                [dic setObject:[item objectForKey:@"latitude"] forKey:@"lat"];
-                [dic setObject:[item objectForKey:@"longitude"] forKey:@"lng"];
-                
-                if ([[item objectForKey:@"title"] isEqual:@"50嵐"]) {
-                    [dic setObject:@"1" forKey:@"id"];
-                }
-                else if ([[item objectForKey:@"title"] isEqual:@"南傳鮮奶"]) {
-                    [dic setObject:@"2" forKey:@"id"];
-                }
-                else if ([[item objectForKey:@"title"] isEqual:@"鮮茶道"]) {
-                    [dic setObject:@"3" forKey:@"id"];
-                }
-                [_roleArray addObject:dic];
+                [_dataArray addObject:list[i]];
             }
             [self.tableView reloadData];
         }
         else {
-            [[[UIAlertView alloc] initWithTitle:@"Search Error"
-                                        message:[searchInfo objectForKey:@"message"]
+            [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+                                        message:[searchInfo objectForKey:coiResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
-            LoginViewController *loginVC = [[LoginViewController alloc] init];
-            [[appUtil sharedUtil] setRootWindowView:loginVC];
+            if ([[searchInfo objectForKey:coiResParams.errCode] intValue] == -2) {
+                [[appUtil sharedUtil] logout];
+            }
         }
     }
 }
-
+/*
 - (void)getContent
 {
-    {
+    {//7745-7744
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"1" forKey:@"id"];
         [dic setObject:@"50嵐" forKey:@"name"];
@@ -178,7 +155,7 @@
         [dic setObject:@"120.282424" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7747-7746
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"1" forKey:@"id"];
         [dic setObject:@"50嵐" forKey:@"name"];
@@ -189,7 +166,7 @@
         [dic setObject:@"120.272051" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7748-7764
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"1" forKey:@"id"];
         [dic setObject:@"50嵐" forKey:@"name"];
@@ -200,7 +177,7 @@
         [dic setObject:@"120.299968" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7749-7763
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"1" forKey:@"id"];
         [dic setObject:@"50嵐" forKey:@"name"];
@@ -211,7 +188,7 @@
         [dic setObject:@"120.307256" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7750-7762
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"2" forKey:@"id"];
         [dic setObject:@"南傳鮮奶" forKey:@"name"];
@@ -222,7 +199,7 @@
         [dic setObject:@"120.326034" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7752-7757
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"2" forKey:@"id"];
         [dic setObject:@"南傳鮮奶" forKey:@"name"];
@@ -233,7 +210,7 @@
         [dic setObject:@"120.311305" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7753-7758
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"2" forKey:@"id"];
         [dic setObject:@"南傳鮮奶" forKey:@"name"];
@@ -244,7 +221,7 @@
         [dic setObject:@"120.272403" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7754-7761
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"3" forKey:@"id"];
         [dic setObject:@"鮮茶道" forKey:@"name"];
@@ -255,7 +232,7 @@
         [dic setObject:@"120.282418" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7755-7760
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"3" forKey:@"id"];
         [dic setObject:@"鮮茶道" forKey:@"name"];
@@ -266,7 +243,7 @@
         [dic setObject:@"120.318245" forKey:@"lng"];
         [_roleArray addObject:dic];
     }
-    {
+    {//7756-7759
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:@"3" forKey:@"id"];
         [dic setObject:@"鮮茶道" forKey:@"name"];
@@ -279,5 +256,5 @@
     }
     [self.tableView reloadData];
 }
-
+*/
 @end

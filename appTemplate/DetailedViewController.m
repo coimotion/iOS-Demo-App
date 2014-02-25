@@ -25,16 +25,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [data valueForKey:@"name"];
+    self.title = [data valueForKey:coiResParams.title];
+    
     UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout" style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     self.navigationItem.rightBarButtonItem = anotherButton;
-    NSString *imageFilename = [[NSString alloc] init];
-    if ([[data valueForKey:@"id"] isEqual:@"1"])
+    NSString *imageFilename = [[[appUtil sharedUtil] shopMenuList] objectForKey:[data objectForKey:@"title"]];
+    
+    /*if ([[data valueForKey:coiResParams.title] isEqual:@"1"])
         imageFilename = @"menu1.png";
     if ([[data valueForKey:@"id"] isEqual:@"2"])
         imageFilename = @"menu2.png";
     if ([[data valueForKey:@"id"] isEqual:@"3"])
-        imageFilename = @"menu3.png";
+        imageFilename = @"menu3.png";*/
     UIImage *image = [UIImage imageNamed:imageFilename];
     UIImageView *menuImage = [[UIImageView alloc] initWithImage:image];
     CGRect fullScreenRect=[[UIScreen mainScreen] applicationFrame];
@@ -55,11 +57,7 @@
 
 - (void)logout
 {
-    LoginViewController *loginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    app.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    app.window.rootViewController = loginVC;
-    [app.window makeKeyAndVisible];
+    [[appUtil sharedUtil] logout];
 }
 
 @end

@@ -13,18 +13,19 @@
 @end
 
 @implementation LoginViewController
-@synthesize connection;
-@synthesize loginIndicator;
-@synthesize loginButton;
-@synthesize username, password;
-@synthesize loginURL;
+
+@synthesize connection = _connection;
+@synthesize loginIndicator = _loginIndicator;
+@synthesize loginButton = _loginButton;
+@synthesize usernameText = _usernameText;
+@synthesize passwordText = _passwordText;
+@synthesize loginURL = _loginURL;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
     }
     return self;
 }
@@ -32,12 +33,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSDictionary *plist = [[NSDictionary alloc] init];
-    plist = [[appUtil sharedUtil] getSettingsFrom:@"coimotion"];
-    loginURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",[plist objectForKey:[[appUtil sharedUtil] baseURLKey]],
-                                                            [plist objectForKey:[[appUtil sharedUtil] appCodeKey]],
-                                                            [plist objectForKey:[[appUtil sharedUtil] loginURIKey]]];
-    [loginIndicator stopAnimating];
+    _loginURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
+                                                              coiAppCode,
+                                                              coiLoginURI];
+    [_loginIndicator stopAnimating];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -48,44 +47,40 @@
 }
 
 - (IBAction)login:(id)sender {
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", [[appUtil sharedUtil] accNamePraram], username.text, [[appUtil sharedUtil] passwordParam], password.text];
-    NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpConnectionByMethod:@"POST" toURL:loginURL useData:parameters];
-    if (!connection) {
-        connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
+                                                                            coiReqParams.passwd, _passwordText.text];
+    NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpConnectionByMethod:coiMethodPost toURL:_loginURL useData:parameters];
+    if (!_connection) {
+        _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
     }
     else {
-        [connection cancel];
-        connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
+        [_connection cancel];
+        _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
     }
-    [connection setAccessibilityLabel:@"login"];
+    [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
     [self setDisable];
 }
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
-    if ([[connection accessibilityLabel] isEqualToString:@"login"]) {
+    if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
         NSDictionary *loginInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        if ([[loginInfoDic objectForKey:@"errCode"] integerValue] == 0) {
-            [[appUtil sharedUtil] setToken:[loginInfoDic objectForKey:@"token"]];
-            
-            NSMutableDictionary *plist = [[appUtil sharedUtil] getPlistFrom:@"/app.plist"];
-            [plist setObject:[loginInfoDic objectForKey:@"token"] forKey:@"token"];
-            [[appUtil sharedUtil] setPlist:plist to:@"/app.plist"];
+        if ([[loginInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
+            [[appUtil sharedUtil] setToken:[loginInfoDic objectForKey:coiResParams.token]];
+            [[appUtil sharedUtil] saveObject:[loginInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist]; 
             
             TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
             UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-            [naviVC1 setTitle:@"Table"];
             MapListingViewController *mapListVC = [[MapListingViewController alloc] init];
             UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
-            [naviVC2 setTitle:@"Map"];
             UITabBarController *tbc = [[UITabBarController alloc] init];
             [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
             [[appUtil sharedUtil] setRootWindowView:tbc];
         }
         else {
-            password.text = @"";
-            [[[UIAlertView alloc] initWithTitle:@"Login Error"
-                                       message:[loginInfoDic objectForKey:@"message"]
+            _passwordText.text = @"";
+            [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
+                                       message:[loginInfoDic objectForKey:coiResParams.message]
                                       delegate:nil
                              cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
@@ -96,20 +91,20 @@
 
 - (void)setDisable
 {
-    [username setEnabled:NO];
-    [password setEnabled:NO];
-    [loginButton setEnabled:NO];
-    [loginIndicator startAnimating];
-    [loginButton setBackgroundColor:[UIColor grayColor]];
+    [_usernameText setEnabled:NO];
+    [_passwordText setEnabled:NO];
+    [_loginButton setEnabled:NO];
+    [_loginIndicator startAnimating];
+    [_loginButton setBackgroundColor:[UIColor grayColor]];
 }
 
 - (void)setEnable
 {
-    [username setEnabled:YES];
-    [password setEnabled:YES];
-    [loginButton setEnabled:YES];
-    [loginIndicator stopAnimating];
-    [loginButton setBackgroundColor:[UIColor whiteColor]];
+    [_usernameText setEnabled:YES];
+    [_passwordText setEnabled:YES];
+    [_loginButton setEnabled:YES];
+    [_loginIndicator stopAnimating];
+    [_loginButton setBackgroundColor:[UIColor whiteColor]];
 }
 
 @end

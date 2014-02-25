@@ -27,16 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    bool isLogin = NO;
-    if (isLogin) {
-        TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
-        UINavigationController *naviVC = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-        [[appUtil sharedUtil] setRootWindowView:naviVC];
-    }
-    else {
-        LoginViewController *loginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
-        [[appUtil sharedUtil] setRootWindowView:loginVC];
-    }
+    LoginViewController *loginVC = [[LoginViewController alloc] initWithNibName:@"LoginViewController" bundle:nil];
+    [[appUtil sharedUtil] setRootWindowView:loginVC];
     // Do any additional setup after loading the view from its nib.
 }
 

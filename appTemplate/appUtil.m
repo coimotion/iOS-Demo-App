@@ -10,18 +10,7 @@
 
 @implementation appUtil
 
-@synthesize token, userName;
-
-@synthesize accNamePraram;
-@synthesize passwordParam;
-@synthesize latParam;
-@synthesize lngParam;
-@synthesize tokenParam;
-
-@synthesize baseURLKey;
-@synthesize appCodeKey;
-@synthesize loginURIKey;
-@synthesize searchURIKey;
+@synthesize token, userName, shopMenuList;
 
 + (id)sharedUtil
 {
@@ -36,16 +25,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        accNamePraram = @"accName";
-        passwordParam = @"passwd";
-        latParam = @"lat";
-        lngParam = @"lng";
-        tokenParam = @"token";
-        
-        baseURLKey = @"baseURL";
-        appCodeKey = @"appCode";
-        loginURIKey = @"loginURI";
-        searchURIKey = @"searchURI";
+        shopMenuList = [[NSDictionary alloc] initWithObjects:[[NSArray alloc] initWithObjects:@"menu1", @"menu2", @"menu3", nil] forKeys:[[NSArray alloc] initWithObjects:@"50嵐", @"南傳鮮奶", @"鮮茶道", nil]];
     }
     return self;
 }
@@ -56,14 +36,29 @@
     [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
 }
 
-- (NSDictionary *)getSettingsFrom:(NSString *)fileName
+- (NSURLRequest *)getHttpConnectionByMethod:(NSString *)method
+                                toURL:(NSString *)URL
+                                 useData:(NSString *)data
 {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"plist"];
-    NSMutableDictionary *plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-    return plistDict;
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    if([method isEqualToString:@"GET"]) {
+        URL = [URL stringByAppendingFormat:@"?%@", data];
+        [request setURL:[[NSURL alloc] initWithString:URL]];
+    }
+    else {
+        [request setURL:[[NSURL alloc] initWithString:URL]];
+        [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setHTTPMethod:method];
+    }
+    return request;
 }
 
-- (NSMutableDictionary *)getPlistFrom:(NSString *)fileName
+- (void)logout
+{
+    [self setRootWindowView:[[LoginViewController alloc] init]];
+}
+
+- (void)saveObject:(id)obj forKey:(NSString *)key toPlist:(NSString *)fileName
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -82,38 +77,12 @@
     }else{
         plistDict = [[NSMutableDictionary alloc] init];
     }
-    return plistDict;
-}
-
-- (bool)setPlist:(NSDictionary *)newPlist
-               to:(NSString *)fileName
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingString:fileName];
-    if ([newPlist writeToFile:filePath atomically: YES]) {
-        return YES;
+    [plistDict setObject:obj forKey:key];
+    if ([plistDict writeToFile:filePath atomically: YES]) {
+        NSLog(@"Token updated");
     } else {
-        return NO;
+        NSLog(@"Token update failed");
     }
-}
-
-- (NSURLRequest *)getHttpConnectionByMethod:(NSString *)method
-                                toURL:(NSString *)URL
-                                 useData:(NSString *)data
-{
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    if([method isEqualToString:@"GET"]) {
-        URL = [URL stringByAppendingFormat:@"?%@", data];
-        NSLog(@"URL: %@", URL);
-        [request setURL:[[NSURL alloc] initWithString:URL]];
-    }
-    else {
-        [request setURL:[[NSURL alloc] initWithString:URL]];
-        [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setHTTPMethod:method];
-    }
-    return request;
 }
 
 @end

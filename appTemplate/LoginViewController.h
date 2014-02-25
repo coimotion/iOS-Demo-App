@@ -10,16 +10,17 @@
 #import "AppDelegate.h"
 #import "TableListingViewController.h"
 #import "MapListingViewController.h"
-#import "appUtil.h"
+
+#define LOGIN_CONNECTION_LABEL @"loginConn"
+#define LOGIN_ERROR @"登入錯誤"
 
 @interface LoginViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIButton *loginButton;
-@property (strong, nonatomic) IBOutlet UITextField *username;
-@property (strong, nonatomic) IBOutlet UITextField *password;
+@property (strong, nonatomic) IBOutlet UITextField *usernameText;
+@property (strong, nonatomic) IBOutlet UITextField *passwordText;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loginIndicator;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (strong, nonatomic) NSString *loginURL;
-
 
 - (IBAction)login:(id)sender;
 
