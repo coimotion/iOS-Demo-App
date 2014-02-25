@@ -50,13 +50,6 @@
                 [[appUtil sharedUtil] saveObject:[checkTokenInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
             }
             [[appUtil sharedUtil] enterApp];
-            /*TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
-            UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-            MapListingViewController *mapListVC = [[MapListingViewController alloc] init];
-            UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
-            UITabBarController *tbc = [[UITabBarController alloc] init];
-            [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
-            [[appUtil sharedUtil] setRootWindowView:tbc];*/
         }
         else {
             [[appUtil sharedUtil] logout];

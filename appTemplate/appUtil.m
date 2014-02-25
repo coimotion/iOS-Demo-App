@@ -59,6 +59,7 @@
 
 - (void)logout
 {
+    NSLog(@"logout, remove token in plist");
     [self saveObject:@"" forKey:coiResParams.token toPlist:coiPlist];
     [self setRootWindowView:[[LoginViewController alloc] init]];
 }
