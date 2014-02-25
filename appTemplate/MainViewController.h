@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "LoginViewController.h"
-
+#define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
 
 @interface MainViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
+@property (strong, nonatomic) NSURLConnection *connection;
+@property (strong, nonatomic) NSString *checkTokenURL;
 @end

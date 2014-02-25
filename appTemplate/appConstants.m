@@ -9,10 +9,11 @@
 #import "appConstants.h"
 
 @implementation appConstants
-NSString *const coiBaseURL = @"http://192.168.1.190:3000";
+NSString *const coiBaseURL = @"http://api.coimotion.com";
 NSString *const coiAppCode = @"wcoim";
 NSString *const coiLoginURI = @"core/user/login";
 NSString *const coiSearchURI = @"cms/geoLoc/search";
+NSString *const coiCheckTokenURI = @"core/user/profile";
 NSString *const coiPlist = @"/app.plist";
 NSString *const coiMethodPost = @"POST";
 NSString *const coiMethodGet = @"GET";
@@ -38,7 +39,8 @@ const struct responseKeysFromCoimotionAPI coiResParams = {
     .geID = @"geID",
     .ngID = @"ngID",
     .token = @"token",
-    .addr = @"addr"
+    .addr = @"addr",
+    .dspName = @"dspName"
 };
 
 @end

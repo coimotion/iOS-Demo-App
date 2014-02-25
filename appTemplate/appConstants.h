@@ -14,6 +14,7 @@ extern NSString *const coiBaseURL;
 extern NSString *const coiAppCode;
 extern NSString *const coiLoginURI;
 extern NSString *const coiSearchURI;
+extern NSString *const coiCheckTokenURI;
 extern NSString *const coiPlist;
 extern NSString *const coiMethodPost;
 extern NSString *const coiMethodGet;
@@ -40,6 +41,7 @@ struct responseKeysFromCoimotionAPI{
     __unsafe_unretained NSString *ngID;
     __unsafe_unretained NSString *token;
     __unsafe_unretained NSString *addr;
+    __unsafe_unretained NSString *dspName;
 };
 
 extern const struct requestKeysForCoimotionAPI coiReqParams;

@@ -95,9 +95,9 @@
     NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, lat,
                                                                                   coiReqParams.lng, lng,
                                                                                   coiReqParams.token, [[appUtil sharedUtil] token]];
-    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpConnectionByMethod:coiMethodGet
-                                                                        toURL:_searchURL
-                                                                      useData:parameters];
+    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
+                                                                     toURL:_searchURL
+                                                                   useData:parameters];
     if (!_connection) {
         _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
     }

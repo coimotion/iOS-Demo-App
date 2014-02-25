@@ -20,4 +20,7 @@
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @property (nonatomic, retain)NSURLConnection *connection;
 @property (strong) NSString *searchURL;
+@property (strong) NSString *latitude;
+@property (strong) NSString *longitude;
+
 @end

@@ -17,6 +17,8 @@
 @synthesize locationManager = _locationManager;
 @synthesize connection = _connection;
 @synthesize searchURL = _searchURL;
+@synthesize latitude = _latitude;
+@synthesize longitude = _longitude;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -40,6 +42,10 @@
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     [_locationManager startUpdatingLocation];
     
+    UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+    refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
+    [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refresh;
 }
 
 - (void)didReceiveMemoryWarning
@@ -91,17 +97,23 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     [_locationManager stopUpdatingLocation];
-    NSString *lat = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.latitude];
-    NSString *lng = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.longitude];
-    [self searchAtLat:lat Lng:lng];
+    _latitude = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.latitude];
+    _longitude = [[NSString alloc] initWithFormat:@"%f", ((CLLocation *)[locations objectAtIndex:0]).coordinate.longitude];
+    [self searchList];
 }
 
-- (void)searchAtLat:(NSString *)lat Lng:(NSString *)lng
+- (void)refreshingView
 {
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, lat, coiReqParams.lng, lng, coiReqParams.token, [[appUtil sharedUtil] token]];
-    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpConnectionByMethod:coiMethodGet
-                                                                        toURL:_searchURL
-                                                                      useData:parameters];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
+    [_locationManager startUpdatingLocation];
+}
+
+- (void)searchList
+{
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, _latitude, coiReqParams.lng, _longitude, coiReqParams.token, [[appUtil sharedUtil] token]];
+    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
+                                                                     toURL:_searchURL
+                                                                   useData:parameters];
     if (!_connection) {
         _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
     }
@@ -114,6 +126,11 @@
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
+    [[self refreshControl] endRefreshing];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MMM d, h:mm a"];
+    NSString *lastUpdated = [NSString stringWithFormat:@"Last updated on %@",[formatter stringFromDate:[NSDate date]]];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:lastUpdated];
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
         NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
         if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {

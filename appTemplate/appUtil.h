@@ -18,9 +18,11 @@
 
 + (id)sharedUtil;
 - (void)setRootWindowView:(UIViewController *)VC;
-- (NSURLRequest *)getHttpConnectionByMethod:(NSString *)method
+- (NSURLRequest *)getHttpRequestByMethod:(NSString *)method
                                          toURL:(NSString *)URL
                                        useData:(NSString *)data;
 - (void)logout;
+- (void)enterApp;
 - (void)saveObject:(id)obj forKey:(NSString *)key toPlist:(NSString *)fileName;
+- (id)readObjectForKey:(NSString *)key fromPlist:(NSString *)fileName;
 @end
