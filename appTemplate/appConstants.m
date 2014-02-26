@@ -12,6 +12,8 @@
 NSString *const coiBaseURL = @"http://api.coimotion.com";
 NSString *const coiAppCode = @"demoApp";
 NSString *const coiLoginURI = @"teaShop/account/login";
+NSString *const coiRegisterURI = @"teaShop/account/register";
+NSString *const coiActivateURI = @"teaShop/account/activate";
 NSString *const coiSearchURI = @"teaShop/shops/search";
 NSString *const coiCheckTokenURI = @"teaShop/account/profile";
 NSString *const coiDetailURI = @"teaShop/shops/info";
@@ -26,7 +28,8 @@ const struct requestKeysForCoimotionAPI coiReqParams = {
     .accName = @"accName",
     .passwd = @"passwd",
     .token = @"token",
-    .detail = @"detail"
+    .detail = @"detail",
+    .passwd2 = @"passwd2"
 };
 
 const struct responseKeysFromCoimotionAPI coiResParams = {
@@ -43,7 +46,8 @@ const struct responseKeysFromCoimotionAPI coiResParams = {
     .token = @"token",
     .addr = @"addr",
     .dspName = @"dspName",
-    .doc = @"doc"
+    .doc = @"doc",
+    .actID = @"actID"
 };
 
 @end

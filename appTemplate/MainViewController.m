@@ -23,6 +23,7 @@
     if (self) {
         // Custom initialization
         NSString *token = [[appUtil sharedUtil] readObjectForKey:coiResParams.token fromPlist:coiPlist];
+        
         [[appUtil sharedUtil] setToken:token];
         _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
         NSString *param = [[NSString alloc] initWithFormat:@"%@=%@", coiReqParams.token, token];
@@ -35,6 +36,7 @@
             _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
         }
         [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+        
     }
     return self;
 }

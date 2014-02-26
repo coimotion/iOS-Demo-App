@@ -20,6 +20,8 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loginIndicator;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property (strong, nonatomic) NSString *loginURL;
+@property (strong, nonatomic) NSString *registerURL;
+@property (strong, nonatomic) NSString *activateURL;
 @property bool regMode;
 
 - (IBAction)login:(id)sender;
