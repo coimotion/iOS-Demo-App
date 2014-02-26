@@ -10,5 +10,7 @@
 #import "LoginViewController.h"
 
 @interface DetailedViewController : UIViewController <UIScrollViewDelegate>
-@property (strong) NSDictionary *data;
+@property (strong, nonatomic) NSDictionary *data;
+@property (strong, nonatomic) NSString *detailURL;
+@property (strong, nonatomic) NSURLConnection *connection;
 @end

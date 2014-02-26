@@ -8,6 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "MainViewController.h"
+
+#define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
+#define LOGIN_CONNECTION_LABEL @"loginConn"
+#define LOGIN_ERROR @"登入錯誤"
+#define TOP_OF_BUTTON 236
+#define TOP_OF_CONFIRM 198
+#define CELL_IDENTIFIER @"cell"
+#define SEARCH_CONNECTION_LABEL @"searchConn"
+#define LIST_TITLE @"列表顯示"
+#define SEARCH_ERROR @"搜尋錯誤"
+#define RIGHT_BUTTON_TITLE_MAP @"登出"
+#define LEFT_BUTTON_TITLE_MAP @"目前位置"
+#define RIGHT_BUTTON_TITLE_LIST @"登出"
+#define LEFT_BUTTON_TITLE_LIST @"登出"
+#define DETAIL_CONNECTION_LABEL @"detailConn"
+#define MAP_TITLE @"地圖顯示"
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;

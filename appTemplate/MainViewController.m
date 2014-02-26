@@ -24,7 +24,6 @@
         // Custom initialization
         NSString *token = [[appUtil sharedUtil] readObjectForKey:coiResParams.token fromPlist:coiPlist];
         [[appUtil sharedUtil] setToken:token];
-        NSLog(@"read token: %@", token);
         _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
         NSString *param = [[NSString alloc] initWithFormat:@"%@=%@", coiReqParams.token, token];
         NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
@@ -38,6 +37,18 @@
         [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
     }
     return self;
+}
+
+- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    if ([httpResponse statusCode] != 200) {
+        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
+                                   delegate:nil
+                          cancelButtonTitle:@"Ok"
+                          otherButtonTitles:nil] show];
+    }
 }
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData

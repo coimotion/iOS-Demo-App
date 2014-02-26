@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "LoginViewController.h"
 
-@interface appUtil : NSObject
-{}
+@interface appUtil : NSObject{}
 
 @property (nonatomic, retain)NSString *token;
 @property (nonatomic, retain)NSString *userName;

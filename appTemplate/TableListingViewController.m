@@ -46,6 +46,9 @@
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
     [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
+    
+    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_LIST style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    //self.navigationItem.rightBarButtonItem = rightButton;
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,7 +76,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        NSString *title = [[NSString alloc] initWithFormat:@"%@, %@",[_dataArray[indexPath.row] valueForKey:coiResParams.title], [_dataArray[indexPath.row] valueForKey:coiResParams.summary]];
+        NSString *title = [[NSString alloc] initWithFormat:@"%@",[_dataArray[indexPath.row] valueForKey:coiResParams.title]];
         cell.textLabel.text = title;
         cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coiResParams.addr];
     }
@@ -92,6 +95,12 @@
         [self.navigationController pushViewController:detailedVC animated:YES];
     else
         [self presentViewController:detailedVC animated:YES completion:nil];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = [_dataArray[indexPath.row] objectForKey:coiResParams.title];
+    cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coiResParams.addr];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
@@ -124,7 +133,19 @@
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 
-- (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    if ([httpResponse statusCode] != 200) {
+        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
+                                   delegate:nil
+                          cancelButtonTitle:@"Ok"
+                          otherButtonTitles:nil] show];
+    }
+}
+
+- (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *) incomingData
 {
     [[self refreshControl] endRefreshing];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -138,7 +159,6 @@
                 [[appUtil sharedUtil] setToken:[searchInfo objectForKey:coiResParams.token]];
                 [[appUtil sharedUtil] saveObject:[searchInfo objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
             }
-            
             [_dataArray removeAllObjects];
             NSArray *list = [[searchInfo objectForKey:coiResParams.value] objectForKey:coiResParams.list];
             for (int i = 0; i < [list count]; i++) {
@@ -158,120 +178,10 @@
         }
     }
 }
-/*
-- (void)getContent
+
+- (void)logout
 {
-    {//7745-7744
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"1" forKey:@"id"];
-        [dic setObject:@"50嵐" forKey:@"name"];
-        [dic setObject:@"鹽埕店" forKey:@"branch"];
-        [dic setObject:@"高雄市鹽埕區七賢三路138號" forKey:@"addr"];
-        [dic setObject:@"07-5218988" forKey:@"tel"];
-        [dic setObject:@"22.626295" forKey:@"lat"];
-        [dic setObject:@"120.282424" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7747-7746
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"1" forKey:@"id"];
-        [dic setObject:@"50嵐" forKey:@"name"];
-        [dic setObject:@"臨海店" forKey:@"branch"];
-        [dic setObject:@"高雄市鼓山區臨海二路41號" forKey:@"addr"];
-        [dic setObject:@"07-5512998" forKey:@"tel"];
-        [dic setObject:@"22.623241" forKey:@"lat"];
-        [dic setObject:@"120.272051" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7748-7764
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"1" forKey:@"id"];
-        [dic setObject:@"50嵐" forKey:@"name"];
-        [dic setObject:@"苓雅店" forKey:@"branch"];
-        [dic setObject:@"高雄市苓雅區苓雅二路72號" forKey:@"addr"];
-        [dic setObject:@"07-3384515" forKey:@"tel"];
-        [dic setObject:@"22.618131" forKey:@"lat"];
-        [dic setObject:@"120.299968" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7749-7763
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"1" forKey:@"id"];
-        [dic setObject:@"50嵐" forKey:@"name"];
-        [dic setObject:@"青年店" forKey:@"branch"];
-        [dic setObject:@"高雄市苓雅區青年一路1792號" forKey:@"addr"];
-        [dic setObject:@"07-5376229" forKey:@"tel"];
-        [dic setObject:@"22.621657" forKey:@"lat"];
-        [dic setObject:@"120.307256" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7750-7762
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"2" forKey:@"id"];
-        [dic setObject:@"南傳鮮奶" forKey:@"name"];
-        [dic setObject:@"建工店" forKey:@"branch"];
-        [dic setObject:@"高雄市三民區建工路522號" forKey:@"addr"];
-        [dic setObject:@"07-3858595" forKey:@"tel"];
-        [dic setObject:@"22.65101" forKey:@"lat"];
-        [dic setObject:@"120.326034" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7752-7757
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"2" forKey:@"id"];
-        [dic setObject:@"南傳鮮奶" forKey:@"name"];
-        [dic setObject:@"復興店" forKey:@"branch"];
-        [dic setObject:@"高雄市前鎮區復興三路152號" forKey:@"addr"];
-        [dic setObject:@"07-3343611" forKey:@"tel"];
-        [dic setObject:@"22.612281" forKey:@"lat"];
-        [dic setObject:@"120.311305" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7753-7758
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"2" forKey:@"id"];
-        [dic setObject:@"南傳鮮奶" forKey:@"name"];
-        [dic setObject:@"西子灣店" forKey:@"branch"];
-        [dic setObject:@"高雄市鼓山區臨海二路34號" forKey:@"addr"];
-        [dic setObject:@"07-5310900" forKey:@"tel"];
-        [dic setObject:@"22.623122" forKey:@"lat"];
-        [dic setObject:@"120.272403" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7754-7761
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"3" forKey:@"id"];
-        [dic setObject:@"鮮茶道" forKey:@"name"];
-        [dic setObject:@"鹽埕七賢店" forKey:@"branch"];
-        [dic setObject:@"高雄市鹽埕區七賢三路130號" forKey:@"addr"];
-        [dic setObject:@"07-5316718" forKey:@"tel"];
-        [dic setObject:@"22.626306" forKey:@"lat"];
-        [dic setObject:@"120.282418" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7755-7760
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"3" forKey:@"id"];
-        [dic setObject:@"鮮茶道" forKey:@"name"];
-        [dic setObject:@"高雄鼎山店" forKey:@"branch"];
-        [dic setObject:@"高雄市三民區鼎山街555號" forKey:@"addr"];
-        [dic setObject:@"07-3945736" forKey:@"tel"];
-        [dic setObject:@"22.651908" forKey:@"lat"];
-        [dic setObject:@"120.318245" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    {//7756-7759
-        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-        [dic setObject:@"3" forKey:@"id"];
-        [dic setObject:@"鮮茶道" forKey:@"name"];
-        [dic setObject:@"高雄西子灣店" forKey:@"branch"];
-        [dic setObject:@"高雄市鼓山區臨海二路47號" forKey:@"addr"];
-        [dic setObject:@"07-5336018" forKey:@"tel"];
-        [dic setObject:@"22.623018" forKey:@"lat"];
-        [dic setObject:@"120.271809" forKey:@"lng"];
-        [_roleArray addObject:dic];
-    }
-    [self.tableView reloadData];
+    [[appUtil sharedUtil] logout];
 }
-*/
+
 @end

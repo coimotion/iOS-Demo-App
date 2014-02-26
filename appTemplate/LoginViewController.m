@@ -23,6 +23,7 @@
 @synthesize loginURL = _loginURL;
 @synthesize regMode = _regMode;
 @synthesize segControl = _segControl;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -97,6 +98,18 @@
             break;
         default:
             break;
+    }
+}
+
+- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    if ([httpResponse statusCode] != 200) {
+        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
+                                   delegate:nil
+                          cancelButtonTitle:@"Ok"
+                          otherButtonTitles:nil] show];
     }
 }
 

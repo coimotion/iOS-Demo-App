@@ -43,6 +43,12 @@
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     [_locationManager startUpdatingLocation];
+    
+    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    //self.navigationItem.rightBarButtonItem = rightButton;
+    
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:LEFT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(currentLocation)];
+    self.navigationItem.leftBarButtonItem = leftButton;
 }
 
 - (void)didReceiveMemoryWarning
@@ -108,6 +114,18 @@
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 
+- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    if ([httpResponse statusCode] != 200) {
+        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
+                                   delegate:nil
+                          cancelButtonTitle:@"Ok"
+                          otherButtonTitles:nil] show];
+    }
+}
+
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
@@ -126,7 +144,6 @@
                 pinCenter.longitude = [[list[i] objectForKey:coiResParams.longitude] doubleValue];
                 mapAnnotaion *annotation = [[mapAnnotaion alloc] initWithCoordinate: pinCenter];
                 annotation.title = [list[i] objectForKey:coiResParams.title];
-                annotation.subtitle = [list[i] objectForKey:coiResParams.summary];
                 annotation.ind = i;
                 [_mapView addAnnotation:annotation];
                 [_dataArray addObject:list[i]];
@@ -144,6 +161,16 @@
             }
         }
     }
+}
+
+- (void)logout
+{
+    [[appUtil sharedUtil] logout];
+}
+
+- (void)currentLocation
+{
+    [_locationManager startUpdatingLocation];
 }
 
 @end
