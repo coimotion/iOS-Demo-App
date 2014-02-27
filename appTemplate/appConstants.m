@@ -11,12 +11,12 @@
 @implementation appConstants
 NSString *const coiBaseURL = @"http://api.coimotion.com";
 NSString *const coiAppCode = @"demoApp";
-NSString *const coiLoginURI = @"teaShop/account/login";
-NSString *const coiRegisterURI = @"teaShop/account/register";
-NSString *const coiActivateURI = @"teaShop/account/activate";
-NSString *const coiSearchURI = @"teaShop/shops/search";
-NSString *const coiCheckTokenURI = @"teaShop/account/profile";
-NSString *const coiDetailURI = @"teaShop/shops/info";
+NSString *const coiLoginURI = @"drinks/account/login";
+NSString *const coiRegisterURI = @"drinks/account/register";
+NSString *const coiActivateURI = @"drinks/account/activate";
+NSString *const coiSearchURI = @"drinks/shops/search";
+NSString *const coiCheckTokenURI = @"drinks/account/profile";
+NSString *const coiDetailURI = @"drinks/shops/info";
 NSString *const coiPlist = @"/app.plist";
 NSString *const coiMethodPost = @"POST";
 NSString *const coiMethodGet = @"GET";
@@ -41,6 +41,7 @@ const struct responseKeysFromCoimotionAPI coiResParams = {
     .longitude = @"longitude",
     .title = @"title",
     .summary = @"summary",
+    .body = @"body",
     .geID = @"geID",
     .ngID = @"ngID",
     .token = @"token",

@@ -49,6 +49,7 @@ struct responseKeysFromCoimotionAPI{
     __unsafe_unretained NSString *dspName;
     __unsafe_unretained NSString *doc;
     __unsafe_unretained NSString *actID;
+    __unsafe_unretained NSString *body;
 };
 
 extern const struct requestKeysForCoimotionAPI coiReqParams;

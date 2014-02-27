@@ -123,13 +123,7 @@
     NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
                                                                      toURL:_searchURL
                                                                    useData:parameters];
-    if (!_connection) {
-        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
-    }
-    else {
-        [_connection cancel];
-        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
-    }
+    _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 

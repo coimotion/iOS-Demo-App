@@ -14,6 +14,9 @@
 
 @implementation DetailedViewController
 
+@synthesize summaryText = _summaryText;
+@synthesize addrText = _addrText;
+@synthesize bodyText = _bodyText;
 @synthesize data = _data;
 @synthesize detailURL = _detailURL;
 @synthesize connection = _connection;
@@ -29,14 +32,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    _addrText.layer.borderColor = [UIColor grayColor].CGColor;
+    _addrText.layer.borderWidth = 1.0f;
+    _addrText.layer.cornerRadius = 5.0f;
+    
+    _summaryText.layer.borderColor = [UIColor grayColor].CGColor;
+    _summaryText.layer.borderWidth = 1.0f;
+    _summaryText.layer.cornerRadius = 5.0f;
+    
+    _bodyText.layer.borderColor = [UIColor grayColor].CGColor;
+    _bodyText.layer.borderWidth = 1.0f;
+    _bodyText.layer.cornerRadius = 5.0f;
+    
     self.title = [_data valueForKey:coiResParams.title];
+    
     _detailURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDetailURI, [_data objectForKey:coiResParams.geID]];
-    NSLog(@"url: %@", _detailURL);
     NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=1", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.detail];
     NSURLRequest *cdetailReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_detailURL useData:param];
-    if (_connection) {
-        [_connection cancel];
-    }
     _connection = [[NSURLConnection alloc] initWithRequest:cdetailReq delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
     // Do any additional setup after loading the view from its nib.
@@ -46,7 +59,7 @@
 {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     if ([httpResponse statusCode] != 200) {
-        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+        [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
                                     message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
                                    delegate:nil
                           cancelButtonTitle:@"Ok"
@@ -61,40 +74,22 @@
         if ([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
             NSDictionary *doc = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.doc];
             if (doc != nil) {
-                int top, left, width, height, shift;
-                top = 10;
-                left = 10;
-                width = self.view.frame.size.width - 20;
-                height = 40;
-                shift = height + 10;
+                _addrText.text = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.addr];
                 
-                UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
+                _summaryText.text = [doc objectForKey:coiResParams.summary] != nil ? [doc objectForKey:coiResParams.summary] : @"N/A";
                 
-                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(top, left, width, height)];
-                NSString *title = [[NSString alloc] init];
-                title = [doc objectForKey:coiResParams.title] != nil ? [doc objectForKey:coiResParams.title] : @"N/A";
-                titleLabel.text = title;
-                
-                UILabel *addrLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top + shift, width, height)];
-                addrLabel.text = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.addr];
-                
-                UILabel *telLabel = [[UILabel alloc] initWithFrame:CGRectMake(left,top + 2 * shift, width, height)];
-                NSString *summary = [[NSString alloc] init];
-                summary = [doc objectForKey:coiResParams.summary] != nil ? [doc objectForKey:coiResParams.summary] : @"N/A";
-                telLabel.text = summary;
-                
-                [view addSubview:titleLabel];
-                [view addSubview:addrLabel];
-                [view addSubview:telLabel];
-                [view setBackgroundColor:[UIColor whiteColor]];
-                self.view = view;
+                _bodyText.text = [doc objectForKey:coiResParams.body] != nil ? [doc objectForKey:coiResParams.body] : @"N/A";
             }
             else {
-                
+                [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
+                                            message:@"No detailed information!"
+                                           delegate:nil
+                                  cancelButtonTitle:@"Ok"
+                                  otherButtonTitles:nil] show];
             }
         }
         else if (([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == -2)){
-            [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
+            [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
                                         message:[detailInfoDic objectForKey:coiResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"

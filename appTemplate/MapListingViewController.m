@@ -104,13 +104,7 @@
     NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
                                                                      toURL:_searchURL
                                                                    useData:parameters];
-    if (!_connection) {
-        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
-    }
-    else {
-        [_connection cancel];
-        _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
-    }
+    _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 
@@ -129,6 +123,8 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
+        [_connection cancel];
+        _connection = nil;
         NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
         if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {
             if ([searchInfo objectForKey:coiResParams.token] != nil) {

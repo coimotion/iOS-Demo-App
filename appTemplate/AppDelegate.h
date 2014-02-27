@@ -21,6 +21,7 @@
 #define SEARCH_ERROR @"搜尋錯誤"
 #define LOGIN_ERROR @"登入錯誤"
 #define REGISTER_ERROR @"註冊錯誤"
+#define DETAIL_ERROR @"資訊錯誤"
 #define LIST_TITLE @"列表顯示"
 #define MAP_TITLE @"地圖顯示"
 #define RIGHT_BUTTON_TITLE_MAP @"登出"

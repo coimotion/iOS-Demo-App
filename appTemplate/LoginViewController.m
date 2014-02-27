@@ -43,25 +43,17 @@
                                                               coiAppCode,
                                                               coiLoginURI];
     _registerURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
-                 coiAppCode,
-                 coiRegisterURI];
-    
+                                                                 coiAppCode,
+                                                                 coiRegisterURI];
     [_loginIndicator stopAnimating];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
-    
     [self.view addGestureRecognizer:tap];
     
     [self setLoginMode];
     // Do any additional setup after loading the view from its nib.
-}
-
-- (void)dismissKeyboard
-{
-    [_usernameText resignFirstResponder];
-    [_passwordText resignFirstResponder];
-    [_confirmText resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning
@@ -74,16 +66,11 @@
     if(_regMode) {
         NSLog(@"Register the user");
         NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
-                                coiReqParams.passwd, _passwordText.text,
-                                coiReqParams.passwd2, _confirmText.text];
-        NSURLRequest *registerReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_loginURL useData:parameters];
-        if (!_connection) {
-            _connection = [[NSURLConnection alloc] initWithRequest:registerReq delegate:self];
-        }
-        else {
-            [_connection cancel];
-            _connection = [[NSURLConnection alloc] initWithRequest:registerReq delegate:self];
-        }
+                                                                                      coiReqParams.passwd, _passwordText.text,
+                                                                                      coiReqParams.passwd2, _confirmText.text];
+        NSLog(@"parameters: %@", parameters);
+        NSURLRequest *registerReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_registerURL useData:parameters];
+        _connection = [[NSURLConnection alloc] initWithRequest:registerReq delegate:self];
         [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
         [self setDisable];
     }
@@ -91,13 +78,7 @@
         NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
                                                                                 coiReqParams.passwd, _passwordText.text];
         NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_loginURL useData:parameters];
-        if (!_connection) {
-            _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
-        }
-        else {
-            [_connection cancel];
-            _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
-        }
+        _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
         [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
         [self setDisable];
     }
@@ -120,7 +101,7 @@
 {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     if ([httpResponse statusCode] != 200) {
-        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
+        [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
                                     message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
                                    delegate:nil
                           cancelButtonTitle:@"Ok"
@@ -131,35 +112,29 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     NSLog(@"received: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
+    NSDictionary *receivedDataDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    int erroCode = [[receivedDataDic objectForKey:coiResParams.errCode] integerValue];
     if ([[_connection accessibilityLabel] isEqualToString:ACTIVATE_CONNECTION_LABEL]) {
-        NSDictionary *activateInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        if ([[activateInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
-            [[appUtil sharedUtil] setToken:[activateInfoDic objectForKey:coiResParams.token]];
-            [[appUtil sharedUtil] saveObject:[activateInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
+        if (erroCode == 0) {
+            [[appUtil sharedUtil] setToken:[receivedDataDic objectForKey:coiResParams.token]];
+            [[appUtil sharedUtil] saveObject:[receivedDataDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
             [[appUtil sharedUtil] enterApp];}
     }
     
     if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
-        NSDictionary *registeInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        if ([[registeInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
-            NSString *actID = [registeInfoDic objectForKey:coiResParams.actID];
+        if (erroCode == 0) {
+            NSString *actID = [[receivedDataDic objectForKey:coiResParams.value] objectForKey:coiResParams.actID];
             _activateURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL,
                             coiAppCode,
                             coiActivateURI,
                             actID];
             NSURLRequest *activateReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_activateURL useData:@""];
-            if (!_connection) {
-                _connection = [[NSURLConnection alloc] initWithRequest:activateReq delegate:self];
-            }
-            else {
-                [_connection cancel];
-                _connection = [[NSURLConnection alloc] initWithRequest:activateReq delegate:self];
-            }
+            _connection = [[NSURLConnection alloc] initWithRequest:activateReq delegate:self];
             [_connection setAccessibilityLabel:ACTIVATE_CONNECTION_LABEL];
         }
         else {
             [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                        message:[registeInfoDic objectForKey:coiResParams.message]
+                                        message:[receivedDataDic objectForKey:coiResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
@@ -167,25 +142,21 @@
     }
     
     if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
-        NSDictionary *loginInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        if ([[loginInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
-            [[appUtil sharedUtil] setToken:[loginInfoDic objectForKey:coiResParams.token]];
-            [[appUtil sharedUtil] saveObject:[loginInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist]; 
+        if (erroCode == 0) {
+            [[appUtil sharedUtil] setToken:[receivedDataDic objectForKey:coiResParams.token]];
+            [[appUtil sharedUtil] saveObject:[receivedDataDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist]; 
             [[appUtil sharedUtil] enterApp];
         }
-        else if (([[loginInfoDic objectForKey:coiResParams.errCode] integerValue] == -2)){
+        else if (erroCode == -2){
             _passwordText.text = @"";
             [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                       message:[loginInfoDic objectForKey:coiResParams.message]
+                                       message:[receivedDataDic objectForKey:coiResParams.message]
                                       delegate:nil
                              cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
         }
-        else {
-            [_segControl setSelectedSegmentIndex:1];
-            [_confirmText setHidden:NO];
-            [_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
-            _regMode = YES;
+        else { //unregistered user go register mode
+            [self setRegisterMode];
         }
     }
     [self setEnable];
@@ -227,6 +198,13 @@
     [_segControl setSelectedSegmentIndex:0];
     CGRect loginButtonFrame = _loginButton.frame;
     _loginButton.frame = CGRectMake(loginButtonFrame.origin.x, TOP_OF_CONFIRM, loginButtonFrame.size.width, loginButtonFrame.size.height);
+}
+
+- (void)dismissKeyboard
+{
+    [_usernameText resignFirstResponder];
+    [_passwordText resignFirstResponder];
+    [_confirmText resignFirstResponder];
 }
 
 @end
