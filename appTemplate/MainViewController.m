@@ -22,49 +22,49 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        NSString *token = [[appUtil sharedUtil] readObjectForKey:coiResParams.token fromPlist:coiPlist];
-        
-        [[appUtil sharedUtil] setToken:token];
-        _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
-        NSString *param = [[NSString alloc] initWithFormat:@"%@=%@", coiReqParams.token, token];
-        NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
-        if (!_connection) {
-            _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
-        }
-        else {
-            [_connection cancel];
-            _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
-        }
-        [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
-        
     }
     return self;
 }
 
-- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
+- (void)viewDidLoad
 {
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    if ([httpResponse statusCode] != 200) {
-        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
-                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
-                                   delegate:nil
-                          cancelButtonTitle:@"Ok"
-                          otherButtonTitles:nil] show];
-    }
+    [super viewDidLoad];
+    //  get token from property list
+    NSString *token = [[appUtil sharedUtil] readObjectForKey:coiResParams.token fromPlist:coiPlist];
+    //  set to singleton object for using through whole app
+    [[appUtil sharedUtil] setToken:token];
+    //  prepare URL for API to check token's validility
+    _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
+    //  parameter to API
+    NSString *param = [[NSString alloc] initWithFormat:@"%@=%@", coiReqParams.token, token];
+    //  get request object
+    NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
+    //  create connection to validate token
+    _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
+    [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
 }
+
+/*
+    get result of token validation
+ */
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
+        //  parse JSON to dictionary
         NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        //  valid token is not belongs to a guest
         if (![[[checkTokenInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.dspName] isEqual:@"Guest"]) {
+            //  a new token is presented, set it to singleton object and property list
             if ([checkTokenInfoDic objectForKey:coiResParams.token] != nil) {
                 [[appUtil sharedUtil] setToken:[checkTokenInfoDic objectForKey:coiResParams.token]];
                 [[appUtil sharedUtil] saveObject:[checkTokenInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
             }
+            //  then enter app
             [[appUtil sharedUtil] enterApp];
         }
         else {
+            // invalid token, open login view
             [[appUtil sharedUtil] logout];
         }
     }

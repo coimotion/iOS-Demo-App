@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MainViewController.h"
+#import "MyTableViewController.h"
 
 #define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
 #define LOGIN_CONNECTION_LABEL @"loginConn"
@@ -15,15 +16,17 @@
 #define DETAIL_CONNECTION_LABEL @"detailConn"
 #define REGISTER_CONNECTION_LABEL @"registerConn"
 #define ACTIVATE_CONNECTION_LABEL @"activateConn"
-#define TOP_OF_BUTTON 236
-#define TOP_OF_CONFIRM 198
+#define TOP_OF_BUTTON 253
+#define TOP_OF_INDICATOR 265
+#define SHIFT (253-215)
+
 #define CELL_IDENTIFIER @"cell"
 #define SEARCH_ERROR @"搜尋錯誤"
 #define LOGIN_ERROR @"登入錯誤"
 #define REGISTER_ERROR @"註冊錯誤"
 #define DETAIL_ERROR @"資訊錯誤"
-#define LIST_TITLE @"列表顯示"
-#define MAP_TITLE @"地圖顯示"
+#define LIST_TITLE @"店家一覽"
+#define MAP_TITLE @"店家地圖"
 #define RIGHT_BUTTON_TITLE_MAP @"登出"
 #define LEFT_BUTTON_TITLE_MAP @"目前位置"
 #define RIGHT_BUTTON_TITLE_LIST @"登出"

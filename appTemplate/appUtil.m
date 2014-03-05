@@ -64,16 +64,29 @@
     [self setRootWindowView:[[LoginViewController alloc] init]];
 }
 
+/*
+    start using app, create a tab controlled view with list and map view controller
+ */
+
 - (void)enterApp
 {
     TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
     UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
+    UIImage *listImage = [UIImage imageNamed:@"list.png"];
+    [naviVC1 tabBarItem].image = listImage;
     MapListingViewController *mapListVC = [[MapListingViewController alloc] init];
     UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
+    UIImage *mapImage = [UIImage imageNamed:@"map.png"];
+    [naviVC2 tabBarItem].image = mapImage;
     UITabBarController *tbc = [[UITabBarController alloc] init];
+    
     [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
     [self setRootWindowView:tbc];
 }
+
+/*
+    save object for key to property list file
+ */
 
 - (void)saveObject:(id)obj forKey:(NSString *)key toPlist:(NSString *)fileName
 {
@@ -103,6 +116,10 @@
         NSLog(@"Token update failed");
     }
 }
+
+/*
+    read object for key from property list file
+ */
 
 - (id)readObjectForKey:(NSString *)key fromPlist:(NSString *)fileName
 {

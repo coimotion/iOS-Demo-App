@@ -32,48 +32,44 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    //  init addrText component
     _addrText.layer.borderColor = [UIColor grayColor].CGColor;
     _addrText.layer.borderWidth = 1.0f;
     _addrText.layer.cornerRadius = 5.0f;
-    
+    //  init summaryText component
     _summaryText.layer.borderColor = [UIColor grayColor].CGColor;
     _summaryText.layer.borderWidth = 1.0f;
     _summaryText.layer.cornerRadius = 5.0f;
-    
+    //  init bodyText component
     _bodyText.layer.borderColor = [UIColor grayColor].CGColor;
     _bodyText.layer.borderWidth = 1.0f;
     _bodyText.layer.cornerRadius = 5.0f;
-    
+    //  set title of the view
     self.title = [_data valueForKey:coiResParams.title];
-    
+    //  prepare URL for detail info API
     _detailURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDetailURI, [_data objectForKey:coiResParams.geID]];
+    //  prepare parameter of detail info API
     NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=1", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.detail];
+    //  get request of the API
     NSURLRequest *cdetailReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_detailURL useData:param];
+    //  create connection of the API
     _connection = [[NSURLConnection alloc] initWithRequest:cdetailReq delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
-    // Do any additional setup after loading the view from its nib.
 }
-
-- (void)connection:(NSURLConnection *)conn didReceiveResponse:(NSURLResponse *)response
-{
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    if ([httpResponse statusCode] != 200) {
-        [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
-                                    message:[[NSString alloc] initWithFormat:@"%d",[httpResponse statusCode]]
-                                   delegate:nil
-                          cancelButtonTitle:@"Ok"
-                          otherButtonTitles:nil] show];
-    }
-}
-
+/*
+    receive data from connection
+ */
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
+    //  parse JSON string to a dictionary
+    NSDictionary *detailInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
-        NSDictionary *detailInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        //  process data from detail info connection
         if ([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
+            //  get data successed, get documentation
             NSDictionary *doc = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.doc];
             if (doc != nil) {
+                //  has documentation, get info to display on the view
                 _addrText.text = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.addr];
                 
                 _summaryText.text = [doc objectForKey:coiResParams.summary] != nil ? [doc objectForKey:coiResParams.summary] : @"N/A";
@@ -81,6 +77,7 @@
                 _bodyText.text = [doc objectForKey:coiResParams.body] != nil ? [doc objectForKey:coiResParams.body] : @"N/A";
             }
             else {
+                //  no document, alert a message
                 [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
                                             message:@"No detailed information!"
                                            delegate:nil
@@ -88,15 +85,13 @@
                                   otherButtonTitles:nil] show];
             }
         }
-        else if (([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == -2)){
+        else {
+            //  failed to get data, alert a message
             [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
                                         message:[detailInfoDic objectForKey:coiResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
-        }
-        else {
-            
         }
     }
 }
