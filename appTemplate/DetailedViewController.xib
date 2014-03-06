@@ -36,9 +36,9 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIImageView" id="967908365">
+					<object class="IBUIImageView" id="533515717">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">256</int>
+						<int key="NSvFlags">292</int>
 						<string key="NSFrameSize">{320, 548}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -229,8 +229,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="515711460"/>
 							<reference ref="120129037"/>
-							<reference ref="967908365"/>
 							<reference ref="154074334"/>
+							<reference ref="533515717"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -253,9 +253,8 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">354</int>
-						<reference key="object" ref="967908365"/>
-						<array class="NSMutableArray" key="children"/>
+						<int key="objectID">359</int>
+						<reference key="object" ref="533515717"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -269,13 +268,13 @@
 				<string key="239.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="283.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="318.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="354.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="359.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">358</int>
+			<int key="maxID">359</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
