@@ -36,7 +36,7 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIImageView" id="533515717">
+					<object class="IBUIImageView" id="719290707">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrameSize">{320, 548}</string>
@@ -230,7 +230,7 @@
 							<reference ref="515711460"/>
 							<reference ref="120129037"/>
 							<reference ref="154074334"/>
-							<reference ref="533515717"/>
+							<reference ref="719290707"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -254,7 +254,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">359</int>
-						<reference key="object" ref="533515717"/>
+						<reference key="object" ref="719290707"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
