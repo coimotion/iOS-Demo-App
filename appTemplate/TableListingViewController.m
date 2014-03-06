@@ -64,7 +64,6 @@
     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]];
     [tempImageView setFrame:self.tableView.frame];
     self.tableView.backgroundView = tempImageView;
-    
     [self.tableView setSeparatorColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.2f]];
     
 }
@@ -104,7 +103,7 @@
     if (cell == nil) {//  no defined cell, using dynamic generated cell
         //  cell generated with UITableViewCellStyleSubtitle
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        cell.backgroundColor = [UIColor clearColor];
     }
     return cell;
 }
