@@ -16,5 +16,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *bodyText;
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSString *detailURL;
+@property (strong, nonatomic) NSString *docURL;
 @property (strong, nonatomic) NSURLConnection *connection;
 @end

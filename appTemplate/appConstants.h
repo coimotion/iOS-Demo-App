@@ -18,6 +18,7 @@ extern NSString *const coiActivateURI;
 extern NSString *const coiSearchURI;
 extern NSString *const coiCheckTokenURI;
 extern NSString *const coiDetailURI;
+extern NSString *const coiDocURI;
 extern NSString *const coiPlist;
 extern NSString *const coiMethodPost;
 extern NSString *const coiMethodGet;

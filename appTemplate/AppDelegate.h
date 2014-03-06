@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MainViewController.h"
-#import "MyTableViewController.h"
+//#import "MyTableViewController.h"
 
 #define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
 #define LOGIN_CONNECTION_LABEL @"loginConn"
@@ -16,6 +16,7 @@
 #define DETAIL_CONNECTION_LABEL @"detailConn"
 #define REGISTER_CONNECTION_LABEL @"registerConn"
 #define ACTIVATE_CONNECTION_LABEL @"activateConn"
+#define DOC_CONNECTION_LABEL @"docConn"
 #define TOP_OF_BUTTON 253
 #define TOP_OF_INDICATOR 265
 #define SHIFT (253-215)

@@ -17,6 +17,7 @@ NSString *const coiActivateURI = @"drinks/account/activate";
 NSString *const coiSearchURI = @"drinks/shops/search";
 NSString *const coiCheckTokenURI = @"drinks/account/profile";
 NSString *const coiDetailURI = @"drinks/shops/info";
+NSString *const coiDocURI = @"drinks/shops/view";
 NSString *const coiPlist = @"/app.plist";
 NSString *const coiMethodPost = @"POST";
 NSString *const coiMethodGet = @"GET";

@@ -19,6 +19,7 @@
 @synthesize bodyText = _bodyText;
 @synthesize data = _data;
 @synthesize detailURL = _detailURL;
+@synthesize docURL = _docURL;
 @synthesize connection = _connection;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,9 +52,9 @@
     //  prepare parameter of detail info API
     NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=1", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.detail];
     //  get request of the API
-    NSURLRequest *cdetailReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_detailURL useData:param];
+    NSURLRequest *detailReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_detailURL useData:param];
     //  create connection of the API
-    _connection = [[NSURLConnection alloc] initWithRequest:cdetailReq delegate:self];
+    _connection = [[NSURLConnection alloc] initWithRequest:detailReq delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
 }
 /*
@@ -63,27 +64,48 @@
 {
     //  parse JSON string to a dictionary
     NSDictionary *detailInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    //  process data received from detail info connection
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
         //  process data from detail info connection
         if ([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == 0) {
-            //  get data successed, get documentation
-            NSDictionary *doc = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.doc];
-            if (doc != nil) {
-                //  has documentation, get info to display on the view
-                _addrText.text = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.addr];
-                
-                _summaryText.text = [doc objectForKey:coiResParams.summary] != nil ? [doc objectForKey:coiResParams.summary] : @"N/A";
-                
-                _bodyText.text = [doc objectForKey:coiResParams.body] != nil ? [doc objectForKey:coiResParams.body] : @"N/A";
+            //  get data successed, check if detail info exists
+            //  filled in addr
+            _addrText.text = [[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.addr];
+            //  get ngID for retrieving associated document
+            NSString *ngID =[[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.ngID];
+            if (ngID != nil) {
+                //  this location has a document, create URL to get document with ngID
+                _docURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDocURI,ngID];
+                //  get request for retrieving document
+                NSURLRequest *docRequest = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_docURL useData:@""];
+                //  create connection
+                _connection = [[NSURLConnection alloc] initWithRequest:docRequest delegate:self];
+                [_connection setAccessibilityLabel:DOC_CONNECTION_LABEL];
             }
             else {
                 //  no document, alert a message
                 [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
-                                            message:@"No detailed information!"
+                                            message:@"No accociated document!"
                                            delegate:nil
                                   cancelButtonTitle:@"Ok"
                                   otherButtonTitles:nil] show];
             }
+        }
+        else {
+            //  failed to get data, alert a message
+            [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
+                                        message:[detailInfoDic objectForKey:coiResParams.message]
+                                       delegate:nil
+                              cancelButtonTitle:@"Ok"
+                              otherButtonTitles:nil] show];
+        }
+    }
+    //  process data received from doc connection
+    if([[_connection accessibilityLabel] isEqualToString:DOC_CONNECTION_LABEL]) {
+        if([[detailInfoDic objectForKey:coiResParams.errCode] integerValue] == 0){
+            NSDictionary *doc = [detailInfoDic objectForKey:coiResParams.value];
+            _summaryText.text = ([doc objectForKey:coiResParams.summary] != nil)? [doc objectForKey:coiResParams.summary]:@"N/A";
+            _bodyText.text = ([doc objectForKey:coiResParams.body] != nil)?[doc objectForKey:coiResParams.body]:@"N/A";
         }
         else {
             //  failed to get data, alert a message
