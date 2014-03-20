@@ -36,7 +36,9 @@
     //  prepare URL for API to check token's validility
     _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
     //  parameter to API
-    NSString *param = [[NSString alloc] initWithFormat:@"%@=%@", coiReqParams.token, token];
+    NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@",
+                       coiReqParams.token, token,
+                       coiReqParams.appKey, coiAppKey];
     //  get request object
     NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
     //  create connection to validate token
@@ -50,9 +52,10 @@
 
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
+    NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
         //  parse JSON to dictionary
-        NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        
         //  valid token is not belongs to a guest
         if (![[[checkTokenInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.dspName] isEqual:@"Guest"]) {
             //  a new token is presented, set it to singleton object and property list

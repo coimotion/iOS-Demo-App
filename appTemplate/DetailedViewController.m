@@ -63,6 +63,7 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     //  parse JSON string to a dictionary
+
     NSDictionary *detailInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     //  process data received from detail info connection
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
@@ -76,8 +77,10 @@
             if (ngID != nil) {
                 //  this location has a document, create URL to get document with ngID
                 _docURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDocURI,ngID];
+                //  set param
+                NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.appKey, coiAppKey];
                 //  get request for retrieving document
-                NSURLRequest *docRequest = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_docURL useData:@""];
+                NSURLRequest *docRequest = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_docURL useData:param];
                 //  create connection
                 _connection = [[NSURLConnection alloc] initWithRequest:docRequest delegate:self];
                 [_connection setAccessibilityLabel:DOC_CONNECTION_LABEL];

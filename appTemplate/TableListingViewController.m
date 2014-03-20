@@ -49,7 +49,9 @@
         with refreshingView function to trigger search
      */
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+    
     refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
+    [refresh setAlpha:1.0f];
     [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
     /*

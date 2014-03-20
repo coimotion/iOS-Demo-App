@@ -75,8 +75,8 @@
     region.span.longitudeDelta = 0.003;
     [_mapView setRegion:region];
     //  search information of current location
-    NSString *lat = [[NSString alloc] initWithFormat:@"%f", region.center.latitude];
-    NSString *lng = [[NSString alloc] initWithFormat:@"%f", region.center.longitude];
+    double lat = [[[NSString alloc] initWithFormat:@"%f", region.center.latitude] doubleValue];
+    double lng = [[[NSString alloc] initWithFormat:@"%f", region.center.longitude] doubleValue];
     [self searchAtLat:lat Lng:lng];
 }
 /*
@@ -100,10 +100,11 @@
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     //  get new lat/lng of current mapview's center
-    NSString *lat = [[NSString alloc] initWithFormat:@"%f", mapView.region.center.latitude];
-    NSString *lng = [[NSString alloc] initWithFormat:@"%f", mapView.region.center.longitude];
+    double lat = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.latitude] doubleValue];
+    double lng = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.longitude] doubleValue];
     //  search the location
-    [self searchAtLat:lat Lng:lng];
+    if(lat !=0.0f && lng != 0.0f)
+        [self searchAtLat:lat Lng:lng];
 }
 
 /*
@@ -114,6 +115,7 @@
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
         //  process data of search connection, parse JSON to a dictionary
         NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        
         if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {
             //  search successed
             if ([searchInfo objectForKey:coiResParams.token] != nil) {
@@ -171,10 +173,11 @@
     [_locationManager startUpdatingLocation];
 }
 
-- (void)searchAtLat:(NSString *)lat Lng:(NSString *)lng
+- (void)searchAtLat:(double)lat Lng:(double)lng
 {
     //  prepare parameters for search
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, lat,
+    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%f&%@=%f&%@=%@",
+                            coiReqParams.lat, lat,
                             coiReqParams.lng, lng,
                             coiReqParams.token, [[appUtil sharedUtil] token]];
     //  get request

@@ -71,9 +71,10 @@
     if(_regMode) {
         NSLog(@"Register the user");
         //  prepare parameters to register
-        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
+        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
                                                                                       coiReqParams.passwd, _passwordText.text,
-                                                                                      coiReqParams.passwd2, _confirmText.text];
+                                                                                      coiReqParams.passwd2, _confirmText.text,
+                                                                                      coiReqParams.appKey, coiAppKey];
         //  get register request
         NSURLRequest *registerReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_registerURL useData:parameters];
         //  create connection to register API
@@ -85,8 +86,10 @@
     //  login mode
     else {
         //  prepare parameters to login
-        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
-                                                                                coiReqParams.passwd, _passwordText.text];
+        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@",
+                                coiReqParams.accName, _usernameText.text,
+                                coiReqParams.passwd, _passwordText.text,
+                                coiReqParams.appKey, coiAppKey];
         //  get request of login
         NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_loginURL useData:parameters];
         //  create connection to login API
@@ -117,7 +120,6 @@
  */
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
-    NSLog(@"received: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
     //  parse JSON string to a dictionary
     NSDictionary *receivedDataDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     int erroCode = [[receivedDataDic objectForKey:coiResParams.errCode] integerValue];
@@ -143,7 +145,9 @@
                             coiActivateURI,
                             actID];
             //  prepare request to activate
-            NSURLRequest *activateReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_activateURL useData:@""];
+            NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@",
+                                    coiReqParams.appKey, coiAppKey];
+            NSURLRequest *activateReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_activateURL useData:parameters];
             //  create connect of activation
             _connection = [[NSURLConnection alloc] initWithRequest:activateReq delegate:self];
             [_connection setAccessibilityLabel:ACTIVATE_CONNECTION_LABEL];

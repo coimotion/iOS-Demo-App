@@ -11,6 +11,7 @@
 @implementation appConstants
 NSString *const coiBaseURL = @"http://api.coimotion.com";
 NSString *const coiAppCode = @"demoApp";
+NSString *const coiAppKey = @"518d517f-2c91-0cf9-f3f1-a0f3133e85b0";
 NSString *const coiLoginURI = @"drinks/account/login";
 NSString *const coiRegisterURI = @"drinks/account/register";
 NSString *const coiActivateURI = @"drinks/account/activate";
@@ -30,7 +31,8 @@ const struct requestKeysForCoimotionAPI coiReqParams = {
     .passwd = @"passwd",
     .token = @"token",
     .detail = @"detail",
-    .passwd2 = @"passwd2"
+    .passwd2 = @"passwd2",
+    .appKey=@"_key"
 };
 
 const struct responseKeysFromCoimotionAPI coiResParams = {
