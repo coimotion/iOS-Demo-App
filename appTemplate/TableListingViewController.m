@@ -35,7 +35,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@/%@",coiBaseURL, coiAppCode, coiSearchURI];
+    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@",coiBaseURL, coiSearchURI];
     
     _dataArray = [[NSMutableArray alloc] init];
 
@@ -44,14 +44,20 @@
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
     [_locationManager startUpdatingLocation];
+    
     /*
         add pull to refresh
         with refreshingView function to trigger search
      */
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     
-    refresh.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh"];
-    [refresh setAlpha:1.0f];
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    
+    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh!!" attributes:attributes];
+    refresh.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
+    
+    [refresh setTintColor:[UIColor whiteColor]];
     [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
     /*
@@ -63,11 +69,8 @@
     /*
         set background image
      */
-    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]];
-    [tempImageView setFrame:self.tableView.frame];
-    self.tableView.backgroundView = tempImageView;
-    [self.tableView setSeparatorColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:0.2f]];
-    
+    UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    self.tableView.backgroundColor = background;
 }
 
 - (void)didReceiveMemoryWarning
@@ -171,7 +174,11 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"MMM d, h:mm a"];
     NSString *lastUpdated = [NSString stringWithFormat:@"Last updated on %@",[formatter stringFromDate:[NSDate date]]];
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:lastUpdated];
+    
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:lastUpdated attributes:attributes];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
 
     /*
         processing data recieved by different connections (telled by connection's accesibilityLabel
@@ -218,7 +225,10 @@
 
 - (void)refreshingView
 {
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..."];
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..." attributes:attributes];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
     [_locationManager startUpdatingLocation];
 }
 

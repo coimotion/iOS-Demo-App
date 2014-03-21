@@ -48,7 +48,7 @@
     //  set title of the view
     self.title = [_data valueForKey:coiResParams.title];
     //  prepare URL for detail info API
-    _detailURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDetailURI, [_data objectForKey:coiResParams.geID]];
+    _detailURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiDetailURI, [_data objectForKey:coiResParams.geID]];
     //  prepare parameter of detail info API
     NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=1", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.detail];
     //  get request of the API
@@ -76,7 +76,7 @@
             NSString *ngID =[[detailInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.ngID];
             if (ngID != nil) {
                 //  this location has a document, create URL to get document with ngID
-                _docURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL, coiAppCode, coiDocURI,ngID];
+                _docURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiDocURI,ngID];
                 //  set param
                 NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@", coiReqParams.token, [[appUtil sharedUtil] token], coiReqParams.appKey, coiAppKey];
                 //  get request for retrieving document

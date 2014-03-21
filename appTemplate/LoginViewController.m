@@ -39,11 +39,10 @@
 {
     [super viewDidLoad];
     //  prepare URLs to APIs of login, register
-    _loginURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
-                                                              coiAppCode,
+    _loginURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL,
+                 
                                                               coiLoginURI];
-    _registerURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
-                                                                 coiAppCode,
+    _registerURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL,
                                                                  coiRegisterURI];
     //  init loginIndicator's state
     [_loginIndicator stopAnimating];
@@ -122,6 +121,7 @@
 {
     //  parse JSON string to a dictionary
     NSDictionary *receivedDataDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    if(receivedDataDic != nil){
     int erroCode = [[receivedDataDic objectForKey:coiResParams.errCode] integerValue];
     //  check accessibilityLabel to tell data comes from which API
     if ([[_connection accessibilityLabel] isEqualToString:ACTIVATE_CONNECTION_LABEL]) {
@@ -140,8 +140,8 @@
             //  register successed, get actId
             NSString *actID = [[receivedDataDic objectForKey:coiResParams.value] objectForKey:coiResParams.actID];
             //  prepare URL to activate account
-            _activateURL = [[NSString alloc] initWithFormat:@"%@/%@/%@/%@", coiBaseURL,
-                            coiAppCode,
+            _activateURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
+                            
                             coiActivateURI,
                             actID];
             //  prepare request to activate
@@ -181,7 +181,9 @@
         }
         else { //unregistered user go register mode
             [self setRegisterMode];
+            [_loginButton setBackgroundColor:[UIColor clearColor]];
         }
+    }
     }
     [self setEnable];
 }
@@ -198,8 +200,8 @@
     [_usernameText setEnabled:NO];
     [_passwordText setEnabled:NO];
     [_loginButton setEnabled:NO];
+    [_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator startAnimating];
-    [_loginButton setBackgroundColor:[UIColor grayColor]];
 }
 
 - (void)setEnable
@@ -207,8 +209,8 @@
     [_usernameText setEnabled:YES];
     [_passwordText setEnabled:YES];
     [_loginButton setEnabled:YES];
+    [_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator stopAnimating];
-    [_loginButton setBackgroundColor:[UIColor whiteColor]];
 }
 
 - (void)setRegisterMode

@@ -9,7 +9,7 @@
 #import "appConstants.h"
 
 @implementation appConstants
-NSString *const coiBaseURL = @"http://api.coimotion.com";
+NSString *const coiBaseURL = @"http://demoApp.coimapi.net";
 NSString *const coiAppCode = @"demoApp";
 NSString *const coiAppKey = @"518d517f-2c91-0cf9-f3f1-a0f3133e85b0";
 NSString *const coiLoginURI = @"drinks/account/login";

@@ -35,7 +35,7 @@
 {
     [super viewDidLoad];
     //  prepare URL for search API
-    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiSearchURI];
+    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL, coiSearchURI];
     //  init dataArray to store searched results
     _dataArray = [[NSMutableArray alloc] init];
     //  init location manager's setting

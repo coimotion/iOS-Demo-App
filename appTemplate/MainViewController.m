@@ -34,16 +34,21 @@
     //  set to singleton object for using through whole app
     [[appUtil sharedUtil] setToken:token];
     //  prepare URL for API to check token's validility
-    _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL, coiAppCode, coiCheckTokenURI];
+    _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL, coiCheckTokenURI];
     //  parameter to API
     NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@",
                        coiReqParams.token, token,
                        coiReqParams.appKey, coiAppKey];
+    NSLog(@"param: %@", param );
     //  get request object
     NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
     //  create connection to validate token
     _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+}
+
+- (void)connection:(NSURLConnection *)conn didFailWithError:(NSError *)error {
+    NSLog(@"failed: %@", [error localizedDescription]);
 }
 
 /*
@@ -53,6 +58,7 @@
 - (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    NSLog(@"data: %@", checkTokenInfoDic);
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
         //  parse JSON to dictionary
         
