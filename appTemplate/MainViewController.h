@@ -11,7 +11,7 @@
 #import "LoginViewController.h"
 
 @interface MainViewController : UIViewController
+
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (strong, nonatomic) NSURLConnection *connection;
-@property (strong, nonatomic) NSString *checkTokenURL;
 @end

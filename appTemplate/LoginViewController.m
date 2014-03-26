@@ -20,17 +20,16 @@
 @synthesize usernameText = _usernameText;
 @synthesize passwordText = _passwordText;
 @synthesize confirmText = _confirmText;
-@synthesize loginURL = _loginURL;
-@synthesize registerURL = _registerURL;
-@synthesize activateURL = _activateURL;
 @synthesize regMode = _regMode;
 @synthesize segControl = _segControl;
+
+//  progress table
+NSMutableDictionary *dic;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -38,12 +37,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //  prepare URLs to APIs of login, register
-    _loginURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL,
-                 
-                                                              coiLoginURI];
-    _registerURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL,
-                                                                 coiRegisterURI];
+    //  progress table
+    dic = [NSMutableDictionary new];
+
     //  init loginIndicator's state
     [_loginIndicator stopAnimating];
     
@@ -60,40 +56,38 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 /*
     action of "touch up inside" for login button
  */
 - (IBAction)login:(id)sender {
-    //  register mode
     if(_regMode) {
         NSLog(@"Register the user");
         //  prepare parameters to register
-        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@&%@=%@", coiReqParams.accName, _usernameText.text,
-                                                                                      coiReqParams.passwd, _passwordText.text,
-                                                                                      coiReqParams.passwd2, _confirmText.text,
-                                                                                      coiReqParams.appKey, coiAppKey];
-        //  get register request
-        NSURLRequest *registerReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_registerURL useData:parameters];
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                    _usernameText.text, coimReqParams.accName,
+                                    _passwordText.text, coimReqParams.passwd,
+                                    _confirmText.text, coimReqParams.passwd2,
+                                    nil];
+        
         //  create connection to register API
-        _connection = [[NSURLConnection alloc] initWithRequest:registerReq delegate:self];
+        _connection = [ReqUtil registerWithParameter:parameters delegate:self progressTable:dic];
         [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
+        
         //  disable UI util receive results
         [self setDisable];
     }
-    //  login mode
     else {
         //  prepare parameters to login
-        NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@",
-                                coiReqParams.accName, _usernameText.text,
-                                coiReqParams.passwd, _passwordText.text,
-                                coiReqParams.appKey, coiAppKey];
-        //  get request of login
-        NSURLRequest *loginReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_loginURL useData:parameters];
+        NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                    _usernameText.text, coimReqParams.accName,
+                                    _passwordText.text, coimReqParams.passwd,
+                                    nil];
+        
         //  create connection to login API
-        _connection = [[NSURLConnection alloc] initWithRequest:loginReq delegate:self];
+        _connection = [ReqUtil loginTo:coimLoginURI withParameter:parameters delegate:self progressTable:dic];
         [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
+        
         //  disable UI util receive results
         [self setDisable];
     }
@@ -117,73 +111,46 @@
 /*
     connection receives data
  */
-- (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     //  parse JSON string to a dictionary
     NSDictionary *receivedDataDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     if(receivedDataDic != nil){
-    int erroCode = [[receivedDataDic objectForKey:coiResParams.errCode] integerValue];
-    //  check accessibilityLabel to tell data comes from which API
-    if ([[_connection accessibilityLabel] isEqualToString:ACTIVATE_CONNECTION_LABEL]) {
-        //  activate connection
-        if (erroCode == 0) {
-            //  activate successed, keep token, enter app
-            [[appUtil sharedUtil] setToken:[receivedDataDic objectForKey:coiResParams.token]];
-            [[appUtil sharedUtil] saveObject:[receivedDataDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
-            [[appUtil sharedUtil] enterApp];
+        int erroCode = [[receivedDataDic objectForKey:coimResParams.errCode] integerValue];
+        //  check accessibilityLabel to tell data comes from which API
+        if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
+            //  register connection
+            if (erroCode == 0) {
+                [appUtil enterApp];
+            }
+            else {
+                //  register failed, alert message
+                [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
+                                            message:[receivedDataDic objectForKey:coimResParams.message]
+                                           delegate:nil
+                                  cancelButtonTitle:@"Ok"
+                                  otherButtonTitles:nil] show];
+            }
         }
-    }
-    
-    if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
-        //  register connection
-        if (erroCode == 0) {
-            //  register successed, get actId
-            NSString *actID = [[receivedDataDic objectForKey:coiResParams.value] objectForKey:coiResParams.actID];
-            //  prepare URL to activate account
-            _activateURL = [[NSString alloc] initWithFormat:@"%@/%@/%@", coiBaseURL,
-                            
-                            coiActivateURI,
-                            actID];
-            //  prepare request to activate
-            NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@",
-                                    coiReqParams.appKey, coiAppKey];
-            NSURLRequest *activateReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodPost toURL:_activateURL useData:parameters];
-            //  create connect of activation
-            _connection = [[NSURLConnection alloc] initWithRequest:activateReq delegate:self];
-            [_connection setAccessibilityLabel:ACTIVATE_CONNECTION_LABEL];
+        
+        if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
+            //  login connection
+            if (erroCode == 0) {
+                [appUtil enterApp];
+            }
+            else if (erroCode == -2){
+                //  no permission, alert message
+                _passwordText.text = @"";
+                [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
+                                           message:[receivedDataDic objectForKey:coimResParams.message]
+                                          delegate:nil
+                                 cancelButtonTitle:@"Ok"
+                                  otherButtonTitles:nil] show];
+            }
+            else { //unregistered user go register mode
+                [self setRegisterMode];
+            }
         }
-        else {
-            //  register failed, alert message
-            [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                        message:[receivedDataDic objectForKey:coiResParams.message]
-                                       delegate:nil
-                              cancelButtonTitle:@"Ok"
-                              otherButtonTitles:nil] show];
-        }
-    }
-    
-    if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
-        //  login connection
-        if (erroCode == 0) {
-            //login successed, keep the token and enter app
-            [[appUtil sharedUtil] setToken:[receivedDataDic objectForKey:coiResParams.token]];
-            [[appUtil sharedUtil] saveObject:[receivedDataDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist]; 
-            [[appUtil sharedUtil] enterApp];
-        }
-        else if (erroCode == -2){
-            //  no permission, alert message
-            _passwordText.text = @"";
-            [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                       message:[receivedDataDic objectForKey:coiResParams.message]
-                                      delegate:nil
-                             cancelButtonTitle:@"Ok"
-                              otherButtonTitles:nil] show];
-        }
-        else { //unregistered user go register mode
-            [self setRegisterMode];
-            [_loginButton setBackgroundColor:[UIColor clearColor]];
-        }
-    }
     }
     [self setEnable];
 }

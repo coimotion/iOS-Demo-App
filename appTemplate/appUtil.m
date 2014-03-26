@@ -10,138 +10,74 @@
 
 @implementation appUtil
 
+NSString *const coimLoginURI = @"drinks/account/login";
+NSString *const coimLogoutURI = @"drinks/account/logout";
+NSString *const coimRegisterURI = @"drinks/account/register";
+NSString *const coimActivateURI = @"drinks/account/activate";
+NSString *const coimSearchURI = @"drinks/shops/search";
+NSString *const coimCheckTokenURI = @"drinks/account/profile";
+NSString *const coimDetailURI = @"drinks/shops/info";
+NSString *const coimDocURI = @"drinks/shops/view";
+
+const struct requestKeysForCoimotionAPI coimReqParams = {
+    .lat = @"lat",
+    .lng = @"lng",
+    .addr = @"addr",
+    .accName = @"accName",
+    .passwd = @"passwd",
+    .token = @"token",
+    .detail = @"detail",
+    .passwd2 = @"passwd2",
+    .appKey=@"_key"
+};
+
+const struct responseKeysFromCoimotionAPI coimResParams = {
+    .errCode = @"errCode",
+    .message = @"message",
+    .value = @"value",
+    .list = @"list",
+    .latitude = @"latitude",
+    .longitude = @"longitude",
+    .title = @"title",
+    .summary = @"summary",
+    .body = @"body",
+    .geID = @"geID",
+    .ngID = @"ngID",
+    .token = @"token",
+    .addr = @"addr",
+    .dspName = @"dspName",
+    .doc = @"doc",
+    .actID = @"actID"
+};
 @synthesize token, userName, shopMenuList;
 
-+ (id)sharedUtil
-{
-    static appUtil *sharedUtil = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedUtil = [[self alloc] init];
-    });
-    return sharedUtil;
-}
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        shopMenuList = [[NSDictionary alloc] initWithObjects:[[NSArray alloc] initWithObjects:@"menu1", @"menu2", @"menu3", nil] forKeys:[[NSArray alloc] initWithObjects:@"50嵐", @"南傳鮮奶", @"鮮茶道", nil]];
-    }
-    return self;
-}
-
-- (void)setRootWindowView:(UIViewController *)VC
++ (void)setRootWindowView:(UIViewController *)VC
 {
     [[[[UIApplication sharedApplication] delegate] window] setRootViewController:VC];
     [[[[UIApplication sharedApplication] delegate] window] makeKeyAndVisible];
 }
-
-- (NSURLRequest *)getHttpRequestByMethod:(NSString *)method
-                                toURL:(NSString *)URL
-                                 useData:(NSString *)data
-{
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    if([method isEqualToString:@"GET"]) {
-        if (![data isEqual:@""]) {
-            URL = [URL stringByAppendingFormat:@"?%@", data];
-        }
-        [request setURL:[[NSURL alloc] initWithString:URL]];
-    }
-    else {
-        [request setURL:[[NSURL alloc] initWithString:URL]];
-        if (![data isEqual:@""]) {
-            [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
-        }
-        [request setHTTPMethod:method];
-    }
-    return request;
-}
-
-- (void)logout
-{
-    NSLog(@"logout, remove token in plist");
-    [self saveObject:@"" forKey:coiResParams.token toPlist:coiPlist];
-    [self setRootWindowView:[[LoginViewController alloc] init]];
-}
-
 /*
-    start using app, create a tab controlled view with list and map view controller
- */
-
-- (void)enterApp
+ start with app login view, create a tab controlled view with list and map view controller
+*/
++ (void)enterLogin
 {
-    TableListingViewController *tableListVC = [[TableListingViewController alloc] init];
+    [self setRootWindowView:[LoginViewController new]];
+}
+/*
+    start with app main view, create a tab controlled view with list and map view controller
+*/
++ (void)enterApp
+{
+    TableListingViewController *tableListVC = [TableListingViewController new];
     UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
     UIImage *listImage = [UIImage imageNamed:@"list.png"];
     [naviVC1 tabBarItem].image = listImage;
-    MapListingViewController *mapListVC = [[MapListingViewController alloc] init];
+    MapListingViewController *mapListVC = [MapListingViewController new];
     UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
     UIImage *mapImage = [UIImage imageNamed:@"map.png"];
     [naviVC2 tabBarItem].image = mapImage;
-    UITabBarController *tbc = [[UITabBarController alloc] init];
-    
+    UITabBarController *tbc = [UITabBarController new];
     [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
     [self setRootWindowView:tbc];
 }
-
-/*
-    save object for key to property list file
- */
-
-- (void)saveObject:(id)obj forKey:(NSString *)key toPlist:(NSString *)fileName
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingString:fileName];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableDictionary *plistDict;
-    if (![fileManager fileExistsAtPath:documentsDirectory]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory
-                                  withIntermediateDirectories:NO
-                                                   attributes:nil
-                                                        error:nil];
-    }
-    if ([fileManager fileExistsAtPath: filePath]) {
-        plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-    }
-    else {
-        plistDict = [[NSMutableDictionary alloc] init];
-    }
-    
-    [plistDict setObject:obj forKey:key];
-    
-    if ([plistDict writeToFile:filePath atomically: YES]) {
-        NSLog(@"Token updated");
-    } else {
-        NSLog(@"Token update failed");
-    }
-}
-
-/*
-    read object for key from property list file
- */
-
-- (id)readObjectForKey:(NSString *)key fromPlist:(NSString *)fileName
-{
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingString:fileName];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableDictionary *plistDict;
-    if (![fileManager fileExistsAtPath:documentsDirectory]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory
-                                  withIntermediateDirectories:NO
-                                                   attributes:nil
-                                                        error:nil];
-    }
-    if ([fileManager fileExistsAtPath: filePath]) {
-        plistDict = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
-    }
-    else {
-        plistDict = [[NSMutableDictionary alloc] init];
-    }
-    
-    return [plistDict objectForKey:key];
-}
-
 @end

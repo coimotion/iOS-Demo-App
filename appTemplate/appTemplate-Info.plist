@@ -28,6 +28,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>APP_KEY</key>
+	<string>518d517f-2c91-0cf9-f3f1-a0f3133e85b0</string>
+	<key>APP_CODE</key>
+	<string>demoApp</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

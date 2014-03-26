@@ -11,7 +11,6 @@
 #import <MapKit/MapKit.h>
 #import "mapAnnotaion.h"
 #import "DetailedViewController.h"
-#import "LoginViewController.h"
 
 @interface MapListingViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
@@ -19,6 +18,5 @@
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @property (nonatomic, retain)NSMutableArray *annotaions;
 @property (nonatomic, retain)NSURLConnection *connection;
-@property (strong, nonatomic) NSString *searchURL;
 @property int index;
 @end

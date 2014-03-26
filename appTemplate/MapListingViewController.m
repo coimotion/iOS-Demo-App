@@ -18,14 +18,14 @@
 @synthesize locationManager = _locationManager;
 @synthesize mapView = _mapView;
 @synthesize connection = _connection;
-@synthesize searchURL = _searchURL;
 @synthesize index;
+
+NSMutableDictionary *dic;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
         self.title = MAP_TITLE;
     }
     return self;
@@ -34,19 +34,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //  prepare URL for search API
-    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL, coiSearchURI];
+    dic = [NSMutableDictionary new];
+    
     //  init dataArray to store searched results
-    _dataArray = [[NSMutableArray alloc] init];
+    _dataArray = [NSMutableArray new];
+    
     //  init location manager's setting
-    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager = [CLLocationManager new];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
+    
     //  start updating location
     [_locationManager startUpdatingLocation];
+    
     //  create a button to logout
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    
     //  set the button as rightBarButton
     self.navigationItem.rightBarButtonItem = rightButton;
     
@@ -58,7 +62,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 /*
     locationManager event
@@ -67,6 +70,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     [_locationManager stopUpdatingLocation];
+    
     //  set mapview's center to current location
     MKCoordinateRegion region;
     region.center.latitude = ((CLLocation *)locations[0]).coordinate.latitude;
@@ -74,6 +78,7 @@
     region.span.latitudeDelta = 0.003;
     region.span.longitudeDelta = 0.003;
     [_mapView setRegion:region];
+    
     //  search information of current location
     double lat = [[[NSString alloc] initWithFormat:@"%f", region.center.latitude] doubleValue];
     double lng = [[[NSString alloc] initWithFormat:@"%f", region.center.longitude] doubleValue];
@@ -87,12 +92,15 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     //  get annotationview of clicked annotaion
-    MKAnnotationView* annotationView = [mapView viewForAnnotation:view.annotation];
+    MKAnnotationView *annotationView = [mapView viewForAnnotation:view.annotation];
+    
     //  create a button to show the detailed information of the annotation
     UIButton *calloutButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     [calloutButton addTarget:self action:@selector(checkButtonTapped:event:) forControlEvents:UIControlEventTouchUpInside];
+    
     //  set the button to rightCalloutAccessoryView of the annotation view
     annotationView.rightCalloutAccessoryView = calloutButton;
+    
     //  get index of annotation for retriving data from dataArray
     index = ((mapAnnotaion *)view.annotation).ind;
 }
@@ -102,40 +110,36 @@
     //  get new lat/lng of current mapview's center
     double lat = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.latitude] doubleValue];
     double lng = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.longitude] doubleValue];
+    
     //  search the location
     if(lat !=0.0f && lng != 0.0f)
         [self searchAtLat:lat Lng:lng];
 }
-
 /*
     connection recieves data
  */
-- (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
+    NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
-        //  process data of search connection, parse JSON to a dictionary
-        NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-        
-        if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {
-            //  search successed
-            if ([searchInfo objectForKey:coiResParams.token] != nil) {
-                //  token renew
-                [[appUtil sharedUtil] setToken:[searchInfo objectForKey:coiResParams.token]];
-                [[appUtil sharedUtil] saveObject:[searchInfo objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
-            }
+        //  search successed
+        if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
             //  clear old annotations
             [_mapView removeAnnotations:_mapView.annotations];
+            
             //  clear _dataArray
             [_dataArray removeAllObjects];
+            
             //  get searched list
-            NSArray *list = [[searchInfo objectForKey:coiResParams.value] objectForKey:coiResParams.list];
+            NSArray *list = [[searchInfo objectForKey:coimResParams.value] objectForKey:coimResParams.list];
+            
             //  generating new annotations and dataArray for displaying
             for (int i = 0; i < [list count]; i++) {
                 CLLocationCoordinate2D pinCenter;
-                pinCenter.latitude = [[list[i] objectForKey:coiResParams.latitude] doubleValue];
-                pinCenter.longitude = [[list[i] objectForKey:coiResParams.longitude] doubleValue];
+                pinCenter.latitude = [[list[i] objectForKey:coimResParams.latitude] doubleValue];
+                pinCenter.longitude = [[list[i] objectForKey:coimResParams.longitude] doubleValue];
                 mapAnnotaion *annotation = [[mapAnnotaion alloc] initWithCoordinate: pinCenter];
-                annotation.title = [list[i] objectForKey:coiResParams.title];
+                annotation.title = [list[i] objectForKey:coimResParams.title];
                 annotation.ind = i;
                 [_mapView addAnnotation:annotation];
                 [_dataArray addObject:list[i]];
@@ -144,14 +148,15 @@
         else {
             //  search failed, alert message
             [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
-                                        message:[searchInfo objectForKey:coiResParams.message]
+                                        message:[searchInfo objectForKey:coimResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
             
-            if ([[searchInfo objectForKey:coiResParams.errCode] intValue] == -2) {
+            if ([[searchInfo objectForKey:coimResParams.errCode] intValue] == -2) {
                 //  errCode is no permission, go login view
-                [[appUtil sharedUtil] logout];
+                [ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+                [appUtil enterLogin];
             }
         }
     }
@@ -165,7 +170,8 @@
  */
 - (void)logout
 {
-    [[appUtil sharedUtil] logout];
+    [ReqUtil logoutFrom:@"drinks/account/logout" delegate:self progressTable:dic];
+    [appUtil enterLogin];
 }
 
 - (void)currentLocation
@@ -176,17 +182,17 @@
 - (void)searchAtLat:(double)lat Lng:(double)lng
 {
     //  prepare parameters for search
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%f&%@=%f&%@=%@",
-                            coiReqParams.lat, lat,
-                            coiReqParams.lng, lng,
-                            coiReqParams.token, [[appUtil sharedUtil] token]];
-    //  get request
-    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
-                                                                     toURL:_searchURL
-                                                                   useData:parameters];
+    NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys: [NSString stringWithFormat:@"%f", lat], coimReqParams.lat, [NSString stringWithFormat:@"%f", lng], coimReqParams.lng, nil];
+    
     //  create connection
-    _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
+    if(_connection != nil){
+        //  if connection exists, cancel it and restart connection
+        [_connection cancel];
+        _connection = nil;
+    }
+    _connection = [ReqUtil sendTo:coimSearchURI withParameter:parameters delegate:self progressTable:dic];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
+    
 }
 
 - (void)checkButtonTapped:(id)sender event:(id)event

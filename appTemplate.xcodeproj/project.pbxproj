@@ -43,9 +43,9 @@
 		04AD818518C6CCAD00BF3179 /* list.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD818318C6CCAC00BF3179 /* list.png */; };
 		04AD818618C6CCAD00BF3179 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD818418C6CCAC00BF3179 /* map.png */; };
 		04AD818918C6D4C100BF3179 /* mapAnnotaion.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AD818818C6D4C000BF3179 /* mapAnnotaion.m */; };
+		04BC485718E2A2E100718BAF /* ReqUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC485618E2A2E100718BAF /* ReqUtil.m */; };
 		04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662918B6F804003C769F /* MapListingViewController.m */; };
 		04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662A18B6F804003C769F /* MapListingViewController.xib */; };
-		04E1B19318BC23C100BC41B1 /* appConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E1B19218BC23C100BC41B1 /* appConstants.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,11 +103,11 @@
 		04AD818418C6CCAC00BF3179 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
 		04AD818718C6D4C000BF3179 /* mapAnnotaion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapAnnotaion.h; sourceTree = "<group>"; };
 		04AD818818C6D4C000BF3179 /* mapAnnotaion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapAnnotaion.m; sourceTree = "<group>"; };
+		04BC485518E2A2E100718BAF /* ReqUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReqUtil.h; path = COIMSDK/ReqUtil.h; sourceTree = "<group>"; };
+		04BC485618E2A2E100718BAF /* ReqUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReqUtil.m; path = COIMSDK/ReqUtil.m; sourceTree = "<group>"; };
 		04DB662818B6F804003C769F /* MapListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListingViewController.h; sourceTree = "<group>"; };
 		04DB662918B6F804003C769F /* MapListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListingViewController.m; sourceTree = "<group>"; };
 		04DB662A18B6F804003C769F /* MapListingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapListingViewController.xib; sourceTree = "<group>"; };
-		04E1B19118BC23C100BC41B1 /* appConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appConstants.h; sourceTree = "<group>"; };
-		04E1B19218BC23C100BC41B1 /* appConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = appConstants.m; sourceTree = "<group>"; };
 		04E1B19418BC45A100BC41B1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		04E1B19518BC45A100BC41B1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -176,6 +176,8 @@
 		0476DF3C18B354F600380537 /* appTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				04BC485518E2A2E100718BAF /* ReqUtil.h */,
+				04BC485618E2A2E100718BAF /* ReqUtil.m */,
 				04AD818718C6D4C000BF3179 /* mapAnnotaion.h */,
 				04AD818818C6D4C000BF3179 /* mapAnnotaion.m */,
 				0476DF4518B354F600380537 /* AppDelegate.h */,
@@ -199,8 +201,6 @@
 				04DB662818B6F804003C769F /* MapListingViewController.h */,
 				04DB662918B6F804003C769F /* MapListingViewController.m */,
 				04DB662A18B6F804003C769F /* MapListingViewController.xib */,
-				04E1B19118BC23C100BC41B1 /* appConstants.h */,
-				04E1B19218BC23C100BC41B1 /* appConstants.m */,
 			);
 			path = appTemplate;
 			sourceTree = "<group>";
@@ -369,6 +369,7 @@
 			files = (
 				0476DF4318B354F600380537 /* main.m in Sources */,
 				0476DF4718B354F600380537 /* AppDelegate.m in Sources */,
+				04BC485718E2A2E100718BAF /* ReqUtil.m in Sources */,
 				0476DF5018B354F600380537 /* appTemplate.xcdatamodeld in Sources */,
 				0476DF7418B3556300380537 /* MainViewController.m in Sources */,
 				0476DF7918B3591300380537 /* LoginViewController.m in Sources */,
@@ -376,7 +377,6 @@
 				0476DF8318B361B000380537 /* DetailedViewController.m in Sources */,
 				0491F4DA18B5A84B009C8D13 /* appUtil.m in Sources */,
 				04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */,
-				04E1B19318BC23C100BC41B1 /* appConstants.m in Sources */,
 				04AD818918C6D4C100BF3179 /* mapAnnotaion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

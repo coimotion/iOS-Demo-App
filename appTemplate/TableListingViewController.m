@@ -16,9 +16,10 @@
 @synthesize dataArray = _dataArray;
 @synthesize locationManager = _locationManager;
 @synthesize connection = _connection;
-@synthesize searchURL = _searchURL;
 @synthesize latitude = _latitude;
 @synthesize longitude = _longitude;
+
+NSMutableDictionary *dic;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -35,11 +36,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _searchURL = [[NSString alloc] initWithFormat:@"%@/%@",coiBaseURL, coiSearchURI];
+    dic = [NSMutableDictionary new];
     
-    _dataArray = [[NSMutableArray alloc] init];
+    _dataArray = [NSMutableArray new];
 
-    _locationManager = [[CLLocationManager alloc] init];
+    _locationManager = [CLLocationManager new];
     _locationManager.delegate = self;
     _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     _locationManager.distanceFilter = kCLDistanceFilterNone;
@@ -49,7 +50,7 @@
         add pull to refresh
         with refreshingView function to trigger search
      */
-    UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
+    UIRefreshControl *refresh = [UIRefreshControl new];
     
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
@@ -134,10 +135,10 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //  setting title of a row
-    cell.textLabel.text = [_dataArray[indexPath.row] objectForKey:coiResParams.title];
+    cell.textLabel.text = [_dataArray[indexPath.row] objectForKey:coimResParams.title];
     cell.textLabel.textColor = [UIColor whiteColor];
     //  setting subtitle of the row
-    cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coiResParams.addr];
+    cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coimResParams.addr];
     UIColor *color = [UIColor colorWithRed:204/255.0f green:204/255.0f blue:204/255.0f alpha:1.0f];
     cell.detailTextLabel.textColor = color;
 }
@@ -162,7 +163,7 @@
         didReceiveData: the connection recieves data, process the data to display
  */
 
-- (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *) incomingData
+- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
 {
     /*
         modifying refresh controller
@@ -171,58 +172,49 @@
     //  stop refreshing state
     [[self refreshControl] endRefreshing];
     //  showing updated time on it
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *formatter = [NSDateFormatter new];
     [formatter setDateFormat:@"MMM d, h:mm a"];
     NSString *lastUpdated = [NSString stringWithFormat:@"Last updated on %@",[formatter stringFromDate:[NSDate date]]];
-    
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
     [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
     NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:lastUpdated attributes:attributes];
     self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
-
     /*
         processing data recieved by different connections (telled by connection's accesibilityLabel
-     */
+    */
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
         //  parse JSON string data into a dictionary
-        NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+        NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
         //  successed get data (errCode is 0)
-        if ([[searchInfo objectForKey:coiResParams.errCode] integerValue] == 0) {
-            //  if data has token, renew the token
-            if ([searchInfo objectForKey:coiResParams.token] != nil) {
-                [[appUtil sharedUtil] setToken:[searchInfo objectForKey:coiResParams.token]];
-                [[appUtil sharedUtil] saveObject:[searchInfo objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
-            }
+        if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
             //  renew _dataArray for TableView displaying
             [_dataArray removeAllObjects];
-            NSArray *list = [[searchInfo objectForKey:coiResParams.value] objectForKey:coiResParams.list];
+            NSArray *list = [[searchInfo objectForKey:coimResParams.value] objectForKey:coimResParams.list];
             for (int i = 0; i < [list count]; i++) {
                 [_dataArray addObject:list[i]];
             }
             [self.tableView reloadData];
         }
-        //  failed to get data (errCode is not 0)
         else {
             //  an alert window displays error message
             [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
-                                        message:[searchInfo objectForKey:coiResParams.message]
+                                        message:[searchInfo objectForKey:coimResParams.message]
                                        delegate:nil
                               cancelButtonTitle:@"Ok"
                               otherButtonTitles:nil] show];
-            if ([[searchInfo objectForKey:coiResParams.errCode] intValue] == -2) {
-                [[appUtil sharedUtil] logout];
+            if ([[searchInfo objectForKey:coimResParams.errCode] intValue] == -2) {
+                [self logout];
             }
         }
     }
 }
-
 /*
     sub functions
         refreshingView: renew current location
         searchList: query information around current location
         logout: logout
  */
-
 - (void)refreshingView
 {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
@@ -234,17 +226,17 @@
 
 - (void)searchList
 {
-    NSString *parameters = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@&%@=%@", coiReqParams.lat, _latitude, coiReqParams.lng, _longitude, coiReqParams.token, [[appUtil sharedUtil] token]];
-    NSURLRequest *searchReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet
-                                                                     toURL:_searchURL
-                                                                   useData:parameters];
-    _connection = [[NSURLConnection alloc] initWithRequest:searchReq delegate:self];
+    NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                _latitude, coimReqParams.lat,
+                                _longitude, coimReqParams.lng, nil];
+    _connection = [ReqUtil sendTo:coimSearchURI withParameter:parameters delegate:self progressTable:dic];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 
 - (void)logout
 {
-    [[appUtil sharedUtil] logout];
+    [ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+    [appUtil enterLogin];
 }
 
 @end

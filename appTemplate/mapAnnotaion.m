@@ -10,8 +10,8 @@
 
 @implementation mapAnnotaion
 @synthesize coordinate;
-@synthesize title;
-@synthesize subtitle;
+@synthesize title = _title;
+@synthesize subtitle = _subtitle;
 @synthesize ind;
 
 -(id) initWithCoordinate: (CLLocationCoordinate2D) the_coordinate

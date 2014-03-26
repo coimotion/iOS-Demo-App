@@ -15,7 +15,6 @@
 @property (strong, nonatomic) NSMutableArray *dataArray;
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @property (nonatomic, retain)NSURLConnection *connection;
-@property (strong, nonatomic) NSString *searchURL;
 @property (strong, nonatomic) NSString *latitude;
 @property (strong, nonatomic) NSString *longitude;
 

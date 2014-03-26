@@ -15,13 +15,14 @@
 @implementation MainViewController
 @synthesize activityIndicator = _activityIndicator;
 @synthesize connection = _connection;
-@synthesize checkTokenURL = _checkTokenURL;
+
+// used to save progress information
+NSMutableDictionary *dic;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -29,52 +30,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //  get token from property list
-    NSString *token = [[appUtil sharedUtil] readObjectForKey:coiResParams.token fromPlist:coiPlist];
-    //  set to singleton object for using through whole app
-    [[appUtil sharedUtil] setToken:token];
-    //  prepare URL for API to check token's validility
-    _checkTokenURL = [[NSString alloc] initWithFormat:@"%@/%@", coiBaseURL, coiCheckTokenURI];
+    //  init COIMSDK
+    [ReqUtil initSDK:^(NSError *err){
+        if(err)
+            NSLog(@"err: %@", [err localizedDescription]);
+    }];
     //  parameter to API
-    NSString *param = [[NSString alloc] initWithFormat:@"%@=%@&%@=%@",
-                       coiReqParams.token, token,
-                       coiReqParams.appKey, coiAppKey];
-    NSLog(@"param: %@", param );
-    //  get request object
-    NSURLRequest *checkTokenReq = [[appUtil sharedUtil] getHttpRequestByMethod:coiMethodGet toURL:_checkTokenURL useData:param];
+    NSDictionary *params = [NSDictionary new];
+    
     //  create connection to validate token
-    _connection = [[NSURLConnection alloc] initWithRequest:checkTokenReq delegate:self];
+    _connection = [ReqUtil sendTo:coimCheckTokenURI withParameter:params delegate:self progressTable:dic];
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
 }
-
-- (void)connection:(NSURLConnection *)conn didFailWithError:(NSError *)error {
-    NSLog(@"failed: %@", [error localizedDescription]);
-}
-
 /*
     get result of token validation
- */
-
-- (void)connection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+*/
+- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
+    //  parse JSON to dictionary
     NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-    NSLog(@"data: %@", checkTokenInfoDic);
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
-        //  parse JSON to dictionary
-        
         //  valid token is not belongs to a guest
-        if (![[[checkTokenInfoDic objectForKey:coiResParams.value] objectForKey:coiResParams.dspName] isEqual:@"Guest"]) {
-            //  a new token is presented, set it to singleton object and property list
-            if ([checkTokenInfoDic objectForKey:coiResParams.token] != nil) {
-                [[appUtil sharedUtil] setToken:[checkTokenInfoDic objectForKey:coiResParams.token]];
-                [[appUtil sharedUtil] saveObject:[checkTokenInfoDic objectForKey:coiResParams.token] forKey:coiResParams.token toPlist:coiPlist];
-            }
-            //  then enter app
-            [[appUtil sharedUtil] enterApp];
+        if (![[[checkTokenInfoDic objectForKey:coimResParams.value] objectForKey:coimResParams.dspName] isEqual:@"Guest"]) {
+            [appUtil  enterApp];
         }
         else {
-            // invalid token, open login view
-            [[appUtil sharedUtil] logout];
+            [appUtil enterLogin];
         }
     }
 }
@@ -82,7 +63,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
