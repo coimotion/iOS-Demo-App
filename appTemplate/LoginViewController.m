@@ -71,7 +71,8 @@ NSMutableDictionary *dic;
                                     nil];
         
         //  create connection to register API
-        _connection = [ReqUtil registerWithParameter:parameters delegate:self progressTable:dic];
+        //_connection = [ReqUtil registerWithParameter:parameters delegate:self progressTable:dic];
+        _connection = [coimSDK registerWithParameter:parameters delegate:self];
         [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
         
         //  disable UI util receive results
@@ -85,7 +86,7 @@ NSMutableDictionary *dic;
                                     nil];
         
         //  create connection to login API
-        _connection = [ReqUtil loginTo:coimLoginURI withParameter:parameters delegate:self progressTable:dic];
+        _connection = [coimSDK loginTo:coimLoginURI withParameter:parameters delegate:self];
         [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
         
         //  disable UI util receive results

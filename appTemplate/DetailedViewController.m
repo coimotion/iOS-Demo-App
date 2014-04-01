@@ -14,15 +14,26 @@
 
 @implementation DetailedViewController
 
-@synthesize summaryText = _summaryText;
-@synthesize addrText = _addrText;
-@synthesize bodyText = _bodyText;
+@synthesize saleText = _saleText;
+@synthesize saleImg = _saleImg;
+@synthesize locationText = _locationText;
+@synthesize descText = _descText;
 @synthesize data = _data;
 @synthesize detailURL = _detailURL;
 @synthesize docURL = _docURL;
 @synthesize connection = _connection;
+@synthesize showTitle = _showTitle;
+@synthesize periodText = _periodText;
+@synthesize pickerView = _pickerView;
+@synthesize dismissPickerView = _dismissPickerView;
+@synthesize picker = _picker;
+@synthesize freeImg = _freeImg;
+@synthesize timeLabel = _timeLabel;
 
 NSMutableDictionary *dic;
+NSString *saleURL;
+NSArray *showInfos;
+int selected;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,34 +46,47 @@ NSMutableDictionary *dic;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    dic = [NSMutableDictionary new];
     
+    NSLog(@"data: %@", _data);
+    selected = 0;
     //  init addrText component
-    _addrText.layer.borderColor = [UIColor grayColor].CGColor;
-    _addrText.layer.borderWidth = 1.0f;
-    _addrText.layer.cornerRadius = 5.0f;
+    _locationText.layer.borderColor = [UIColor grayColor].CGColor;
+    _locationText.layer.borderWidth = 1.0f;
+    _locationText.layer.cornerRadius = 5.0f;
     
     //  init summaryText component
-    _summaryText.layer.borderColor = [UIColor grayColor].CGColor;
-    _summaryText.layer.borderWidth = 1.0f;
-    _summaryText.layer.cornerRadius = 5.0f;
+    _saleText.layer.borderColor = [UIColor grayColor].CGColor;
+    _saleText.layer.borderWidth = 1.0f;
+    _saleText.layer.cornerRadius = 5.0f;
     
     //  init bodyText component
-    _bodyText.layer.borderColor = [UIColor grayColor].CGColor;
-    _bodyText.layer.borderWidth = 1.0f;
-    _bodyText.layer.cornerRadius = 5.0f;
+    _descText.layer.borderColor = [UIColor grayColor].CGColor;
+    _descText.layer.borderWidth = 1.0f;
+    _descText.layer.cornerRadius = 5.0f;
     
+    //  init bodyText component
+    _periodText.layer.borderColor = [UIColor grayColor].CGColor;
+    _periodText.layer.borderWidth = 1.0f;
+    _periodText.layer.cornerRadius = 5.0f;
+    
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(showPicker)];
+    [_dismissPickerView addGestureRecognizer:tap];
+    [_pickerView setHidden:YES];
     //  set title of the view
-    self.title = [_data valueForKey:coimResParams.title];
     
+    self.title = @"活動資訊";
+    _showTitle.text = [_data valueForKey:coimResParams.title];
     //  prepare URL for detail info API
-    _detailURL = [[NSString alloc] initWithFormat:@"%@/%@", coimDetailURI, [_data objectForKey:coimResParams.geID]];
-    
+    _detailURL = [[NSString alloc] initWithFormat:@"twShow/show/info/%@", [_data objectForKey:@"spID"]];
+    NSLog(@"detail url: %@", _detailURL);
     //  prepare parameter of detail info API
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1", coimReqParams.detail, nil];
     
     //  create connection of the API
-    _connection = [ReqUtil sendTo:_detailURL withParameter:param delegate:self progressTable:dic];
+    _connection = [coimSDK sendTo:_detailURL withParameter:param delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
 }
 /*
@@ -71,51 +95,50 @@ NSMutableDictionary *dic;
 - (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 {
     //  parse JSON string to a dictionary
-    NSDictionary *detailInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    NSDictionary *detailInfoDic = [[NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil] objectForKey:@"value"];
+    NSLog(@"data: %@", detailInfoDic);
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
         //  process data from detail info connection
         if ([[detailInfoDic objectForKey:coimResParams.errCode] integerValue] == 0) {
             //  get data successed, check if detail info exists
             //  filled in addr
-            _addrText.text = [[detailInfoDic objectForKey:coimResParams.value] objectForKey:coimResParams.addr];
+            showInfos =[detailInfoDic objectForKey:@"showInfo"];
+            [_picker reloadAllComponents];
+            NSLog(@"# showinfos %d",[showInfos count] );
+            NSDictionary *showInfo = [showInfos objectAtIndex:0];
+            if([showInfos count] > 1) {
+                /*
+                 set logout button on right of navigationBar
+                 */
+                UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"場次" style:UIBarButtonItemStylePlain target:self action:@selector(showPicker)];
+                self.navigationItem.rightBarButtonItem = rightButton;
+
+            }
+            NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
+            _locationText.text = location;
             
-            //  get ngID for retrieving associated document
-            NSString *ngID =[[detailInfoDic objectForKey:coimResParams.value] objectForKey:coimResParams.ngID];
-            if (ngID != nil) {
-                //  this location has a document, create URL to get document with ngID
-                _docURL = [[NSString alloc] initWithFormat:@"%@/%@", coimDocURI,ngID];
-                
-                //  set param
-                NSDictionary *param = [NSDictionary new];
-                
-                //  create connection
-                _connection = [ReqUtil sendTo:_docURL withParameter:param delegate:self progressTable:dic];
-                [_connection setAccessibilityLabel:DOC_CONNECTION_LABEL];
+            _descText.text = ([[detailInfoDic objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[detailInfoDic  objectForKey:@"descTx"];
+            if([[showInfo objectForKey:@"isFree"] integerValue] == 0) {
+                NSString *infoSrc = ([[detailInfoDic objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[detailInfoDic objectForKey:@"infoSrc"];
+                NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
+                NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
+                _saleText.text = priceInfo;
+                saleURL = [detailInfoDic objectForKey:@"saleURL"];
+                if([saleURL isEqualToString:@""]) {
+                    [_saleImg setHidden:YES];
+                }
             }
             else {
-                //  no document, alert a message
-                [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
-                                            message:@"No accociated document!"
-                                           delegate:nil
-                                  cancelButtonTitle:@"Ok"
-                                  otherButtonTitles:nil] show];
+                [_freeImg setHidden:NO];
+                [_saleImg setHidden:YES];
+                [_saleText setHidden:YES];
             }
-        }
-        else {
-            //  failed to get data, alert a message
-            [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
-                                        message:[detailInfoDic objectForKey:coimResParams.message]
-                                       delegate:nil
-                              cancelButtonTitle:@"Ok"
-                              otherButtonTitles:nil] show];
-        }
-    }
-    //  process data received from doc connection
-    if([[_connection accessibilityLabel] isEqualToString:DOC_CONNECTION_LABEL]) {
-        if([[detailInfoDic objectForKey:coimResParams.errCode] integerValue] == 0){
-            NSDictionary *doc = [detailInfoDic objectForKey:coimResParams.value];
-            _summaryText.text = ([doc objectForKey:coimResParams.summary] != nil)? [doc objectForKey:coimResParams.summary]:@"N/A";
-            _bodyText.text = ([doc objectForKey:coimResParams.body] != nil)?[doc objectForKey:coimResParams.body]:@"N/A";
+            
+            [_timeLabel setText:[showInfo objectForKey:@"time"]];
+            
+            NSString *periodStr = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", [detailInfoDic objectForKey:@"startDate"], [detailInfoDic objectForKey:@"endDate"]];
+            _periodText.text = periodStr;
+            dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
         }
         else {
             //  failed to get data, alert a message
@@ -132,6 +155,75 @@ NSMutableDictionary *dic;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)openMapView:(id)sender {
+    MapListingViewController *mapView = [MapListingViewController new];
+    mapView.data = dic;
+    [self.navigationController pushViewController:mapView animated:YES];
+}
+
+- (IBAction)buyTicket:(id)sender {
+    NSLog(@"open saleURL");
+    [[UIApplication sharedApplication]openURL:[[NSURL alloc] initWithString:saleURL]];
+}
+
+- (IBAction)check:(id)sender {
+    [self showPicker];
+    selected = [_picker selectedRowInComponent:0];
+    dic = [showInfos objectAtIndex:selected];
+    [_timeLabel setText:[dic objectForKey:@"time"]];
+    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [dic objectForKey:@"placeName"], [dic objectForKey:@"addr"]];
+    _locationText.text = location;
+}
+
+- (IBAction)cancel:(id)sender {
+    [self showPicker];
+    [_picker selectRow:selected inComponent:0 animated:NO];
+    NSDictionary *d = [showInfos objectAtIndex:selected];
+    [_timeLabel setText:[d objectForKey:@"time"]];
+    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
+    _locationText.text = location;
+}
+
+-(void) showPicker
+{
+    NSLog(@"show picker, %d", [_pickerView isHidden]);
+    if([_pickerView isHidden]) {
+        [_pickerView setHidden: NO];
+    }
+    else {
+        [_pickerView setHidden:YES];
+    }
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    //selected = [_picker selectedRowInComponent:0];
+    NSDictionary *d = [showInfos objectAtIndex:[_picker selectedRowInComponent:0]];
+    [_timeLabel setText:[d objectForKey:@"time"]];
+    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
+    _locationText.text = location;
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    NSLog(@"# rows in component %d", [showInfos count]);
+    return [showInfos count];
+}
+
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSString *title = [[showInfos objectAtIndex:row] objectForKey:@"placeName"];
+    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    
+    return attString;
+    
 }
 
 @end

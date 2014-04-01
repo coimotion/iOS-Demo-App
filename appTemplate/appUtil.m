@@ -14,7 +14,7 @@ NSString *const coimLoginURI = @"drinks/account/login";
 NSString *const coimLogoutURI = @"drinks/account/logout";
 NSString *const coimRegisterURI = @"drinks/account/register";
 NSString *const coimActivateURI = @"drinks/account/activate";
-NSString *const coimSearchURI = @"drinks/shops/search";
+NSString *const coimSearchURI = @"twCtBus/busStop/search";
 NSString *const coimCheckTokenURI = @"drinks/account/profile";
 NSString *const coimDetailURI = @"drinks/shops/info";
 NSString *const coimDocURI = @"drinks/shops/view";
@@ -68,16 +68,17 @@ const struct responseKeysFromCoimotionAPI coimResParams = {
 */
 + (void)enterApp
 {
-    TableListingViewController *tableListVC = [TableListingViewController new];
+    //TableListingViewController *tableListVC = [TableListingViewController new];
+    ViewController *tableListVC = [ViewController new];
     UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-    UIImage *listImage = [UIImage imageNamed:@"list.png"];
-    [naviVC1 tabBarItem].image = listImage;
-    MapListingViewController *mapListVC = [MapListingViewController new];
-    UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
-    UIImage *mapImage = [UIImage imageNamed:@"map.png"];
-    [naviVC2 tabBarItem].image = mapImage;
-    UITabBarController *tbc = [UITabBarController new];
-    [tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
-    [self setRootWindowView:tbc];
+    //UIImage *listImage = [UIImage imageNamed:@"list.png"];
+    //[naviVC1 tabBarItem].image = listImage;
+    //MapListingViewController *mapListVC = [MapListingViewController new];
+    //UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
+    //UIImage *mapImage = [UIImage imageNamed:@"map.png"];
+    //[naviVC2 tabBarItem].image = mapImage;
+    //UITabBarController *tbc = [UITabBarController new];
+    //[tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
+    [self setRootWindowView:naviVC1];
 }
 @end

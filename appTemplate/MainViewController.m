@@ -31,15 +31,12 @@ NSMutableDictionary *dic;
 {
     [super viewDidLoad];
     //  init COIMSDK
-    [ReqUtil initSDK:^(NSError *err){
+    [coimSDK initSDK:^(NSError *err){
         if(err)
             NSLog(@"err: %@", [err localizedDescription]);
     }];
     //  parameter to API
-    NSDictionary *params = [NSDictionary new];
-    
-    //  create connection to validate token
-    _connection = [ReqUtil sendTo:coimCheckTokenURI withParameter:params delegate:self progressTable:dic];
+    _connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
 }
 /*

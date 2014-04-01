@@ -72,6 +72,8 @@ NSMutableDictionary *dic;
      */
     UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     self.tableView.backgroundColor = background;
+    
+    [self searchList];
 }
 
 - (void)didReceiveMemoryWarning
@@ -138,7 +140,7 @@ NSMutableDictionary *dic;
     cell.textLabel.text = [_dataArray[indexPath.row] objectForKey:coimResParams.title];
     cell.textLabel.textColor = [UIColor whiteColor];
     //  setting subtitle of the row
-    cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:coimResParams.addr];
+    cell.detailTextLabel.text = [_dataArray[indexPath.row] valueForKey:@"time"];
     UIColor *color = [UIColor colorWithRed:204/255.0f green:204/255.0f blue:204/255.0f alpha:1.0f];
     cell.detailTextLabel.textColor = color;
 }
@@ -182,10 +184,10 @@ NSMutableDictionary *dic;
     /*
         processing data recieved by different connections (telled by connection's accesibilityLabel
     */
+    //  parse JSON string data into a dictionary
+    NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSLog(@"data: %@", searchInfo);
     if ([[_connection accessibilityLabel] isEqualToString:SEARCH_CONNECTION_LABEL]) {
-        //  parse JSON string data into a dictionary
-        NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-        
         //  successed get data (errCode is 0)
         if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
             //  renew _dataArray for TableView displaying
@@ -227,15 +229,21 @@ NSMutableDictionary *dic;
 - (void)searchList
 {
     NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                _latitude, coimReqParams.lat,
-                                _longitude, coimReqParams.lng, nil];
-    _connection = [ReqUtil sendTo:coimSearchURI withParameter:parameters delegate:self progressTable:dic];
+                                //_latitude, coimReqParams.lat,
+                                //_longitude, coimReqParams.lng,
+                                @"1", @"cat",
+                                @"2014-03-28", @"fromTm",
+                                @"2014-04-10", @"toTm",
+                                nil];
+    //_connection = [coimSDK sendTo:coimSearchURI withParameter:parameters delegate:self];
+    _connection = [coimSDK sendTo:@"twShow/show/byCity/15" withParameter:parameters delegate:self];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
 }
 
 - (void)logout
 {
-    [ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+    //[ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+    [coimSDK logoutFrom:coimLogoutURI delegate:self];
     [appUtil enterLogin];
 }
 

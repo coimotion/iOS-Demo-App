@@ -18,5 +18,5 @@
 @property (nonatomic,retain)CLLocationManager* locationManager;
 @property (nonatomic, retain)NSMutableArray *annotaions;
 @property (nonatomic, retain)NSURLConnection *connection;
-@property int index;
+@property (nonatomic, retain)NSMutableDictionary *data;
 @end

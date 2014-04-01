@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "LoginViewController.h"
+#import "ViewController.h"
+
 #define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
 #define LOGIN_CONNECTION_LABEL @"loginConn"
 #define SEARCH_CONNECTION_LABEL @"searchConn"

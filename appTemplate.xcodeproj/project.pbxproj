@@ -34,16 +34,22 @@
 		0476DF7F18B35ABF00380537 /* TableListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0476DF7D18B35ABF00380537 /* TableListingViewController.xib */; };
 		0476DF8318B361B000380537 /* DetailedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0476DF8118B361AF00380537 /* DetailedViewController.m */; };
 		0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0476DF8218B361AF00380537 /* DetailedViewController.xib */; };
-		0491F4DA18B5A84B009C8D13 /* appUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 0491F4D918B5A84B009C8D13 /* appUtil.m */; };
-		04AD817D18C6A97600BF3179 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD817918C6A97600BF3179 /* background.png */; };
-		04AD817E18C6A97600BF3179 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD817A18C6A97600BF3179 /* button.png */; };
-		04AD817F18C6A97600BF3179 /* mail.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD817B18C6A97600BF3179 /* mail.png */; };
-		04AD818018C6A97600BF3179 /* password.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD817C18C6A97600BF3179 /* password.png */; };
-		04AD818218C6AFA100BF3179 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD818118C6AFA100BF3179 /* bg.png */; };
-		04AD818518C6CCAD00BF3179 /* list.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD818318C6CCAC00BF3179 /* list.png */; };
-		04AD818618C6CCAD00BF3179 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 04AD818418C6CCAC00BF3179 /* map.png */; };
+		048EDD3C18E4168F00073AA8 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3718E4168F00073AA8 /* background.png */; };
+		048EDD3D18E4168F00073AA8 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3818E4168F00073AA8 /* bg.png */; };
+		048EDD3E18E4168F00073AA8 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3918E4168F00073AA8 /* button.png */; };
+		048EDD3F18E4168F00073AA8 /* list.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3A18E4168F00073AA8 /* list.png */; };
+		048EDD4018E4168F00073AA8 /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3B18E4168F00073AA8 /* map.png */; };
+		048EDD4618E4171400073AA8 /* appUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EDD4518E4171400073AA8 /* appUtil.m */; };
+		048EDD4F18E423AA00073AA8 /* libcoimSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 048EDD4918E4219000073AA8 /* libcoimSDK.a */; };
 		04AD818918C6D4C100BF3179 /* mapAnnotaion.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AD818818C6D4C000BF3179 /* mapAnnotaion.m */; };
-		04BC485718E2A2E100718BAF /* ReqUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 04BC485618E2A2E100718BAF /* ReqUtil.m */; };
+		04C0624C18E5682C009305E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0624A18E5682C009305E6 /* ViewController.m */; };
+		04C0624D18E5682C009305E6 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0624B18E5682C009305E6 /* ViewController.xib */; };
+		04C0625B18E57B31009305E6 /* myCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0625A18E57B31009305E6 /* myCell.m */; };
+		04C0625D18E57B4D009305E6 /* myCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0625C18E57B4D009305E6 /* myCell.xib */; };
+		04C0625F18E57E71009305E6 /* def_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C0625E18E57E71009305E6 /* def_image.png */; };
+		04C8007B18EA55D60082BD98 /* free-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C8007A18EA55D60082BD98 /* free-icon.png */; };
+		04D3591D18E93F460055065F /* Create-Ticket-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D3591C18E93F460055065F /* Create-Ticket-icon.png */; };
+		04D3591F18E93F4F0055065F /* mapIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D3591E18E93F4F0055065F /* mapIcon.png */; };
 		04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662918B6F804003C769F /* MapListingViewController.m */; };
 		04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662A18B6F804003C769F /* MapListingViewController.xib */; };
 /* End PBXBuildFile section */
@@ -92,19 +98,28 @@
 		0476DF8018B361AF00380537 /* DetailedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailedViewController.h; sourceTree = "<group>"; };
 		0476DF8118B361AF00380537 /* DetailedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailedViewController.m; sourceTree = "<group>"; };
 		0476DF8218B361AF00380537 /* DetailedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailedViewController.xib; sourceTree = "<group>"; };
-		0491F4D818B5A84B009C8D13 /* appUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appUtil.h; sourceTree = "<group>"; };
-		0491F4D918B5A84B009C8D13 /* appUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = appUtil.m; sourceTree = "<group>"; };
-		04AD817918C6A97600BF3179 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
-		04AD817A18C6A97600BF3179 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
-		04AD817B18C6A97600BF3179 /* mail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mail.png; sourceTree = "<group>"; };
-		04AD817C18C6A97600BF3179 /* password.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = password.png; sourceTree = "<group>"; };
-		04AD818118C6AFA100BF3179 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
-		04AD818318C6CCAC00BF3179 /* list.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list.png; sourceTree = "<group>"; };
-		04AD818418C6CCAC00BF3179 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map.png; sourceTree = "<group>"; };
+		048EDD3718E4168F00073AA8 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = resource/background.png; sourceTree = "<group>"; };
+		048EDD3818E4168F00073AA8 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = resource/bg.png; sourceTree = "<group>"; };
+		048EDD3918E4168F00073AA8 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = button.png; path = resource/button.png; sourceTree = "<group>"; };
+		048EDD3A18E4168F00073AA8 /* list.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = list.png; path = resource/list.png; sourceTree = "<group>"; };
+		048EDD3B18E4168F00073AA8 /* map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = map.png; path = resource/map.png; sourceTree = "<group>"; };
+		048EDD4118E416CE00073AA8 /* coimSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coimSDK.h; sourceTree = "<group>"; };
+		048EDD4418E4171400073AA8 /* appUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appUtil.h; sourceTree = "<group>"; };
+		048EDD4518E4171400073AA8 /* appUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = appUtil.m; sourceTree = "<group>"; };
+		048EDD4918E4219000073AA8 /* libcoimSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcoimSDK.a; sourceTree = "<group>"; };
+		048EDD4C18E4225200073AA8 /* libcoimSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcoimSDK.a; path = ../CoimotionSDK/CoimotionSDK/libcoimSDK.a; sourceTree = "<group>"; };
 		04AD818718C6D4C000BF3179 /* mapAnnotaion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapAnnotaion.h; sourceTree = "<group>"; };
 		04AD818818C6D4C000BF3179 /* mapAnnotaion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapAnnotaion.m; sourceTree = "<group>"; };
-		04BC485518E2A2E100718BAF /* ReqUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReqUtil.h; path = COIMSDK/ReqUtil.h; sourceTree = "<group>"; };
-		04BC485618E2A2E100718BAF /* ReqUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReqUtil.m; path = COIMSDK/ReqUtil.m; sourceTree = "<group>"; };
+		04C0624918E5682C009305E6 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		04C0624A18E5682C009305E6 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		04C0624B18E5682C009305E6 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		04C0625918E57B31009305E6 /* myCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myCell.h; sourceTree = "<group>"; };
+		04C0625A18E57B31009305E6 /* myCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myCell.m; sourceTree = "<group>"; };
+		04C0625C18E57B4D009305E6 /* myCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = myCell.xib; sourceTree = "<group>"; };
+		04C0625E18E57E71009305E6 /* def_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = def_image.png; sourceTree = "<group>"; };
+		04C8007A18EA55D60082BD98 /* free-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "free-icon.png"; path = "../../../free-icon.png"; sourceTree = "<group>"; };
+		04D3591C18E93F460055065F /* Create-Ticket-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Create-Ticket-icon.png"; path = "../../../Create-Ticket-icon.png"; sourceTree = "<group>"; };
+		04D3591E18E93F4F0055065F /* mapIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = mapIcon.png; path = ../../../mapIcon.png; sourceTree = "<group>"; };
 		04DB662818B6F804003C769F /* MapListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListingViewController.h; sourceTree = "<group>"; };
 		04DB662918B6F804003C769F /* MapListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListingViewController.m; sourceTree = "<group>"; };
 		04DB662A18B6F804003C769F /* MapListingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapListingViewController.xib; sourceTree = "<group>"; };
@@ -117,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				048EDD4F18E423AA00073AA8 /* libcoimSDK.a in Frameworks */,
 				043A2D7A18B443BC00700D3F /* MapKit.framework in Frameworks */,
 				043A2D7818B439AA00700D3F /* CoreLocation.framework in Frameworks */,
 				0476DF3518B354F600380537 /* UIKit.framework in Frameworks */,
@@ -162,6 +178,7 @@
 		0476DF3318B354F600380537 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				048EDD4C18E4225200073AA8 /* libcoimSDK.a */,
 				043A2D7918B443BC00700D3F /* MapKit.framework */,
 				043A2D7718B439AA00700D3F /* CoreLocation.framework */,
 				0476DF3418B354F600380537 /* UIKit.framework */,
@@ -176,8 +193,10 @@
 		0476DF3C18B354F600380537 /* appTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				04BC485518E2A2E100718BAF /* ReqUtil.h */,
-				04BC485618E2A2E100718BAF /* ReqUtil.m */,
+				048EDD4918E4219000073AA8 /* libcoimSDK.a */,
+				048EDD4418E4171400073AA8 /* appUtil.h */,
+				048EDD4518E4171400073AA8 /* appUtil.m */,
+				048EDD4118E416CE00073AA8 /* coimSDK.h */,
 				04AD818718C6D4C000BF3179 /* mapAnnotaion.h */,
 				04AD818818C6D4C000BF3179 /* mapAnnotaion.m */,
 				0476DF4518B354F600380537 /* AppDelegate.h */,
@@ -196,11 +215,15 @@
 				0476DF8018B361AF00380537 /* DetailedViewController.h */,
 				0476DF8118B361AF00380537 /* DetailedViewController.m */,
 				0476DF8218B361AF00380537 /* DetailedViewController.xib */,
-				0491F4D818B5A84B009C8D13 /* appUtil.h */,
-				0491F4D918B5A84B009C8D13 /* appUtil.m */,
 				04DB662818B6F804003C769F /* MapListingViewController.h */,
 				04DB662918B6F804003C769F /* MapListingViewController.m */,
 				04DB662A18B6F804003C769F /* MapListingViewController.xib */,
+				04C0624918E5682C009305E6 /* ViewController.h */,
+				04C0624A18E5682C009305E6 /* ViewController.m */,
+				04C0624B18E5682C009305E6 /* ViewController.xib */,
+				04C0625918E57B31009305E6 /* myCell.h */,
+				04C0625A18E57B31009305E6 /* myCell.m */,
+				04C0625C18E57B4D009305E6 /* myCell.xib */,
 			);
 			path = appTemplate;
 			sourceTree = "<group>";
@@ -208,13 +231,15 @@
 		0476DF3D18B354F600380537 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				04AD818318C6CCAC00BF3179 /* list.png */,
-				04AD818418C6CCAC00BF3179 /* map.png */,
-				04AD818118C6AFA100BF3179 /* bg.png */,
-				04AD817918C6A97600BF3179 /* background.png */,
-				04AD817A18C6A97600BF3179 /* button.png */,
-				04AD817B18C6A97600BF3179 /* mail.png */,
-				04AD817C18C6A97600BF3179 /* password.png */,
+				04C8007A18EA55D60082BD98 /* free-icon.png */,
+				04D3591E18E93F4F0055065F /* mapIcon.png */,
+				04D3591C18E93F460055065F /* Create-Ticket-icon.png */,
+				04C0625E18E57E71009305E6 /* def_image.png */,
+				048EDD3718E4168F00073AA8 /* background.png */,
+				048EDD3818E4168F00073AA8 /* bg.png */,
+				048EDD3918E4168F00073AA8 /* button.png */,
+				048EDD3A18E4168F00073AA8 /* list.png */,
+				048EDD3B18E4168F00073AA8 /* map.png */,
 				0476DF3E18B354F600380537 /* appTemplate-Info.plist */,
 				0476DF3F18B354F600380537 /* InfoPlist.strings */,
 				0476DF4218B354F600380537 /* main.m */,
@@ -318,21 +343,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				0476DF4118B354F600380537 /* InfoPlist.strings in Resources */,
+				04C0625D18E57B4D009305E6 /* myCell.xib in Resources */,
+				04D3591D18E93F460055065F /* Create-Ticket-icon.png in Resources */,
 				0476DF4918B354F600380537 /* Default.png in Resources */,
+				048EDD3E18E4168F00073AA8 /* button.png in Resources */,
+				04C0625F18E57E71009305E6 /* def_image.png in Resources */,
+				048EDD3D18E4168F00073AA8 /* bg.png in Resources */,
+				048EDD3C18E4168F00073AA8 /* background.png in Resources */,
+				04C8007B18EA55D60082BD98 /* free-icon.png in Resources */,
 				0476DF4B18B354F600380537 /* Default@2x.png in Resources */,
 				0476DF4D18B354F600380537 /* Default-568h@2x.png in Resources */,
 				0476DF7518B3556300380537 /* MainViewController.xib in Resources */,
 				0476DF7A18B3591300380537 /* LoginViewController.xib in Resources */,
 				0476DF7F18B35ABF00380537 /* TableListingViewController.xib in Resources */,
+				04C0624D18E5682C009305E6 /* ViewController.xib in Resources */,
 				0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */,
+				048EDD3F18E4168F00073AA8 /* list.png in Resources */,
+				04D3591F18E93F4F0055065F /* mapIcon.png in Resources */,
 				04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */,
-				04AD817D18C6A97600BF3179 /* background.png in Resources */,
-				04AD817E18C6A97600BF3179 /* button.png in Resources */,
-				04AD817F18C6A97600BF3179 /* mail.png in Resources */,
-				04AD818018C6A97600BF3179 /* password.png in Resources */,
-				04AD818218C6AFA100BF3179 /* bg.png in Resources */,
-				04AD818518C6CCAD00BF3179 /* list.png in Resources */,
-				04AD818618C6CCAD00BF3179 /* map.png in Resources */,
+				048EDD4018E4168F00073AA8 /* map.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,14 +397,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				0476DF4318B354F600380537 /* main.m in Sources */,
+				04C0625B18E57B31009305E6 /* myCell.m in Sources */,
+				048EDD4618E4171400073AA8 /* appUtil.m in Sources */,
 				0476DF4718B354F600380537 /* AppDelegate.m in Sources */,
-				04BC485718E2A2E100718BAF /* ReqUtil.m in Sources */,
 				0476DF5018B354F600380537 /* appTemplate.xcdatamodeld in Sources */,
 				0476DF7418B3556300380537 /* MainViewController.m in Sources */,
+				04C0624C18E5682C009305E6 /* ViewController.m in Sources */,
 				0476DF7918B3591300380537 /* LoginViewController.m in Sources */,
 				0476DF7E18B35ABF00380537 /* TableListingViewController.m in Sources */,
 				0476DF8318B361B000380537 /* DetailedViewController.m in Sources */,
-				0491F4DA18B5A84B009C8D13 /* appUtil.m in Sources */,
 				04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */,
 				04AD818918C6D4C100BF3179 /* mapAnnotaion.m in Sources */,
 			);
@@ -481,6 +511,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "appTemplate/appTemplate-Prefix.pch";
 				INFOPLIST_FILE = "appTemplate/appTemplate-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/mac/Desktop/Hungyu/iOSAppTemplate/appTemplate,
+					/Users/mac/Desktop/Hungyu/CoimotionSDK/CoimotionSDK,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -492,6 +527,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "appTemplate/appTemplate-Prefix.pch";
 				INFOPLIST_FILE = "appTemplate/appTemplate-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/mac/Desktop/Hungyu/iOSAppTemplate/appTemplate,
+					/Users/mac/Desktop/Hungyu/CoimotionSDK/CoimotionSDK,
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

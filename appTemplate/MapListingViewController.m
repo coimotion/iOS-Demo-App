@@ -18,9 +18,12 @@
 @synthesize locationManager = _locationManager;
 @synthesize mapView = _mapView;
 @synthesize connection = _connection;
-@synthesize index;
+@synthesize data = _data;
 
-NSMutableDictionary *dic;
+int selected;
+NSDictionary *targetDic;
+
+MKAnnotationView *tmpAnnView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,56 +37,39 @@ NSMutableDictionary *dic;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    dic = [NSMutableDictionary new];
     
     //  init dataArray to store searched results
     _dataArray = [NSMutableArray new];
     
-    //  init location manager's setting
-    _locationManager = [CLLocationManager new];
-    _locationManager.delegate = self;
-    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    _locationManager.distanceFilter = kCLDistanceFilterNone;
-    
-    //  start updating location
-    [_locationManager startUpdatingLocation];
-    
-    //  create a button to logout
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:LEFT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(currentLocation)];
+    //self.navigationItem.leftBarButtonItem = leftButton;
+    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     
     //  set the button as rightBarButton
-    self.navigationItem.rightBarButtonItem = rightButton;
+    self.navigationItem.rightBarButtonItem = leftButton;
     
-    //  create a button to go back current location, and set as leftBarButton
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:LEFT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(currentLocation)];
-    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    
+    MKCoordinateRegion region;
+    region.center.latitude = [[_data objectForKey:@"latitude"] floatValue];
+    region.center.longitude = [[_data objectForKey:@"longitude"] floatValue];
+    region.span.latitudeDelta = 0.007;
+    region.span.longitudeDelta = 0.007;
+    [_mapView setRegion:region];
+    // set target pin
+    targetDic = [[NSDictionary alloc] initWithObjectsAndKeys:
+    [_data objectForKey:@"latitude"] ,@"lat",
+    [_data objectForKey:@"longitude"] ,@"lng",
+    [_data objectForKey:@"placeName"] ,@"title", nil];
+    // search bus stops
+    [self searchAtLat:[[_data objectForKey:@"latitude"] doubleValue] Lng:[[_data objectForKey:@"longitude"] doubleValue]];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
 }
-/*
-    locationManager event
-        didUpdateLocations: get location while calling locationManager.startUpdatingLocation
- */
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    [_locationManager stopUpdatingLocation];
-    
-    //  set mapview's center to current location
-    MKCoordinateRegion region;
-    region.center.latitude = ((CLLocation *)locations[0]).coordinate.latitude;
-    region.center.longitude = ((CLLocation *)locations[0]).coordinate.longitude;
-    region.span.latitudeDelta = 0.003;
-    region.span.longitudeDelta = 0.003;
-    [_mapView setRegion:region];
-    
-    //  search information of current location
-    double lat = [[[NSString alloc] initWithFormat:@"%f", region.center.latitude] doubleValue];
-    double lng = [[[NSString alloc] initWithFormat:@"%f", region.center.longitude] doubleValue];
-    [self searchAtLat:lat Lng:lng];
-}
+
 /*
     mapView events
         didSelectAnnotationView: click on an annotation's deatil
@@ -92,29 +78,32 @@ NSMutableDictionary *dic;
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     //  get annotationview of clicked annotaion
-    MKAnnotationView *annotationView = [mapView viewForAnnotation:view.annotation];
     
-    //  create a button to show the detailed information of the annotation
-    UIButton *calloutButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    [calloutButton addTarget:self action:@selector(checkButtonTapped:event:) forControlEvents:UIControlEventTouchUpInside];
-    
-    //  set the button to rightCalloutAccessoryView of the annotation view
-    annotationView.rightCalloutAccessoryView = calloutButton;
-    
-    //  get index of annotation for retriving data from dataArray
-    index = ((mapAnnotaion *)view.annotation).ind;
+    if([view.annotation subtitle] == nil) {
+        tmpAnnView = [mapView viewForAnnotation:view.annotation];
+        selected = ((mapAnnotaion *)view.annotation).ind;
+        [self searchRouteForStop:[[_dataArray objectAtIndex:selected] objectForKey:@"tsID"]];
+        NSLog(@"tsID: %@", [[_dataArray objectAtIndex:selected] objectForKey:@"tsID"]);
+    }
 }
 
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+
 {
-    //  get new lat/lng of current mapview's center
-    double lat = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.latitude] doubleValue];
-    double lng = [[[NSString alloc] initWithFormat:@"%f", mapView.region.center.longitude] doubleValue];
     
-    //  search the location
-    if(lat !=0.0f && lng != 0.0f)
-        [self searchAtLat:lat Lng:lng];
+    MKPinAnnotationView* pinView = [[MKPinAnnotationView alloc]
+                                 initWithAnnotation:annotation reuseIdentifier:nil];
+    pinView.animatesDrop=YES;
+    pinView.canShowCallout=YES;
+    if ([[annotation title] isEqualToString:[targetDic objectForKey:@"title"]]) {
+        NSLog(@"view for annotation green");
+        pinView.pinColor = MKPinAnnotationColorGreen;
+        return pinView;
+    }
+    pinView.pinColor = MKPinAnnotationColorRed;
+    return pinView;
 }
+
 /*
     connection recieves data
  */
@@ -131,19 +120,34 @@ NSMutableDictionary *dic;
             [_dataArray removeAllObjects];
             
             //  get searched list
-            NSArray *list = [[searchInfo objectForKey:coimResParams.value] objectForKey:coimResParams.list];
+            NSMutableArray *list = [[searchInfo objectForKey:coimResParams.value] objectForKey:coimResParams.list];
             
             //  generating new annotations and dataArray for displaying
+            NSLog(@"target Dic: %@", targetDic);
+            [_dataArray addObject:targetDic];
+            {
+                CLLocationCoordinate2D pinCenter;
+                pinCenter.latitude = [[targetDic objectForKey:@"lat"] doubleValue];
+                pinCenter.longitude = [[targetDic objectForKey:@"lng"] doubleValue];
+                mapAnnotaion *annotation = [[mapAnnotaion alloc] initWithCoordinate: pinCenter];
+                annotation.title = [targetDic objectForKey:coimResParams.title];
+                annotation.ind = 0;
+                [_mapView addAnnotation:annotation];
+            }
+            NSLog(@"data length : %d", [_dataArray count]);
             for (int i = 0; i < [list count]; i++) {
+                NSLog(@"list i: %@", list[i]);
                 CLLocationCoordinate2D pinCenter;
                 pinCenter.latitude = [[list[i] objectForKey:coimResParams.latitude] doubleValue];
                 pinCenter.longitude = [[list[i] objectForKey:coimResParams.longitude] doubleValue];
                 mapAnnotaion *annotation = [[mapAnnotaion alloc] initWithCoordinate: pinCenter];
-                annotation.title = [list[i] objectForKey:coimResParams.title];
-                annotation.ind = i;
+                annotation.title = [NSString stringWithFormat:@"%@(%@)",[list[i] objectForKey:@"stName"], [list[i] objectForKey:@"stCode"]];
+                annotation.ind = i + 1;
                 [_mapView addAnnotation:annotation];
                 [_dataArray addObject:list[i]];
             }
+            
+            
         }
         else {
             //  search failed, alert message
@@ -155,11 +159,42 @@ NSMutableDictionary *dic;
             
             if ([[searchInfo objectForKey:coimResParams.errCode] intValue] == -2) {
                 //  errCode is no permission, go login view
-                [ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+                //[ReqUtil logoutFrom:coimLogoutURI delegate:self progressTable:dic];
+                [coimSDK logoutFrom:coimLogoutURI delegate:self];
                 [appUtil enterLogin];
             }
         }
     }
+
+    if([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
+        NSLog(@"%@", searchInfo);
+        NSArray *routes = [[searchInfo objectForKey:@"value"] objectForKey:@"list"];
+        NSMutableString *routeStr = [NSMutableString new];
+        for(int i = 0; i<[routes count]; i++) {
+            if(i > 0) {
+                [routeStr appendString:@", "];
+            }
+            [routeStr appendString:[[routes objectAtIndex:i] objectForKey:@"rtName"]];
+        }
+        NSLog(@"routes: %@", routeStr);
+        NSLog(@"routes: %d", selected);
+        [(mapAnnotaion *)tmpAnnView.annotation setSubtitle:routeStr];
+//        NSLog(@"annotation: %@", [(mapAnnotaion *)tmpAnnView.annotation subtitle]);
+        
+    }
+}
+
+- (void)searchRouteForStop:(NSString *)tsID
+{
+    //  create connection
+    if(_connection != nil){
+        //  if connection exists, cancel it and restart connection
+        [_connection cancel];
+        _connection = nil;
+    }
+    NSString *relativeURL = [NSString stringWithFormat:@"twCtBus/busStop/routes/%@", tsID];
+    _connection = [coimSDK sendTo:relativeURL withParameter:nil delegate:self];
+    [_connection setAccessibilityLabel:@"routeSearch"];
 }
 /*
     sub functions
@@ -170,13 +205,19 @@ NSMutableDictionary *dic;
  */
 - (void)logout
 {
-    [ReqUtil logoutFrom:@"drinks/account/logout" delegate:self progressTable:dic];
+    //[ReqUtil logoutFrom:@"drinks/account/logout" delegate:self progressTable:dic];
+    [coimSDK logoutFrom:coimLogoutURI delegate:self];
     [appUtil enterLogin];
 }
 
 - (void)currentLocation
 {
-    [_locationManager startUpdatingLocation];
+    MKCoordinateRegion region;
+    region.center.latitude = [[_data objectForKey:@"latitude"] floatValue];
+    region.center.longitude = [[_data objectForKey:@"longitude"] floatValue];
+    region.span.latitudeDelta = 0.003;
+    region.span.longitudeDelta = 0.003;
+    [_mapView setRegion:region];
 }
 
 - (void)searchAtLat:(double)lat Lng:(double)lng
@@ -190,18 +231,19 @@ NSMutableDictionary *dic;
         [_connection cancel];
         _connection = nil;
     }
-    _connection = [ReqUtil sendTo:coimSearchURI withParameter:parameters delegate:self progressTable:dic];
+    _connection = [coimSDK sendTo:coimSearchURI withParameter:parameters delegate:self];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
     
 }
 
 - (void)checkButtonTapped:(id)sender event:(id)event
 {
-    NSDictionary *data = _dataArray[index];
-    DetailedViewController *detailedVC = [[DetailedViewController alloc] initWithNibName:@"DetailedViewController" bundle:nil];
-    detailedVC.data = data;
-    if (self.navigationController)
-        [self.navigationController pushViewController:detailedVC animated:YES];
+    //NSDictionary *data = _dataArray[index];
+    //DetailedViewController *detailedVC = [[DetailedViewController alloc] initWithNibName:@"DetailedViewController" bundle:nil];
+    //detailedVC.data = data;
+    //if (self.navigationController)
+        //[self.navigationController pushViewController:detailedVC animated:YES];
+    NSLog(@"click button on pin");
 }
 
 @end
