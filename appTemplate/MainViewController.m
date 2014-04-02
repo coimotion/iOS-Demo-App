@@ -36,8 +36,9 @@ NSMutableDictionary *dic;
             NSLog(@"err: %@", [err localizedDescription]);
     }];
     //  parameter to API
-    _connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
-    [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+    //_connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
+    //[_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+    [appUtil  enterApp];
 }
 /*
     get result of token validation

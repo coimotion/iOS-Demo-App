@@ -29,11 +29,11 @@
 @synthesize picker = _picker;
 @synthesize freeImg = _freeImg;
 @synthesize timeLabel = _timeLabel;
+@synthesize dic = _dic;
+@synthesize saleURL = _saleURL;
+@synthesize showInfos = _showInfos;
 
-NSMutableDictionary *dic;
-NSString *saleURL;
-NSArray *showInfos;
-int selected;
+@synthesize selected = _selected;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,7 +48,8 @@ int selected;
     [super viewDidLoad];
     
     NSLog(@"data: %@", _data);
-    selected = 0;
+    _selected = 0;
+    /*
     //  init addrText component
     _locationText.layer.borderColor = [UIColor grayColor].CGColor;
     _locationText.layer.borderWidth = 1.0f;
@@ -68,16 +69,28 @@ int selected;
     _periodText.layer.borderColor = [UIColor grayColor].CGColor;
     _periodText.layer.borderWidth = 1.0f;
     _periodText.layer.cornerRadius = 5.0f;
-    
-    
+    */
+    [_locationText setBackgroundColor:[UIColor clearColor]];
+    [_saleText setBackgroundColor:[UIColor clearColor]];
+    [_descText setBackgroundColor:[UIColor clearColor]];
+    [_periodText setBackgroundColor:[UIColor clearColor]];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(showPicker)];
     [_dismissPickerView addGestureRecognizer:tap];
     [_pickerView setHidden:YES];
     //  set title of the view
-    
-    self.title = @"活動資訊";
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, -15.0f, 160.0f, 70.0f)];
+    [imgView setImage:[UIImage imageNamed:@"other_bg.png"]];
+
+    UIView *tmpView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 44.0f)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 44.0f)];
+    [titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [titleLabel setTextColor:[UIColor whiteColor]];
+    [titleLabel setText:@"活動資訊"];
+    [tmpView addSubview:imgView];
+    [tmpView addSubview:titleLabel];
+    [self.navigationItem setTitleView:tmpView];
     _showTitle.text = [_data valueForKey:coimResParams.title];
     //  prepare URL for detail info API
     _detailURL = [[NSString alloc] initWithFormat:@"twShow/show/info/%@", [_data objectForKey:@"spID"]];
@@ -89,6 +102,12 @@ int selected;
     _connection = [coimSDK sendTo:_detailURL withParameter:param delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
 }
+
+- (void)coimConnection:(NSURLConnection *)conn didFailWithError: (NSError *) error
+{
+    NSLog(@"error: %@", [error localizedDescription]);
+}
+
 /*
     receive data from connection
  */
@@ -96,17 +115,17 @@ int selected;
 {
     //  parse JSON string to a dictionary
     NSDictionary *detailInfoDic = [[NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil] objectForKey:@"value"];
-    NSLog(@"data: %@", detailInfoDic);
+    NSLog(@"data: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
         //  process data from detail info connection
         if ([[detailInfoDic objectForKey:coimResParams.errCode] integerValue] == 0) {
             //  get data successed, check if detail info exists
             //  filled in addr
-            showInfos =[detailInfoDic objectForKey:@"showInfo"];
+            _showInfos =[detailInfoDic objectForKey:@"showInfo"];
             [_picker reloadAllComponents];
-            NSLog(@"# showinfos %d",[showInfos count] );
-            NSDictionary *showInfo = [showInfos objectAtIndex:0];
-            if([showInfos count] > 1) {
+            NSLog(@"# showinfos %d",[_showInfos count] );
+            NSDictionary *showInfo = [_showInfos objectAtIndex:0];
+            if([_showInfos count] > 1) {
                 /*
                  set logout button on right of navigationBar
                  */
@@ -123,8 +142,8 @@ int selected;
                 NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
                 NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
                 _saleText.text = priceInfo;
-                saleURL = [detailInfoDic objectForKey:@"saleURL"];
-                if([saleURL isEqualToString:@""]) {
+                _saleURL = [detailInfoDic objectForKey:@"saleURL"];
+                if([_saleURL isEqualToString:@""]) {
                     [_saleImg setHidden:YES];
                 }
             }
@@ -133,12 +152,16 @@ int selected;
                 [_saleImg setHidden:YES];
                 [_saleText setHidden:YES];
             }
-            
-            [_timeLabel setText:[showInfo objectForKey:@"time"]];
-            
-            NSString *periodStr = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", [detailInfoDic objectForKey:@"startDate"], [detailInfoDic objectForKey:@"endDate"]];
+            NSString *timeLabel = [showInfo objectForKey:@"time"];
+            timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+            NSLog(@"time: %@", timeLabel);
+            [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+            NSString *t1 = [detailInfoDic objectForKey:@"startDate"], *t2 = [detailInfoDic objectForKey:@"endDate"];
+            t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+            t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+            NSString *periodStr = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", t1 , t2];
             _periodText.text = periodStr;
-            dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
+            _dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
         }
         else {
             //  failed to get data, alert a message
@@ -159,29 +182,33 @@ int selected;
 
 - (IBAction)openMapView:(id)sender {
     MapListingViewController *mapView = [MapListingViewController new];
-    mapView.data = dic;
+    mapView.data = _dic;
     [self.navigationController pushViewController:mapView animated:YES];
 }
 
 - (IBAction)buyTicket:(id)sender {
     NSLog(@"open saleURL");
-    [[UIApplication sharedApplication]openURL:[[NSURL alloc] initWithString:saleURL]];
+    [[UIApplication sharedApplication]openURL:[[NSURL alloc] initWithString:_saleURL]];
 }
 
 - (IBAction)check:(id)sender {
     [self showPicker];
-    selected = [_picker selectedRowInComponent:0];
-    dic = [showInfos objectAtIndex:selected];
-    [_timeLabel setText:[dic objectForKey:@"time"]];
-    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [dic objectForKey:@"placeName"], [dic objectForKey:@"addr"]];
+    _selected = [_picker selectedRowInComponent:0];
+    _dic = [_showInfos objectAtIndex:_selected];
+    NSString *timeLabel = [_dic objectForKey:@"time"];
+    timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [_dic objectForKey:@"placeName"], [_dic objectForKey:@"addr"]];
     _locationText.text = location;
 }
 
 - (IBAction)cancel:(id)sender {
     [self showPicker];
-    [_picker selectRow:selected inComponent:0 animated:NO];
-    NSDictionary *d = [showInfos objectAtIndex:selected];
-    [_timeLabel setText:[d objectForKey:@"time"]];
+    [_picker selectRow:_selected inComponent:0 animated:NO];
+    NSDictionary *d = [_showInfos objectAtIndex:_selected];
+    NSString *timeLabel = [d objectForKey:@"time"];
+    timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
     _locationText.text = location;
 }
@@ -191,17 +218,21 @@ int selected;
     NSLog(@"show picker, %d", [_pickerView isHidden]);
     if([_pickerView isHidden]) {
         [_pickerView setHidden: NO];
+        [self.navigationController setNavigationBarHidden:YES];    // it hides
     }
     else {
         [_pickerView setHidden:YES];
+        [self.navigationController setNavigationBarHidden:NO];    // it shows
     }
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     //selected = [_picker selectedRowInComponent:0];
-    NSDictionary *d = [showInfos objectAtIndex:[_picker selectedRowInComponent:0]];
-    [_timeLabel setText:[d objectForKey:@"time"]];
+    NSDictionary *d = [_showInfos objectAtIndex:[_picker selectedRowInComponent:0]];
+    NSString *timeLabel = [d objectForKey:@"time"];
+    timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
     _locationText.text = location;
 }
@@ -213,14 +244,16 @@ int selected;
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    NSLog(@"# rows in component %d", [showInfos count]);
-    return [showInfos count];
+    NSLog(@"# rows in component %d", [_showInfos count]);
+    return [_showInfos count];
 }
 
 - (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    NSString *title = [[showInfos objectAtIndex:row] objectForKey:@"placeName"];
-    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
+    NSString *title = [[_showInfos objectAtIndex:row] objectForKey:@"time"];
+    title = [title stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+    //[title substringToIndex:([title length]-3)];
+    NSAttributedString *attString = [[NSAttributedString alloc] initWithString:[title substringToIndex:([title length]-3)] attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     
     return attString;
     

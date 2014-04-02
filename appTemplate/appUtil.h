@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LoginViewController.h"
-#import "ViewController.h"
+#import "GridViewController.h"
 
 #define CHECK_TOKEN_CONNECTION_LABEL @"checkTokenConn"
 #define LOGIN_CONNECTION_LABEL @"loginConn"

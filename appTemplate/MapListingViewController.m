@@ -22,14 +22,15 @@
 
 int selected;
 NSDictionary *targetDic;
-
+NSMutableArray *stopRouteList;
+UIBarButtonItem *rightButton;
 MKAnnotationView *tmpAnnView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = MAP_TITLE;
+        self.title = @"活動地點";
     }
     return self;
 }
@@ -40,14 +41,12 @@ MKAnnotationView *tmpAnnView;
     
     //  init dataArray to store searched results
     _dataArray = [NSMutableArray new];
-    
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:LEFT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(currentLocation)];
+    stopRouteList = [NSMutableArray new];
+    rightButton = [[UIBarButtonItem alloc] initWithTitle:@"站牌清單" style:UIBarButtonItemStylePlain target:self action:@selector(listStopRoutes)];
     //self.navigationItem.leftBarButtonItem = leftButton;
     //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     
     //  set the button as rightBarButton
-    self.navigationItem.rightBarButtonItem = leftButton;
-    
     
     
     MKCoordinateRegion region;
@@ -68,6 +67,18 @@ MKAnnotationView *tmpAnnView;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    self.navigationController.navigationBar.translucent = YES;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    self.navigationController.navigationBar.translucent = NO;
 }
 
 /*
@@ -134,20 +145,28 @@ MKAnnotationView *tmpAnnView;
                 annotation.ind = 0;
                 [_mapView addAnnotation:annotation];
             }
-            NSLog(@"data length : %d", [_dataArray count]);
+            NSLog(@"data length : %d", [list count]);
             for (int i = 0; i < [list count]; i++) {
-                NSLog(@"list i: %@", list[i]);
+                NSLog(@"list %d: %@", i, list[i]);
+                NSString *stopName = [NSString stringWithFormat:@"%@(%@)",[list[i] objectForKey:@"stName"], [list[i] objectForKey:@"stCode"]];
+                //[stopRouteList setObject:[NSMutableArray new] forKey:[list[i] objectForKey:stopName]];
+                //NSMutableDictionary *d = [NSMutableDictionary new];
+                
+                //[d setObject:[NSMutableArray new] forKey:stopName];
+                [stopRouteList addObject:[list[i] objectForKey:@"tsID"]];
+                
                 CLLocationCoordinate2D pinCenter;
                 pinCenter.latitude = [[list[i] objectForKey:coimResParams.latitude] doubleValue];
                 pinCenter.longitude = [[list[i] objectForKey:coimResParams.longitude] doubleValue];
                 mapAnnotaion *annotation = [[mapAnnotaion alloc] initWithCoordinate: pinCenter];
-                annotation.title = [NSString stringWithFormat:@"%@(%@)",[list[i] objectForKey:@"stName"], [list[i] objectForKey:@"stCode"]];
+                annotation.title = stopName;
                 annotation.ind = i + 1;
                 [_mapView addAnnotation:annotation];
                 [_dataArray addObject:list[i]];
             }
-            
-            
+            NSLog(@"stop route list: %d", [stopRouteList count]);
+            if([list count] > 1)
+                self.navigationItem.rightBarButtonItem = rightButton;
         }
         else {
             //  search failed, alert message
@@ -196,28 +215,13 @@ MKAnnotationView *tmpAnnView;
     _connection = [coimSDK sendTo:relativeURL withParameter:nil delegate:self];
     [_connection setAccessibilityLabel:@"routeSearch"];
 }
-/*
-    sub functions
-        logout: go login view
-        currentLocation: move map view to currenlocation
-        searchAtLat:lng: search information based on lat and lng
-        checkButtonTapped: 
- */
-- (void)logout
-{
-    //[ReqUtil logoutFrom:@"drinks/account/logout" delegate:self progressTable:dic];
-    [coimSDK logoutFrom:coimLogoutURI delegate:self];
-    [appUtil enterLogin];
-}
 
-- (void)currentLocation
+- (void)listStopRoutes
 {
-    MKCoordinateRegion region;
-    region.center.latitude = [[_data objectForKey:@"latitude"] floatValue];
-    region.center.longitude = [[_data objectForKey:@"longitude"] floatValue];
-    region.span.latitudeDelta = 0.003;
-    region.span.longitudeDelta = 0.003;
-    [_mapView setRegion:region];
+    RouteListViewController *VC = [RouteListViewController new];
+    VC.tsIDs = stopRouteList;
+    [[self navigationController] pushViewController:VC animated:YES];
+    
 }
 
 - (void)searchAtLat:(double)lat Lng:(double)lng

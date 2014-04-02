@@ -61,36 +61,45 @@ NSMutableDictionary *dic;
     action of "touch up inside" for login button
  */
 - (IBAction)login:(id)sender {
-    if(_regMode) {
-        NSLog(@"Register the user");
-        //  prepare parameters to register
-        NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    _usernameText.text, coimReqParams.accName,
-                                    _passwordText.text, coimReqParams.passwd,
-                                    _confirmText.text, coimReqParams.passwd2,
-                                    nil];
-        
-        //  create connection to register API
-        //_connection = [ReqUtil registerWithParameter:parameters delegate:self progressTable:dic];
-        _connection = [coimSDK registerWithParameter:parameters delegate:self];
-        [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
-        
-        //  disable UI util receive results
-        [self setDisable];
+    if ([_usernameText.text isEqual:@""] || [_passwordText.text isEqual:@""] || (![_confirmText isHidden] && [_confirmText.text isEqual:@""])) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登入/註冊錯誤"
+                                                        message:@"帳號或密碼不得為空"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"確定"
+                                              otherButtonTitles:nil];
+        [alert show];
     }
     else {
-        //  prepare parameters to login
-        NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                    _usernameText.text, coimReqParams.accName,
-                                    _passwordText.text, coimReqParams.passwd,
-                                    nil];
-        
-        //  create connection to login API
-        _connection = [coimSDK loginTo:coimLoginURI withParameter:parameters delegate:self];
-        [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
-        
-        //  disable UI util receive results
-        [self setDisable];
+        if(_regMode) {
+            NSLog(@"Register the user");
+            //  prepare parameters to register
+            NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        _usernameText.text, coimReqParams.accName,
+                                        _passwordText.text, coimReqParams.passwd,
+                                        _confirmText.text, coimReqParams.passwd2,
+                                        nil];
+            
+            //  create connection to register API
+            _connection = [coimSDK registerWithParameter:parameters delegate:self];
+            [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
+            
+            //  disable UI util receive results
+            [self setDisable];
+        }
+        else {
+            //  prepare parameters to login
+            NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        _usernameText.text, coimReqParams.accName,
+                                        _passwordText.text, coimReqParams.passwd,
+                                        nil];
+            
+            //  create connection to login API
+            _connection = [coimSDK loginTo:coimLoginURI withParameter:parameters delegate:self];
+            [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
+            
+            //  disable UI util receive results
+            [self setDisable];
+        }
     }
 }
 /*
@@ -100,9 +109,12 @@ NSMutableDictionary *dic;
     //  change the mode between login/register
     switch ([_segControl selectedSegmentIndex]) {
         case 0:
+            [_loginButton setTitle:@"登入" forState:UIControlStateNormal];
             [self setLoginMode];
+            
             break;
         case 1:
+            [_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
             [self setRegisterMode];
             break;
         default:
@@ -139,7 +151,7 @@ NSMutableDictionary *dic;
             if (erroCode == 0) {
                 [appUtil enterApp];
             }
-            else if (erroCode == -2){
+            else {
                 //  no permission, alert message
                 _passwordText.text = @"";
                 [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
@@ -147,9 +159,6 @@ NSMutableDictionary *dic;
                                           delegate:nil
                                  cancelButtonTitle:@"Ok"
                                   otherButtonTitles:nil] show];
-            }
-            else { //unregistered user go register mode
-                [self setRegisterMode];
             }
         }
     }
@@ -168,7 +177,7 @@ NSMutableDictionary *dic;
     [_usernameText setEnabled:NO];
     [_passwordText setEnabled:NO];
     [_loginButton setEnabled:NO];
-    [_loginButton setBackgroundColor:[UIColor clearColor]];
+    //[_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator startAnimating];
 }
 
@@ -177,14 +186,14 @@ NSMutableDictionary *dic;
     [_usernameText setEnabled:YES];
     [_passwordText setEnabled:YES];
     [_loginButton setEnabled:YES];
-    [_loginButton setBackgroundColor:[UIColor clearColor]];
+    //[_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator stopAnimating];
 }
 
 - (void)setRegisterMode
 {
     [_confirmText setHidden:NO];
-    [_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
+    //[_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
     _regMode = YES;
     [_segControl setSelectedSegmentIndex:1];
     CGRect loginButtonFrame = _loginButton.frame;
@@ -196,7 +205,7 @@ NSMutableDictionary *dic;
 - (void)setLoginMode
 {
     [_confirmText setHidden:YES];
-    [_loginButton setTitle:@"登入" forState:UIControlStateNormal];
+    //[_loginButton setTitle:@"登入" forState:UIControlStateNormal];
     _regMode = NO;
     [_segControl setSelectedSegmentIndex:0];
     CGRect loginButtonFrame = _loginButton.frame;

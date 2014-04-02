@@ -69,16 +69,9 @@ const struct responseKeysFromCoimotionAPI coimResParams = {
 + (void)enterApp
 {
     //TableListingViewController *tableListVC = [TableListingViewController new];
-    ViewController *tableListVC = [ViewController new];
-    UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:tableListVC];
-    //UIImage *listImage = [UIImage imageNamed:@"list.png"];
-    //[naviVC1 tabBarItem].image = listImage;
-    //MapListingViewController *mapListVC = [MapListingViewController new];
-    //UINavigationController *naviVC2 = [[UINavigationController alloc] initWithRootViewController:mapListVC];
-    //UIImage *mapImage = [UIImage imageNamed:@"map.png"];
-    //[naviVC2 tabBarItem].image = mapImage;
-    //UITabBarController *tbc = [UITabBarController new];
-    //[tbc setViewControllers:[[NSArray alloc] initWithObjects:naviVC1, naviVC2, nil]];
+    GridViewController *VC = [GridViewController new];
+    
+    UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:VC];
     [self setRootWindowView:naviVC1];
 }
 @end
