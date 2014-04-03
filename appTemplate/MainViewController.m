@@ -18,7 +18,7 @@
 
 // used to save progress information
 NSMutableDictionary *dic;
-
+#pragma mark - view control flows
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -36,10 +36,23 @@ NSMutableDictionary *dic;
             NSLog(@"err: %@", [err localizedDescription]);
     }];
     //  parameter to API
-    //_connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
-    //[_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
-    [appUtil  enterApp];
+    /*
+        start with token validation
+     */
+    _connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
+    [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+    
+    /*
+        start with app itself
+     */
+    //[appUtil  enterApp];
 }
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+}
+#pragma mark - coimotion delegate
 /*
     get result of token validation
 */
@@ -56,11 +69,6 @@ NSMutableDictionary *dic;
             [appUtil enterLogin];
         }
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
 }
 
 @end

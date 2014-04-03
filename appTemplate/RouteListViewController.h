@@ -12,8 +12,9 @@
 
 @interface RouteListViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (retain, nonatomic)NSURLConnection *connection;
 @property (strong, nonatomic)NSMutableArray *tsIDs;
-@property (nonatomic, retain)NSURLConnection *connection;
 @property (strong, nonatomic)NSMutableArray *dataArray;
 @property (strong, nonatomic)NSMutableArray *routes;
+@property int stopIndex;
 @end

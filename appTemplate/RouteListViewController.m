@@ -17,9 +17,9 @@
 @synthesize connection = _connection;
 @synthesize routes = _routes;
 @synthesize dataArray = _dataArray;
+@synthesize stopIndex = _stopIndex;
 
-int stopIndex;
-
+#pragma mark - view control flows
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -28,36 +28,19 @@ int stopIndex;
     }
     return self;
 }
-/*
-    view life cycle
-        viewDidLoad: initializing components of the view while loading the view
- */
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //  initializing
     _dataArray = [NSMutableArray new];
     _routes = [NSMutableArray new];
-    NSLog(@"# stops: %d", [_tsIDs count]);
-    stopIndex = 0;
+    _stopIndex = 0;
+    [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]]];
+    
+    //  start search routes for tsIDs
     [self searchIthTSID:0];
     
-    [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]]];
-    /*
-        add pull to refresh
-        with refreshingView function to trigger search
-     
-    UIRefreshControl *refresh = [UIRefreshControl new];
-    
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
-    
-    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh!!" attributes:attributes];
-    refresh.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
-    
-    [refresh setTintColor:[UIColor whiteColor]];
-    [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
-    self.refreshControl = refresh;
-    */
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -85,14 +68,6 @@ int stopIndex;
     return 1;
 }
 
-/*
-    TableViewController events
-        numberOfRowsInSection: return # of sections of the table
-        cellForRowAtIndexPath: return format of cell in section n of the table
-        didSelectRowAtIndexPath: click on a row
-        willDisplayCell: display content on the cell
- */
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
@@ -104,38 +79,77 @@ int stopIndex;
     //  setting cell style from xib
     static NSString *CellIdentifier = CELL_IDENTIFIER;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {//  no defined cell, using dynamic generated cell
+    if (cell == nil) {
         //  cell generated with UITableViewCellStyleSubtitle
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.backgroundColor = [UIColor clearColor];
-        cell.textLabel.text = [_routes objectAtIndex:indexPath.row];
     }
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = [_routes objectAtIndex:indexPath.row];
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //  generating a detailedView and passing data to it
+    //  enter Route list for stops around location
+    NSLog(@"#dataArray: %d", [_dataArray count]);
     NSString *brID = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"brID"];
-    NSLog(@"brID: %@", brID);
     RouteViewController *VC = [RouteViewController new];
+    NSLog(@"brID: %@", brID);
     VC.brID = brID;
     [VC setTitle:[_routes objectAtIndex:indexPath.row]];
     [[self navigationController] pushViewController:VC animated:YES];
-    //[self.navigationController pushViewController:detailedVC animated:YES];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - coimotion delegate
+
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
 {
-    cell.textLabel.text = _routes[indexPath.row];
+    /*
+        modifying refresh controller
+     */
+    //NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    //NSLog(@"data: %@", responseData);
+    if ([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
+        //if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
+            NSArray *list = [[responseData objectForKey:@"value"] objectForKey:@"list"];
+            //NSLog(@"list length: %d", [list count]);
+            //[_routes removeAllObjects];
+            for (int i = 0; i <[list count]; i++) {
+                
+                if(![_routes containsObject:[list[i] objectForKey:@"rtName"]]) {
+                    
+                    
+                    [_routes addObject:[list[i] objectForKey:@"rtName"]];
+                    [_dataArray addObject:list[i]];
+                    NSLog(@"%d rtName: %@, brID: %@",[_routes count], [list[i] objectForKey:@"rtName"], [[_dataArray objectAtIndex:[_dataArray count]-1] objectForKey:@"brID"]);
+                }
+            }
+            NSLog(@"# routes: %d", [_routes count]);
+            NSLog(@"# datas: %d", [_dataArray count]);
+            [self.tableView reloadData];
+            if(++_stopIndex < [_tsIDs count]) {
+                [self searchIthTSID:_stopIndex];
+            }
+            else {
+            }
+        //}
+    }
 }
 
-/*
-    NSURLConnection events
-        didReceiveData: the connection recieves data, process the data to display
-*/
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error
+{
+    NSLog(@"err: %@", [error localizedDescription]);
+}
+
+#pragma mark - subfunctions
 
 - (void)searchIthTSID:(int)i
 {
@@ -151,36 +165,5 @@ int stopIndex;
     
 }
 
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
-{
-    /*
-        modifying refresh controller
-     */
-    NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSLog(@"data: %@", searchInfo);
-    if ([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
-        if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
-            NSArray *list = [[searchInfo objectForKey:@"value"] objectForKey:@"list"];
-            NSLog(@"list length: %d", [list count]);
-            for (int i = 0; i <[list count]; i++) {
-                NSLog(@"%d rtName: %@",i, [list[i] objectForKey:@"rtName"]
-                      );
-                NSLog(@"%d", [_routes containsObject:[list[i] objectForKey:@"rtName"]]);
-                if(![_routes containsObject:[list[i] objectForKey:@"rtName"]]) {
-                    [_routes addObject:[list[i] objectForKey:@"rtName"]];
-                    [_dataArray addObject:list[i]];
-                }
-            }
-            NSLog(@"# routes: %d", [_routes count]);
-            NSLog(@"# datas: %d", [_dataArray count]);
-            [self.tableView reloadData];
-            if(++stopIndex < [_tsIDs count]) {
-                [self searchIthTSID:stopIndex];
-            }
-        }
-        else {
-        }
-    }
-}
 
 @end

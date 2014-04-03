@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
+#define sdk_version 0.9
+
 @interface coimSDK : NSObject
 
 struct attachType {
@@ -31,27 +33,22 @@ extern const NSString *reqigsterConnLabel;
 
 + (NSURLConnection *)logoutFrom:(NSString *)relativeURL
                        delegate:(id)aDelegate;
-               //progressTable:(NSMutableDictionary *)dic;
 
 + (NSURLConnection *)sendTo:(NSString *)relativeURL
               withParameter:(NSDictionary *)params
                    delegate:(id)aDelegate;
-              //progressTable:(NSMutableDictionary *)dic;
 
 + (NSURLConnection *)loginTo:(NSString *)relativeURL
                withParameter:(NSDictionary *)params
                     delegate:(id)aDelegate;
-               //progressTable:(NSMutableDictionary *)dic;
 
 + (NSURLConnection *)registerWithParameter:(NSDictionary *)params
                                   delegate:(id)aDelegate;
-                             //progressTable:(NSMutableDictionary *)dic;
 
 + (NSURLConnection *)attachFiles:(NSArray *)files
                               To:(NSString *)relativeURL
                       withParams:(NSDictionary *)params
                         delegate:(id)aDelegate;
-                   //progressTable:(NSMutableDictionary *)dic;
 
 + (NSURLConnection *)download:(id)aDelegate;
 @end

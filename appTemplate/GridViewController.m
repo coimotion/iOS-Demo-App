@@ -14,6 +14,8 @@
 
 @implementation GridViewController
 
+#pragma mark - view control flows
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -37,6 +39,8 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
+    
+    NSLog(@"%d", [coimSDK version]);
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -45,6 +49,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - IBActions
 
 - (IBAction)show1:(id)sender {
     ViewController *VC = [ViewController new];

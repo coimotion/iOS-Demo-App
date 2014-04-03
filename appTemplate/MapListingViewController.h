@@ -15,8 +15,12 @@
 @interface MapListingViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) NSMutableArray *dataArray;
-@property (nonatomic,retain)CLLocationManager* locationManager;
-@property (nonatomic, retain)NSMutableArray *annotaions;
-@property (nonatomic, retain)NSURLConnection *connection;
-@property (nonatomic, retain)NSMutableDictionary *data;
+@property (nonatomic, retain) NSMutableArray *annotaions;
+@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, retain) NSMutableDictionary *data;
+@property (nonatomic, retain) NSDictionary *targetDic;
+@property (nonatomic, retain) NSMutableArray *stopRouteList;
+@property (nonatomic, retain) UIBarButtonItem *rightButton;
+@property (nonatomic, retain) MKAnnotationView *tmpAnnView;
+@property int selected;
 @end

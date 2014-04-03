@@ -14,7 +14,6 @@
 
 @implementation ViewController
 @synthesize dataArray = _dataArray;
-@synthesize locationManager = _locationManager;
 @synthesize connection = _connection;
 @synthesize latitude = _latitude;
 @synthesize longitude = _longitude;
@@ -31,12 +30,8 @@
 @synthesize dic = _dic;
 @synthesize catPickerValue = _catPickerValue;
 @synthesize catIDArray = _catIDArray;
-//NSArray *pickerValue;
-//UILabel *titleLabel;
-//int selectedPeriod;
-
-
-
+@synthesize pickerTitle = _pickerTitle;
+#pragma mark - view controll flows
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -174,53 +169,91 @@
         [mCell.image setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[_dataArray[indexPath.row] objectForKey:@"imgURL"]]]]];
     }
 }
-
-- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+#pragma mark - coimotion delegate
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection withData:(NSDictionary *)responseData
 {
     NSLog(@"finish loading:");
     NSLog(@"label: %@", [_connection accessibilityLabel]);
-    NSError *err = nil;
-    NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:_myData options:0 error:&err];
     if ([[_connection accessibilityLabel] isEqualToString:@"logout"]) {
-        
         [appUtil enterLogin];
     }
-    NSLog(@"ERR: %@", [err localizedDescription]);
-    if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
-        //  renew _dataArray for TableView displaying
-        [_dataArray removeAllObjects];
-        NSArray *list = [[searchInfo objectForKey:coimResParams.value] objectForKey:coimResParams.list];
-        NSMutableString *tmp = [NSMutableString new];
-        for (int i = 0; i < [list count]; i++) {
-            if (![[[list objectAtIndex:i] objectForKey:@"title"] isEqualToString:tmp]) {
-                tmp = [[list objectAtIndex:i] objectForKey:@"title"];
-                [_dataArray addObject:list[i]];
-            }
+    [_dataArray removeAllObjects];
+    NSArray *list = [[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.list];
+    NSMutableString *tmp = [NSMutableString new];
+    for (int i = 0; i < [list count]; i++) {
+        if (![[[list objectAtIndex:i] objectForKey:@"title"] isEqualToString:tmp]) {
+            tmp = [[list objectAtIndex:i] objectForKey:@"title"];
+            [_dataArray addObject:list[i]];
         }
-        [_table reloadData];
+    }
+    [_table reloadData];
+}
+#pragma mark - UIPicker delegate
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    if(_catFlag)
+        return [_catPickerValue count];
+    else
+        return [_pickerValue count];
+}
+
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSAttributedString *attString;
+    if(_catFlag) {
+        NSString *title = [_catPickerValue objectAtIndex:row];
+        attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     }
     else {
-        //  an alert window displays error message
-        [[[UIAlertView alloc] initWithTitle:SEARCH_ERROR
-                                    message:[searchInfo objectForKey:coimResParams.message]
-                                   delegate:nil
-                          cancelButtonTitle:@"Ok"
-                          otherButtonTitles:nil] show];
-        if ([[searchInfo objectForKey:coimResParams.errCode] intValue] == -2) {
-            [self logout];
-        }
+        NSString *title = [_pickerValue objectAtIndex:row];
+        attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     }
+    return attString;
+    
 }
 
-/*
- NSURLConnection events
- didReceiveData: the connection recieves data, process the data to display
- */
-
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
-{
-    [_myData appendData:data];
+#pragma mark - IBActions
+- (IBAction)check:(id)sender {
+    if(_catFlag){
+        if(_catID != [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]])
+        {
+            NSLog(@"check cat");
+            _catID = [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]];
+            [[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
+            _titleLabel.text = [_pickerValue objectAtIndex:0];
+            _myData = [NSMutableData new];
+            _selectedPeriod = 0;
+            [self searchListForCat:_catID andWeeks:0];
+        }
+        [self.navigationController setNavigationBarHidden:NO];
+    }
+    else {
+        if (_selectedPeriod != [_picker selectedRowInComponent:0]) {
+            NSLog(@"check");
+            _selectedPeriod = [_picker selectedRowInComponent:0];
+            _titleLabel.text = [_pickerValue objectAtIndex:_selectedPeriod];
+            _myData = [NSMutableData new];
+            [self searchListForCat:_catID andWeeks:_selectedPeriod];
+        }
+        [self.navigationController setNavigationBarHidden:NO];
+    }
+    [_pickerView setHidden: YES];
 }
+
+- (IBAction)cancel:(id)sender {
+    
+    [_picker selectRow:_selectedPeriod inComponent:0 animated:YES];
+    [self.navigationController setNavigationBarHidden:NO];
+    [_pickerView setHidden:YES];
+}
+
+#pragma mark - subfunctions
 
 - (void)searchListForCat:(NSString *)catID andWeeks:(int)nWeek
 {
@@ -288,38 +321,10 @@
     }
 }
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    if(_catFlag)
-        return [_catPickerValue count];
-    else
-        return [_pickerValue count];
-}
-
-- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSAttributedString *attString;
-    if(_catFlag) {
-        NSString *title = [_catPickerValue objectAtIndex:row];
-        attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-    }
-    else {
-        NSString *title = [_pickerValue objectAtIndex:row];
-        attString = [[NSAttributedString alloc] initWithString:title attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
-    }
-    return attString;
-    
-}
-
 - (void)catPicker
 {
     _catFlag = YES;
-    
+    [_pickerTitle setText:@"查詢活動分類"];
     [_picker selectRow:[_catIDArray indexOfObject:_catID] inComponent:0 animated:NO];
     [_picker reloadAllComponents];
     [self dismissPicker];
@@ -328,44 +333,10 @@
 - (void)datePicker
 {
     _catFlag = NO;
-
+    [_pickerTitle setText:@"查詢活動期間"];
     [_picker selectRow:_selectedPeriod inComponent:0 animated:NO];
     [_picker reloadAllComponents];
     [self dismissPicker];
-}
-
-- (IBAction)check:(id)sender {
-    if(_catFlag){
-        if(_catID != [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]])
-        {
-            NSLog(@"check cat");
-            _catID = [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]];
-            [[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
-            _titleLabel.text = [_pickerValue objectAtIndex:0];
-            _myData = [NSMutableData new];
-            _selectedPeriod = 0;
-            [self searchListForCat:_catID andWeeks:0];
-        }
-        [self.navigationController setNavigationBarHidden:NO];
-    }
-    else {
-        if (_selectedPeriod != [_picker selectedRowInComponent:0]) {
-            NSLog(@"check");
-            _selectedPeriod = [_picker selectedRowInComponent:0];
-            _titleLabel.text = [_pickerValue objectAtIndex:_selectedPeriod];
-            _myData = [NSMutableData new];
-            [self searchListForCat:_catID andWeeks:_selectedPeriod];
-        }
-        [self.navigationController setNavigationBarHidden:NO];
-    }
-    [_pickerView setHidden: YES];
-}
-
-- (IBAction)cancel:(id)sender {
-    
-    [_picker selectRow:_selectedPeriod inComponent:0 animated:YES];
-    [self.navigationController setNavigationBarHidden:NO];
-    [_pickerView setHidden:YES];
 }
 
 @end

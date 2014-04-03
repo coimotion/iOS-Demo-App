@@ -12,21 +12,21 @@
 #import "MapListingViewController.h"
 
 @interface DetailedViewController : UIViewController <UIScrollViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
-@property (strong, nonatomic) IBOutlet UITextView *saleText;
-@property (strong, nonatomic) IBOutlet UITextView *locationText;
-@property (strong, nonatomic) IBOutlet UITextView *descText;
-@property (strong, nonatomic) IBOutlet UITextView *periodText;
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSMutableDictionary *dic;
 @property (strong, nonatomic) NSString *saleURL;
 @property (strong, nonatomic) NSArray *showInfos;
-@property int selected;
-@property (strong, nonatomic) IBOutlet UILabel *showTitle;
-@property (strong, nonatomic) NSString *detailURL;
-@property (strong, nonatomic) IBOutlet UIPickerView *picker;
 @property (strong, nonatomic) NSString *docURL;
-@property (strong, nonatomic) IBOutlet UIButton *saleImg;
+@property int selected;
+@property (strong, nonatomic) NSString *detailURL;
 @property (strong, nonatomic) NSURLConnection *connection;
+@property (strong, nonatomic) IBOutlet UITextView *saleText;
+@property (strong, nonatomic) IBOutlet UITextView *locationText;
+@property (strong, nonatomic) IBOutlet UITextView *descText;
+@property (strong, nonatomic) IBOutlet UITextView *periodText;
+@property (strong, nonatomic) IBOutlet UILabel *showTitle;
+@property (strong, nonatomic) IBOutlet UIPickerView *picker;
+@property (strong, nonatomic) IBOutlet UIButton *saleImg;
 @property (strong, nonatomic) IBOutlet UIView *pickerView;
 @property (strong, nonatomic) IBOutlet UIView *dismissPickerView;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;

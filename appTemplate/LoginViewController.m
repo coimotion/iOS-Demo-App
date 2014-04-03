@@ -23,9 +23,7 @@
 @synthesize regMode = _regMode;
 @synthesize segControl = _segControl;
 
-//  progress table
-NSMutableDictionary *dic;
-
+#pragma mark - view control flow
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -37,9 +35,7 @@ NSMutableDictionary *dic;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //  progress table
-    dic = [NSMutableDictionary new];
-
+    
     //  init loginIndicator's state
     [_loginIndicator stopAnimating];
     
@@ -57,6 +53,8 @@ NSMutableDictionary *dic;
 {
     [super didReceiveMemoryWarning];
 }
+
+#pragma mark - IBActions
 /*
     action of "touch up inside" for login button
  */
@@ -121,63 +119,47 @@ NSMutableDictionary *dic;
             break;
     }
 }
+
+#pragma mark - coimotion delegate
 /*
     connection receives data
  */
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
 {
-    //  parse JSON string to a dictionary
-    NSDictionary *receivedDataDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
-    if(receivedDataDic != nil){
-        int erroCode = [[receivedDataDic objectForKey:coimResParams.errCode] integerValue];
-        //  check accessibilityLabel to tell data comes from which API
-        if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
-            //  register connection
-            if (erroCode == 0) {
-                [appUtil enterApp];
-            }
-            else {
-                //  register failed, alert message
-                [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                            message:[receivedDataDic objectForKey:coimResParams.message]
-                                           delegate:nil
-                                  cancelButtonTitle:@"Ok"
-                                  otherButtonTitles:nil] show];
-            }
-        }
-        
-        if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
-            //  login connection
-            if (erroCode == 0) {
-                [appUtil enterApp];
-            }
-            else {
-                //  no permission, alert message
-                _passwordText.text = @"";
-                [[[UIAlertView alloc] initWithTitle:LOGIN_ERROR
-                                           message:[receivedDataDic objectForKey:coimResParams.message]
-                                          delegate:nil
-                                 cancelButtonTitle:@"Ok"
-                                  otherButtonTitles:nil] show];
-            }
-        }
+    //  check accessibilityLabel to tell data comes from which API
+    if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
+        //  register connection
+        [appUtil enterApp];
+    }
+    else if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
+        //  login connection
+        [appUtil enterApp];
     }
     [self setEnable];
 }
+
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error
+{
+    NSLog(@"err: %@", [error localizedDescription]);
+    NSLog(@"err: %d", [error code]);
+}
+
+#pragma mark - subfunctions
 /*
-    sub functions
-        setDisable: UI changes to disabled
-        setEnable: UI changes to enabled
-        setRegisterMode: UI changes to register mode
-        setLoginMode: UI changes to login mode
-        dismissKeyboard: dismiss keyboard while tapping outside editable components
+    setDisable: UI changes to disabled
+    setEnable: UI changes to enabled
+    setRegisterMode: UI changes to register mode
+    setLoginMode: UI changes to login mode
+    dismissKeyboard: dismiss keyboard while tapping outside editable components
  */
 - (void)setDisable
 {
     [_usernameText setEnabled:NO];
     [_passwordText setEnabled:NO];
     [_loginButton setEnabled:NO];
-    //[_loginButton setBackgroundColor:[UIColor clearColor]];
+    [_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator startAnimating];
 }
 
@@ -186,14 +168,14 @@ NSMutableDictionary *dic;
     [_usernameText setEnabled:YES];
     [_passwordText setEnabled:YES];
     [_loginButton setEnabled:YES];
-    //[_loginButton setBackgroundColor:[UIColor clearColor]];
+    [_loginButton setBackgroundColor:[UIColor clearColor]];
     [_loginIndicator stopAnimating];
 }
 
 - (void)setRegisterMode
 {
     [_confirmText setHidden:NO];
-    //[_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
+    [_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
     _regMode = YES;
     [_segControl setSelectedSegmentIndex:1];
     CGRect loginButtonFrame = _loginButton.frame;
@@ -205,7 +187,7 @@ NSMutableDictionary *dic;
 - (void)setLoginMode
 {
     [_confirmText setHidden:YES];
-    //[_loginButton setTitle:@"登入" forState:UIControlStateNormal];
+    [_loginButton setTitle:@"登入" forState:UIControlStateNormal];
     _regMode = NO;
     [_segControl setSelectedSegmentIndex:0];
     CGRect loginButtonFrame = _loginButton.frame;

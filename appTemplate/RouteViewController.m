@@ -37,7 +37,7 @@
     _myData = [NSMutableData new];
     [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]]];
     [self searchBus];
-    
+    NSLog(@"brID: %@", _brID);
     /*
      add pull to refresh
      with refreshingView function to trigger search
@@ -54,15 +54,6 @@
     [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
      
-}
-
-- (void)refreshingView
-{
-    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
-    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..." attributes:attributes];
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
-    [self searchBus];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -135,7 +126,8 @@
     [_connection setAccessibilityLabel:@"routeSearch"];
 }
 
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
+#pragma mark - coimotion delegate
+/*- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
 {
     if(data != nil){
         NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
@@ -145,85 +137,33 @@
         [conn cancel];
     }
     
-}
+}*/
 
 - (void)coimConnection:(NSURLConnection *)conn didFailWithError:(NSError *)err
 {
     NSLog(@"err: %@", err);
 }
 
-- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection withData:(NSDictionary *)responseData
 {
-    NSError *err = nil;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:_myData options:0 error:&err];
-    NSLog(@"finish data: %@", dic);
-    NSLog(@"finish err: %@", err);
+    //NSLog(@"reponseData: %@", responseData);
     [[self refreshControl] endRefreshing];
-    if([[dic objectForKey:@"errCode"] integerValue] == 0) {
-
+    if([[responseData objectForKey:@"errCode"] integerValue] == 0) {
         //[_dataArray removeAllObjects];
-        _dataArray = [[dic objectForKey:@"value"] objectForKey:@"list"];
+        _dataArray = [[responseData objectForKey:@"value"] objectForKey:@"list"];
         [[self tableView] reloadData];
         
     }
 }
 
+#pragma mark - subfunctions
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)refreshingView
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..." attributes:attributes];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
+    [self searchBus];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Table view delegate
-
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-}
- 
- */
-
 @end

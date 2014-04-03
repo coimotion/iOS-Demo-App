@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="dismissView" destination="T4c-q1-fqx" id="9ED-bB-K3q"/>
                 <outlet property="picker" destination="qHv-7f-PHX" id="YmR-D3-xAe"/>
+                <outlet property="pickerTitle" destination="NuC-19-Xx6" id="WyZ-Mm-d3I"/>
                 <outlet property="pickerView" destination="0Rd-Xf-lli" id="gW7-8x-3rR"/>
                 <outlet property="table" destination="I2Q-wq-uTM" id="zK3-1R-U0U"/>
                 <outlet property="view" destination="1" id="3"/>

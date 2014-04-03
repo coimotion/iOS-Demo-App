@@ -54,7 +54,6 @@
 		04C0624D18E5682C009305E6 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0624B18E5682C009305E6 /* ViewController.xib */; };
 		04C0625B18E57B31009305E6 /* myCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0625A18E57B31009305E6 /* myCell.m */; };
 		04C0625D18E57B4D009305E6 /* myCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0625C18E57B4D009305E6 /* myCell.xib */; };
-		04C8007B18EA55D60082BD98 /* free-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04C8007A18EA55D60082BD98 /* free-icon.png */; };
 		04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662918B6F804003C769F /* MapListingViewController.m */; };
 		04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662A18B6F804003C769F /* MapListingViewController.xib */; };
 		04E7510F18EB8EA50074CE4E /* title_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E7510C18EB8EA50074CE4E /* title_bg.png */; };
@@ -140,7 +139,6 @@
 		04C0625918E57B31009305E6 /* myCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = myCell.h; sourceTree = "<group>"; };
 		04C0625A18E57B31009305E6 /* myCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = myCell.m; sourceTree = "<group>"; };
 		04C0625C18E57B4D009305E6 /* myCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = myCell.xib; sourceTree = "<group>"; };
-		04C8007A18EA55D60082BD98 /* free-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "free-icon.png"; path = "../../../free-icon.png"; sourceTree = "<group>"; };
 		04DB662818B6F804003C769F /* MapListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListingViewController.h; sourceTree = "<group>"; };
 		04DB662918B6F804003C769F /* MapListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListingViewController.m; sourceTree = "<group>"; };
 		04DB662A18B6F804003C769F /* MapListingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapListingViewController.xib; sourceTree = "<group>"; };
@@ -285,7 +283,6 @@
 				043F1FEA18EAB75300D6DAF9 /* 2.png */,
 				043F1FEB18EAB75300D6DAF9 /* logo.png */,
 				043F1FEC18EAB75300D6DAF9 /* img.png */,
-				04C8007A18EA55D60082BD98 /* free-icon.png */,
 				048EDD3818E4168F00073AA8 /* bg.png */,
 				0476DF3E18B354F600380537 /* appTemplate-Info.plist */,
 				0476DF3F18B354F600380537 /* InfoPlist.strings */,
@@ -400,7 +397,6 @@
 				048EDD3D18E4168F00073AA8 /* bg.png in Resources */,
 				04E7511818EBA5CF0074CE4E /* free.png in Resources */,
 				04E7511E18EBDC4B0074CE4E /* RouteViewController.xib in Resources */,
-				04C8007B18EA55D60082BD98 /* free-icon.png in Resources */,
 				043F1FF218EAB75300D6DAF9 /* 5.png in Resources */,
 				043F1FF418EAB75300D6DAF9 /* 3.png in Resources */,
 				043F1FFE18EAB7C400D6DAF9 /* GridViewController.xib in Resources */,

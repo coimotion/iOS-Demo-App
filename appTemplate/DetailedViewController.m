@@ -32,9 +32,9 @@
 @synthesize dic = _dic;
 @synthesize saleURL = _saleURL;
 @synthesize showInfos = _showInfos;
-
 @synthesize selected = _selected;
 
+#pragma mark - view control flows
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -97,89 +97,18 @@
     NSLog(@"detail url: %@", _detailURL);
     //  prepare parameter of detail info API
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1", coimReqParams.detail, nil];
-    
     //  create connection of the API
     _connection = [coimSDK sendTo:_detailURL withParameter:param delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
-}
-
-- (void)coimConnection:(NSURLConnection *)conn didFailWithError: (NSError *) error
-{
-    NSLog(@"error: %@", [error localizedDescription]);
-}
-
-/*
-    receive data from connection
- */
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
-{
-    //  parse JSON string to a dictionary
-    NSDictionary *detailInfoDic = [[NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil] objectForKey:@"value"];
-    NSLog(@"data: %@", [[NSString alloc] initWithData:incomingData encoding:NSUTF8StringEncoding]);
-    if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
-        //  process data from detail info connection
-        if ([[detailInfoDic objectForKey:coimResParams.errCode] integerValue] == 0) {
-            //  get data successed, check if detail info exists
-            //  filled in addr
-            _showInfos =[detailInfoDic objectForKey:@"showInfo"];
-            [_picker reloadAllComponents];
-            NSLog(@"# showinfos %d",[_showInfos count] );
-            NSDictionary *showInfo = [_showInfos objectAtIndex:0];
-            if([_showInfos count] > 1) {
-                /*
-                 set logout button on right of navigationBar
-                 */
-                UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"場次" style:UIBarButtonItemStylePlain target:self action:@selector(showPicker)];
-                self.navigationItem.rightBarButtonItem = rightButton;
-
-            }
-            NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
-            _locationText.text = location;
-            
-            _descText.text = ([[detailInfoDic objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[detailInfoDic  objectForKey:@"descTx"];
-            if([[showInfo objectForKey:@"isFree"] integerValue] == 0) {
-                NSString *infoSrc = ([[detailInfoDic objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[detailInfoDic objectForKey:@"infoSrc"];
-                NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
-                NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
-                _saleText.text = priceInfo;
-                _saleURL = [detailInfoDic objectForKey:@"saleURL"];
-                if([_saleURL isEqualToString:@""]) {
-                    [_saleImg setHidden:YES];
-                }
-            }
-            else {
-                [_freeImg setHidden:NO];
-                [_saleImg setHidden:YES];
-                [_saleText setHidden:YES];
-            }
-            NSString *timeLabel = [showInfo objectForKey:@"time"];
-            timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-            NSLog(@"time: %@", timeLabel);
-            [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
-            NSString *t1 = [detailInfoDic objectForKey:@"startDate"], *t2 = [detailInfoDic objectForKey:@"endDate"];
-            t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-            t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-            NSString *periodStr = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", t1 , t2];
-            _periodText.text = periodStr;
-            _dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
-        }
-        else {
-            //  failed to get data, alert a message
-            [[[UIAlertView alloc] initWithTitle:DETAIL_ERROR
-                                        message:[detailInfoDic objectForKey:coimResParams.message]
-                                       delegate:nil
-                              cancelButtonTitle:@"Ok"
-                              otherButtonTitles:nil] show];
-        }
-    }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    NSLog(@"=======memory warning=========");
 }
-
+#pragma mark - IBActions
 - (IBAction)openMapView:(id)sender {
     MapListingViewController *mapView = [MapListingViewController new];
     mapView.data = _dic;
@@ -212,7 +141,7 @@
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
     _locationText.text = location;
 }
-
+#pragma mark - subfunctions
 -(void) showPicker
 {
     NSLog(@"show picker, %d", [_pickerView isHidden]);
@@ -226,6 +155,7 @@
     }
 }
 
+#pragma mark - picker delegate
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     //selected = [_picker selectedRowInComponent:0];
@@ -258,5 +188,59 @@
     return attString;
     
 }
+#pragma mark - coimotion delegate
 
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error
+{
+    NSLog(@"!!!!error: %@!!!", [error localizedDescription]);
+}
+
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
+{
+    NSLog(@"response Data: %@", responseData);
+    _showInfos = [[responseData objectForKey:@"value"] objectForKey:@"showInfo"];
+    if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
+        [_picker reloadAllComponents];
+        NSLog(@"# showinfos %d",[_showInfos count] );
+        NSDictionary *showInfo = [_showInfos objectAtIndex:0];
+        if([_showInfos count] > 1) {
+            /*
+             set logout button on right of navigationBar
+             */
+            UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"場次" style:UIBarButtonItemStylePlain target:self action:@selector(showPicker)];
+            self.navigationItem.rightBarButtonItem = rightButton;
+            
+        }
+        _locationText.text = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
+        _descText.text = ([[[responseData objectForKey:@"value"] objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[[responseData objectForKey:@"value"]  objectForKey:@"descTx"];
+
+        if([[showInfo objectForKey:@"isFree"] integerValue] == 0) {
+            NSString *infoSrc = ([[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"];
+            NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
+            NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
+            _saleText.text = priceInfo;
+            _saleURL = [[responseData objectForKey:@"value"] objectForKey:@"saleURL"];
+            if([_saleURL isEqualToString:@""]) {
+                [_saleImg setHidden:YES];
+            }
+        }
+        else {
+            [_freeImg setHidden:NO];
+            [_saleImg setHidden:YES];
+            [_saleText setHidden:YES];
+        }
+        NSString *timeLabel = [[showInfo objectForKey:@"time"] stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+        NSLog(@"time: %@", timeLabel);
+        [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+        NSString *t1 = [[responseData objectForKey:@"value"] objectForKey:@"startDate"], *t2 = [[responseData objectForKey:@"value"] objectForKey:@"endDate"];
+        t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+        t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
+        _periodText.text = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", t1 , t2];
+        _dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
+        
+        //}
+    }
+}
 @end
