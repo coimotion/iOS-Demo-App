@@ -121,6 +121,16 @@
                     <rect key="frame" x="42" y="36" width="240" height="128"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dsQ-bX-szE">
+                    <rect key="frame" x="24" y="119" width="45" height="45"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" backgroundImage="Gear-icon.png">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="setting:" destination="-1" eventType="touchUpInside" id="sb2-Lh-i3C"/>
+                    </connections>
+                </button>
             </subviews>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
@@ -136,6 +146,7 @@
         <image name="7.png" width="138" height="173"/>
         <image name="8.png" width="138" height="173"/>
         <image name="9.png" width="138" height="173"/>
+        <image name="Gear-icon.png" width="96" height="96"/>
         <image name="bg.png" width="444" height="708"/>
         <image name="logo.png" width="275" height="174"/>
     </resources>

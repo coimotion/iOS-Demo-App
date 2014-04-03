@@ -105,4 +105,9 @@
     VC.catID = @"15";
     [self.navigationController pushViewController:VC animated:YES];
 }
+
+- (IBAction)setting:(id)sender {
+    SettingViewController *VC = [SettingViewController new];
+    [self.navigationController pushViewController:VC animated:YES];
+}
 @end

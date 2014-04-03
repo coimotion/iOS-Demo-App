@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
+#import "SettingViewController.h"
 
 @interface GridViewController : UIViewController
 - (IBAction)show1:(id)sender;
@@ -19,5 +20,6 @@
 - (IBAction)show7:(id)sender;
 - (IBAction)show8:(id)sender;
 - (IBAction)show9:(id)sender;
+- (IBAction)setting:(id)sender;
 
 @end
