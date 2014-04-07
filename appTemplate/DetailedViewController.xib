@@ -174,7 +174,6 @@
     </objects>
     <resources>
         <image name="bg.png" width="444" height="708"/>
-        <image name="bg.png" width="444" height="708"/>
         <image name="delete.png" width="83" height="68"/>
         <image name="free.png" width="101" height="101"/>
         <image name="map.png" width="57" height="57"/>
