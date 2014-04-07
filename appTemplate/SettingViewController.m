@@ -14,6 +14,7 @@
 
 @implementation SettingViewController
 
+#pragma mark - view control flow
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -35,4 +36,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - IBActions
+- (IBAction)logout:(id)sender {
+    [coimSDK logoutFrom:@"drinks/account/logout" delegate:self];
+}
+
+#pragma mark - coimotion delegaet
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
+{
+    NSLog(@"finish: %@", responseData);
+    [appUtil enterLogin];
+}
+
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error
+{
+    NSLog(@"fail: %@", [error localizedDescription]);
+    [appUtil enterLogin];
+}
 @end

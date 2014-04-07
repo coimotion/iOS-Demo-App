@@ -24,7 +24,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"站牌清單";
+        self.title = @"路線清單";
     }
     return self;
 }

@@ -144,6 +144,13 @@
 {
     NSLog(@"err: %@", [error localizedDescription]);
     NSLog(@"err: %d", [error code]);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登入/註冊錯誤"
+                                                    message:[error localizedDescription]
+                                                   delegate:nil
+                                          cancelButtonTitle:@"確定"
+                                          otherButtonTitles:nil];
+    [alert show];
+    [self setEnable];
 }
 
 #pragma mark - subfunctions
@@ -174,6 +181,7 @@
 
 - (void)setRegisterMode
 {
+    NSLog(@"set to reg");
     [_confirmText setHidden:NO];
     [_loginButton setTitle:@"註冊" forState:UIControlStateNormal];
     _regMode = YES;
@@ -186,6 +194,7 @@
 
 - (void)setLoginMode
 {
+    NSLog(@"set to login");
     [_confirmText setHidden:YES];
     [_loginButton setTitle:@"登入" forState:UIControlStateNormal];
     _regMode = NO;

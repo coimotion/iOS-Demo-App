@@ -73,7 +73,7 @@
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 140.0f, 44.0f)];
     [_titleLabel setTextAlignment:NSTextAlignmentCenter];
     [_titleLabel setTextColor:[UIColor whiteColor]];
-    [_titleLabel setText:@"一週活動"];
+    [_titleLabel setText:[_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]];//]]@"一週活動"];
     [tmpView addSubview:imgView];
     [tmpView addSubview:_titleLabel];
     
@@ -81,7 +81,7 @@
 
     UITapGestureRecognizer *singleFingerTap1 =
     [[UITapGestureRecognizer alloc] initWithTarget:self
-                                            action:@selector(datePicker)];
+                                            action:@selector(catPicker)];
     UITapGestureRecognizer *singleFingerTap2 =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(dismissPicker)];
@@ -101,7 +101,7 @@
     self.navigationController.navigationBar.translucent = YES;
     [self searchListForCat:_catID andWeeks:_selectedPeriod];
     
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:[_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]] style:UIBarButtonItemStylePlain target:self action:@selector(catPicker)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"一週活動" /*[_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]*/ style:UIBarButtonItemStylePlain target:self action:@selector(datePicker)];
     self.navigationItem.rightBarButtonItem = rightButton;
 }
 
@@ -225,8 +225,10 @@
         {
             NSLog(@"check cat");
             _catID = [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]];
-            [[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
-            _titleLabel.text = [_pickerValue objectAtIndex:0];
+            //[[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
+            _titleLabel.text = [_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]];
+            //_titleLabel.text = [_pickerValue objectAtIndex:0];
+            [[[self navigationItem] rightBarButtonItem] setTitle:[_pickerValue objectAtIndex:0]];
             _myData = [NSMutableData new];
             _selectedPeriod = 0;
             [self searchListForCat:_catID andWeeks:0];
@@ -237,7 +239,8 @@
         if (_selectedPeriod != [_picker selectedRowInComponent:0]) {
             NSLog(@"check");
             _selectedPeriod = [_picker selectedRowInComponent:0];
-            _titleLabel.text = [_pickerValue objectAtIndex:_selectedPeriod];
+            //_titleLabel.text = [_pickerValue objectAtIndex:_selectedPeriod];
+            [[[self navigationItem] rightBarButtonItem] setTitle:[_pickerValue objectAtIndex:_selectedPeriod]];
             _myData = [NSMutableData new];
             [self searchListForCat:_catID andWeeks:_selectedPeriod];
         }
@@ -324,9 +327,11 @@
 - (void)catPicker
 {
     _catFlag = YES;
+    NSLog(@"catID: %@", _catID);
     [_pickerTitle setText:@"查詢活動分類"];
     [_picker selectRow:[_catIDArray indexOfObject:_catID] inComponent:0 animated:NO];
     [_picker reloadAllComponents];
+    
     [self dismissPicker];
 }
 

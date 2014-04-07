@@ -42,7 +42,7 @@
     //  init dataArray to store searched results
     _dataArray = [NSMutableArray new];
     _stopRouteList = [NSMutableArray new];
-    _rightButton = [[UIBarButtonItem alloc] initWithTitle:@"站牌清單" style:UIBarButtonItemStylePlain target:self action:@selector(listStopRoutes)];
+    _rightButton = [[UIBarButtonItem alloc] initWithTitle:@"路線清單" style:UIBarButtonItemStylePlain target:self action:@selector(listStopRoutes)];
     //self.navigationItem.leftBarButtonItem = leftButton;
     //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     

@@ -10,14 +10,14 @@
 
 @implementation appUtil
 
-NSString *const coimLoginURI = @"drinks/account/login";
-NSString *const coimLogoutURI = @"drinks/account/logout";
-NSString *const coimRegisterURI = @"drinks/account/register";
-NSString *const coimActivateURI = @"drinks/account/activate";
+NSString *const coimLoginURI = @"go4art/account/login";
+NSString *const coimLogoutURI = @"go4art/account/logout";
+//NSString *const coimRegisterURI = @"go4art/account/register";
+//NSString *const coimActivateURI = @"go4art/account/activate";
 NSString *const coimSearchURI = @"twCtBus/busStop/search";
-NSString *const coimCheckTokenURI = @"drinks/account/profile";
-NSString *const coimDetailURI = @"drinks/shops/info";
-NSString *const coimDocURI = @"drinks/shops/view";
+NSString *const coimCheckTokenURI = @"go4art/account/profile";
+//NSString *const coimDetailURI = @"drinks/shops/info";
+//NSString *const coimDocURI = @"drinks/shops/view";
 
 const struct requestKeysForCoimotionAPI coimReqParams = {
     .lat = @"lat",

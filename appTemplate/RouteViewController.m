@@ -36,6 +36,7 @@
     [_dataArray addObject:emptyRow];
     _myData = [NSMutableData new];
     [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]]];
+    self.tableView.backgroundView.layer.zPosition = -1;
     [self searchBus];
     NSLog(@"brID: %@", _brID);
     /*
@@ -45,12 +46,13 @@
     UIRefreshControl *refresh = [UIRefreshControl new];
      
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    [attributes setObject:[UIColor blackColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
      
     NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Pull to Refresh!!" attributes:attributes];
     refresh.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
      
     [refresh setTintColor:[UIColor redColor]];
+    
     [refresh addTarget:self action:@selector(refreshingView) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refresh;
      
@@ -146,7 +148,7 @@
 
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection withData:(NSDictionary *)responseData
 {
-    //NSLog(@"reponseData: %@", responseData);
+    NSLog(@"finish");
     [[self refreshControl] endRefreshing];
     if([[responseData objectForKey:@"errCode"] integerValue] == 0) {
         //[_dataArray removeAllObjects];
@@ -161,7 +163,7 @@
 - (void)refreshingView
 {
     NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-    [attributes setObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
+    [attributes setObject:[UIColor blackColor] forKey:NSForegroundColorAttributeName];  //title text color :optional
     NSAttributedString *aTitle = [[NSAttributedString alloc] initWithString:@"Refreshing data..." attributes:attributes];
     self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithAttributedString:aTitle];
     [self searchBus];
