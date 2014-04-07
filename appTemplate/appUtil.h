@@ -79,9 +79,7 @@ struct responseKeysFromCoimotionAPI{
 extern const struct requestKeysForCoimotionAPI coimReqParams;
 extern const struct responseKeysFromCoimotionAPI coimResParams;
 
-@property (nonatomic, retain)NSString *token;
-@property (nonatomic, retain)NSString *userName;
-@property (nonatomic, retain)NSDictionary *shopMenuList;
+//@property (nonatomic, retain)NSDictionary *shopMenuList;
 
 //+ (id)sharedUtil;
 + (void)setRootWindowView:(UIViewController *)VC;

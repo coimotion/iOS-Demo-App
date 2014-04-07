@@ -56,13 +56,15 @@ NSMutableDictionary *dic;
 /*
     get result of token validation
 */
-- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+//- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
 {
-    //  parse JSON to dictionary
-    NSDictionary *checkTokenInfoDic = [NSJSONSerialization JSONObjectWithData:incomingData options:0 error:nil];
+    NSLog(@"reponseData: %@", responseData);
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
         //  valid token is not belongs to a guest
-        if (![[[checkTokenInfoDic objectForKey:coimResParams.value] objectForKey:coimResParams.dspName] isEqual:@"Guest"]) {
+        if (![[[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.dspName] isEqual:@"Guest"]) {
+            
             [appUtil  enterApp];
         }
         else {

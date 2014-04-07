@@ -12,12 +12,8 @@
 
 NSString *const coimLoginURI = @"go4art/account/login";
 NSString *const coimLogoutURI = @"go4art/account/logout";
-//NSString *const coimRegisterURI = @"go4art/account/register";
-//NSString *const coimActivateURI = @"go4art/account/activate";
 NSString *const coimSearchURI = @"twCtBus/busStop/search";
 NSString *const coimCheckTokenURI = @"go4art/account/profile";
-//NSString *const coimDetailURI = @"drinks/shops/info";
-//NSString *const coimDocURI = @"drinks/shops/view";
 
 const struct requestKeysForCoimotionAPI coimReqParams = {
     .lat = @"lat",
@@ -49,7 +45,6 @@ const struct responseKeysFromCoimotionAPI coimResParams = {
     .doc = @"doc",
     .actID = @"actID"
 };
-@synthesize token, userName, shopMenuList;
 
 + (void)setRootWindowView:(UIViewController *)VC
 {

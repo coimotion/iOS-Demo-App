@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UITextView *aboutText;
 - (IBAction)logout:(id)sender;
 
 @end
