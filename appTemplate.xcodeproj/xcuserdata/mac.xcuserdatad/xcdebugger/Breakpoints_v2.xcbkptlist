@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "appTemplate/DetailedViewController.m"
-            timestampString = "418185138.088015"
+            timestampString = "418712910.498406"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
             landmarkName = "-coimConnectionDidFinishLoading:withData:"
             landmarkType = "5">
          </BreakpointContent>

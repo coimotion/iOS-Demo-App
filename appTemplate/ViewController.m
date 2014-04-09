@@ -68,13 +68,16 @@
      */
     _selectedPeriod = 0;
     UIView *tmpView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 44.0f)];
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 60.0f)];
-    [imgView setImage:[UIImage imageNamed:@"title_bg.png"]];
+    //UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 60.0f)];
+    //[imgView setImage:[UIImage imageNamed:@"title_bg.png"]];
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 140.0f, 44.0f)];
     [_titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [_titleLabel setTextColor:[UIColor whiteColor]];
-    [_titleLabel setText:[_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]];//]]@"一週活動"];
-    [tmpView addSubview:imgView];
+    [_titleLabel setTextColor:[UIColor blackColor]];
+    [_titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+    [_titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [_titleLabel setTextColor:[UIColor redColor]];
+    [_titleLabel setText: [NSString stringWithFormat:@"%@ ★", [_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]]];//]]@"一週活動"];
+    //[tmpView addSubview:imgView];
     [tmpView addSubview:_titleLabel];
     
     //UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Trend"]];
@@ -226,7 +229,8 @@
             NSLog(@"check cat");
             _catID = [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]];
             //[[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
-            _titleLabel.text = [_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]];
+            [_titleLabel setTextAlignment:NSTextAlignmentCenter];
+            _titleLabel.text = [NSString stringWithFormat:@"%@ ★", [_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];//∨
             //_titleLabel.text = [_pickerValue objectAtIndex:0];
             [[[self navigationItem] rightBarButtonItem] setTitle:[_pickerValue objectAtIndex:0]];
             _myData = [NSMutableData new];

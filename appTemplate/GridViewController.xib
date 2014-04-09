@@ -15,12 +15,8 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="FIG-7w-bQm">
-                    <rect key="frame" x="0.0" y="-6" width="320" height="574"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </imageView>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FGD-fq-XyN">
-                    <rect key="frame" x="22" y="172" width="90" height="120"/>
+                    <rect key="frame" x="-1" y="167" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" backgroundImage="1.png">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -30,7 +26,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4hZ-PS-je8">
-                    <rect key="frame" x="115" y="172" width="90" height="120"/>
+                    <rect key="frame" x="106" y="167" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="2.png">
@@ -41,7 +37,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESS-8f-ccR">
-                    <rect key="frame" x="208" y="172" width="90" height="120"/>
+                    <rect key="frame" x="213" y="167" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="3.png">
@@ -52,7 +48,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jaS-Iy-ysS">
-                    <rect key="frame" x="24" y="300" width="90" height="120"/>
+                    <rect key="frame" x="-1" y="274" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="4.png">
@@ -63,7 +59,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ek-cU-cVe">
-                    <rect key="frame" x="117" y="300" width="90" height="120"/>
+                    <rect key="frame" x="106" y="274" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="5.png">
@@ -74,7 +70,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pj0-IE-BYC">
-                    <rect key="frame" x="210" y="300" width="90" height="120"/>
+                    <rect key="frame" x="213" y="274" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="6.png">
@@ -85,7 +81,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEa-mu-8AJ">
-                    <rect key="frame" x="22" y="428" width="90" height="120"/>
+                    <rect key="frame" x="-1" y="380" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="7.png">
@@ -96,7 +92,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IEq-zn-mpi">
-                    <rect key="frame" x="115" y="428" width="90" height="120"/>
+                    <rect key="frame" x="106" y="380" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="8.png">
@@ -107,7 +103,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iye-i1-3OZ">
-                    <rect key="frame" x="208" y="428" width="90" height="120"/>
+                    <rect key="frame" x="213" y="380" width="108" height="108"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" backgroundImage="9.png">
@@ -118,11 +114,11 @@
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="ULE-hL-XXh">
-                    <rect key="frame" x="42" y="30" width="240" height="128"/>
+                    <rect key="frame" x="30" y="65" width="260" height="73"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dsQ-bX-szE">
-                    <rect key="frame" x="276" y="126" width="22" height="22"/>
+                    <rect key="frame" x="278" y="526" width="22" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <state key="normal">
@@ -132,22 +128,27 @@
                         <action selector="setting:" destination="-1" eventType="touchUpInside" id="sb2-Lh-i3C"/>
                     </connections>
                 </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="banner.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZNT-wE-7n4">
+                    <rect key="frame" x="0.0" y="146" width="320" height="22"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
             </subviews>
+            <color key="backgroundColor" red="0.93725490196078431" green="0.92156862745098034" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
     <resources>
-        <image name="1.png" width="138" height="173"/>
-        <image name="2.png" width="138" height="173"/>
-        <image name="3.png" width="138" height="173"/>
-        <image name="4.png" width="138" height="173"/>
-        <image name="5.png" width="138" height="173"/>
-        <image name="6.png" width="138" height="173"/>
-        <image name="7.png" width="138" height="173"/>
-        <image name="8.png" width="138" height="173"/>
-        <image name="9.png" width="138" height="173"/>
-        <image name="bg.png" width="444" height="708"/>
-        <image name="logo.png" width="275" height="174"/>
+        <image name="1.png" width="148" height="149"/>
+        <image name="2.png" width="149" height="149"/>
+        <image name="3.png" width="149" height="149"/>
+        <image name="4.png" width="148" height="150"/>
+        <image name="5.png" width="149" height="150"/>
+        <image name="6.png" width="149" height="150"/>
+        <image name="7.png" width="148" height="149"/>
+        <image name="8.png" width="149" height="149"/>
+        <image name="9.png" width="149" height="149"/>
+        <image name="banner.png" width="444" height="22"/>
+        <image name="logo.png" width="324" height="94"/>
     </resources>
 </document>

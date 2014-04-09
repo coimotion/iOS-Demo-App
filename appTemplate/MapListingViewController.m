@@ -43,12 +43,10 @@
     _dataArray = [NSMutableArray new];
     _stopRouteList = [NSMutableArray new];
     _rightButton = [[UIBarButtonItem alloc] initWithTitle:@"路線清單" style:UIBarButtonItemStylePlain target:self action:@selector(listStopRoutes)];
-    //self.navigationItem.leftBarButtonItem = leftButton;
-    //UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:RIGHT_BUTTON_TITLE_MAP style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
+
+    [self.navigationController.navigationBar setBarTintColor: [[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
     
     //  set the button as rightBarButton
-    
-    
     MKCoordinateRegion region;
     region.center.latitude = [[_data objectForKey:@"latitude"] floatValue];
     region.center.longitude = [[_data objectForKey:@"longitude"] floatValue];

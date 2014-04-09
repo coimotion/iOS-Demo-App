@@ -80,17 +80,7 @@
     [_dismissPickerView addGestureRecognizer:tap];
     [_pickerView setHidden:YES];
     //  set title of the view
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, -15.0f, 160.0f, 70.0f)];
-    [imgView setImage:[UIImage imageNamed:@"other_bg.png"]];
-
-    UIView *tmpView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 44.0f)];
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 160.0f, 44.0f)];
-    [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:[UIColor whiteColor]];
-    [titleLabel setText:@"活動資訊"];
-    [tmpView addSubview:imgView];
-    [tmpView addSubview:titleLabel];
-    [self.navigationItem setTitleView:tmpView];
+    [self setTitle:@"活動資訊"];
     _showTitle.text = [_data valueForKey:coimResParams.title];
     //  prepare URL for detail info API
     _detailURL = [[NSString alloc] initWithFormat:@"twShow/show/info/%@", [_data objectForKey:@"spID"]];
@@ -126,7 +116,7 @@
     _dic = [_showInfos objectAtIndex:_selected];
     NSString *timeLabel = [_dic objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+    [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [_dic objectForKey:@"placeName"], [_dic objectForKey:@"addr"]];
     _locationText.text = location;
 }
@@ -137,7 +127,7 @@
     NSDictionary *d = [_showInfos objectAtIndex:_selected];
     NSString *timeLabel = [d objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+    [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
     _locationText.text = location;
 }
@@ -162,7 +152,8 @@
     NSDictionary *d = [_showInfos objectAtIndex:[_picker selectedRowInComponent:0]];
     NSString *timeLabel = [d objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-    [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+    
+    [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
     _locationText.text = location;
 }
@@ -233,7 +224,7 @@
         }
         NSString *timeLabel = [[showInfo objectForKey:@"time"] stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
         NSLog(@"time: %@", timeLabel);
-        [_timeLabel setText:[timeLabel substringToIndex:[timeLabel length]-3]];
+        [_timeLabel setText:[NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
         NSString *t1 = [[responseData objectForKey:@"value"] objectForKey:@"startDate"], *t2 = [[responseData objectForKey:@"value"] objectForKey:@"endDate"];
         t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
         t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];

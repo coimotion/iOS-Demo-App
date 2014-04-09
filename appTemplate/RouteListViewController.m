@@ -36,8 +36,10 @@
     _dataArray = [NSMutableArray new];
     _routes = [NSMutableArray new];
     _stopIndex = 0;
-    [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg.png"]]];
-    
+    [self.tableView setBackgroundColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
+    [self.navigationController.navigationBar setBarTintColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
+    //  set bar on navigation item
+
     //  start search routes for tsIDs
     [self searchIthTSID:0];
     

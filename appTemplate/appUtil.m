@@ -10,10 +10,10 @@
 
 @implementation appUtil
 
-NSString *const coimLoginURI = @"go4art/account/login";
-NSString *const coimLogoutURI = @"go4art/account/logout";
+NSString *const coimLoginURI = @"core/user/login";
+NSString *const coimLogoutURI = @"core/user/logout";
 NSString *const coimSearchURI = @"twCtBus/busStop/search";
-NSString *const coimCheckTokenURI = @"go4art/account/profile";
+NSString *const coimCheckTokenURI = @"core/user/profile";
 
 const struct requestKeysForCoimotionAPI coimReqParams = {
     .lat = @"lat",

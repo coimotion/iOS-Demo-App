@@ -51,6 +51,8 @@
 		0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0476DF8218B361AF00380537 /* DetailedViewController.xib */; };
 		048EDD3D18E4168F00073AA8 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 048EDD3818E4168F00073AA8 /* bg.png */; };
 		048EDD4618E4171400073AA8 /* appUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 048EDD4518E4171400073AA8 /* appUtil.m */; };
+		0490A4F818F4E2060048398F /* banner.png in Resources */ = {isa = PBXBuildFile; fileRef = 0490A4F718F4E2060048398F /* banner.png */; };
+		0490A4FA18F4EF7A0048398F /* bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 0490A4F918F4EF7A0048398F /* bar.png */; };
 		04AD818918C6D4C100BF3179 /* mapAnnotaion.m in Sources */ = {isa = PBXBuildFile; fileRef = 04AD818818C6D4C000BF3179 /* mapAnnotaion.m */; };
 		04C0624C18E5682C009305E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C0624A18E5682C009305E6 /* ViewController.m */; };
 		04C0624D18E5682C009305E6 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0624B18E5682C009305E6 /* ViewController.xib */; };
@@ -137,6 +139,8 @@
 		048EDD4418E4171400073AA8 /* appUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appUtil.h; sourceTree = "<group>"; };
 		048EDD4518E4171400073AA8 /* appUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = appUtil.m; sourceTree = "<group>"; };
 		048EDD4918E4219000073AA8 /* libcoimSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcoimSDK.a; sourceTree = "<group>"; };
+		0490A4F718F4E2060048398F /* banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = banner.png; path = resource/banner.png; sourceTree = "<group>"; };
+		0490A4F918F4EF7A0048398F /* bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bar.png; path = resource/bar.png; sourceTree = "<group>"; };
 		04AD818718C6D4C000BF3179 /* mapAnnotaion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mapAnnotaion.h; sourceTree = "<group>"; };
 		04AD818818C6D4C000BF3179 /* mapAnnotaion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mapAnnotaion.m; sourceTree = "<group>"; };
 		04C0624918E5682C009305E6 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -275,6 +279,8 @@
 		0476DF3D18B354F600380537 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0490A4F918F4EF7A0048398F /* bar.png */,
+				0490A4F718F4E2060048398F /* banner.png */,
 				04F4AD1A18F21AF000231B88 /* Gear-icon.png */,
 				04E7511218EBA5CF0074CE4E /* other_bg.png */,
 				04E7511318EBA5CF0074CE4E /* delete.png */,
@@ -411,6 +417,7 @@
 				04E7511E18EBDC4B0074CE4E /* RouteViewController.xib in Resources */,
 				043F1FF218EAB75300D6DAF9 /* 5.png in Resources */,
 				043F1FF418EAB75300D6DAF9 /* 3.png in Resources */,
+				0490A4F818F4E2060048398F /* banner.png in Resources */,
 				043F1FFE18EAB7C400D6DAF9 /* GridViewController.xib in Resources */,
 				043F1FF518EAB75300D6DAF9 /* 1.png in Resources */,
 				043F1FEE18EAB75300D6DAF9 /* 9.png in Resources */,
@@ -423,6 +430,7 @@
 				043F1FF318EAB75300D6DAF9 /* 4.png in Resources */,
 				0476DF7A18B3591300380537 /* LoginViewController.xib in Resources */,
 				0476DF7F18B35ABF00380537 /* RouteListViewController.xib in Resources */,
+				0490A4FA18F4EF7A0048398F /* bar.png in Resources */,
 				043F1FF018EAB75300D6DAF9 /* 7.png in Resources */,
 				04E7510F18EB8EA50074CE4E /* title_bg.png in Resources */,
 				04E7511618EBA5CF0074CE4E /* other_bg.png in Resources */,

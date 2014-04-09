@@ -76,7 +76,8 @@
                                         _passwordText.text, coimReqParams.passwd,
                                         _confirmText.text, coimReqParams.passwd2,
                                         nil];
-            
+            NSLog(@"_pass: %@", _passwordText.text );
+            NSLog(@"_pass2: %@", _confirmText.text );
             //  create connection to register API
             _connection = [coimSDK registerWithParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
@@ -92,6 +93,7 @@
                                         nil];
             
             //  create connection to login API
+            NSLog(@"_pass: %@", _passwordText.text );
             _connection = [coimSDK loginTo:coimLoginURI withParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
             
