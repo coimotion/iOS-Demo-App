@@ -29,8 +29,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setTitle:@"關於此App"];
     [_aboutText setBackgroundColor:[UIColor clearColor]];
-    [_aboutText setText:@"此App是用以展示Coimotion API平台，結合政府開放資料中的藝文活動與高雄市政府的公車資訊打造，提供高雄市藝文活動的查詢以及活動地點的公車資訊，方便使用者查詢可前往的公車。"];
+    [_aboutText setTextAlignment:NSTextAlignmentNatural];
+    [_aboutText setText:@"此App是用以展示COIMOTION API平台，結合政府開放資料中的藝文活動與高雄市政府的公車資訊打造，提供高雄市藝文活動的查詢以及活動地點的公車資訊，方便使用者查詢可前往的公車。"];
 }
 
 - (void)didReceiveMemoryWarning

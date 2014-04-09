@@ -72,10 +72,9 @@
     [imgView setImage:[UIImage imageNamed:@"down.png"]];
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 140.0f, 44.0f)];
     [_titleLabel setTextAlignment:NSTextAlignmentLeft];
-    [_titleLabel setTextColor:[UIColor blackColor]];
     [_titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
     [_titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [_titleLabel setTextColor:[UIColor redColor]];
+    [_titleLabel setTextColor:[UIColor colorWithRed:152.0f/255.0f green:58.0f/255.0f blue:44.0f/255.0f alpha:1.0f]];
     [_titleLabel setText: [NSString stringWithFormat:@"%@", [_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]]];//]]@"一週活動"];
     [tmpView addSubview:imgView];
     [tmpView addSubview:_titleLabel];
@@ -281,26 +280,6 @@
     }
     _connection = [coimSDK sendTo:@"twShow/show/byCity/15" withParameter:parameters delegate:self];
     
-}
-
-- (void) showLogoutAlert
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"豋出"
-                                                    message:@"確定要登出嗎？"
-                                                   delegate:self
-                                          cancelButtonTitle:@"取消"
-                                          otherButtonTitles:@"確定", nil];
-    [alert show];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    //將按鈕的Title當作判斷的依據
-    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
-    
-    if([title isEqualToString:@"確定"]) {
-        [self logout];
-    }
 }
 
 - (void)logout
