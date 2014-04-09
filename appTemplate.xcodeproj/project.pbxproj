@@ -24,6 +24,7 @@
 		043F1FFE18EAB7C400D6DAF9 /* GridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 043F1FFC18EAB7C400D6DAF9 /* GridViewController.xib */; };
 		0453AC7518ED68A200976BE1 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0453AC7318ED68A200976BE1 /* SettingViewController.m */; };
 		0453AC7618ED68A200976BE1 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0453AC7418ED68A200976BE1 /* SettingViewController.xib */; };
+		0455288118F5124A0036D641 /* down.png in Resources */ = {isa = PBXBuildFile; fileRef = 0455288018F5124A0036D641 /* down.png */; };
 		0476DF3518B354F600380537 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0476DF3418B354F600380537 /* UIKit.framework */; };
 		0476DF3718B354F600380537 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0476DF3618B354F600380537 /* Foundation.framework */; };
 		0476DF3918B354F600380537 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0476DF3818B354F600380537 /* CoreGraphics.framework */; };
@@ -103,6 +104,7 @@
 		0453AC7218ED68A200976BE1 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		0453AC7318ED68A200976BE1 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		0453AC7418ED68A200976BE1 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
+		0455288018F5124A0036D641 /* down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = down.png; path = resource/down.png; sourceTree = "<group>"; };
 		0476DF3118B354F600380537 /* appTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = appTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0476DF3418B354F600380537 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0476DF3618B354F600380537 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -279,6 +281,7 @@
 		0476DF3D18B354F600380537 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0455288018F5124A0036D641 /* down.png */,
 				0490A4F918F4EF7A0048398F /* bar.png */,
 				0490A4F718F4E2060048398F /* banner.png */,
 				04F4AD1A18F21AF000231B88 /* Gear-icon.png */,
@@ -432,6 +435,7 @@
 				0476DF7F18B35ABF00380537 /* RouteListViewController.xib in Resources */,
 				0490A4FA18F4EF7A0048398F /* bar.png in Resources */,
 				043F1FF018EAB75300D6DAF9 /* 7.png in Resources */,
+				0455288118F5124A0036D641 /* down.png in Resources */,
 				04E7510F18EB8EA50074CE4E /* title_bg.png in Resources */,
 				04E7511618EBA5CF0074CE4E /* other_bg.png in Resources */,
 				04C0624D18E5682C009305E6 /* ViewController.xib in Resources */,
