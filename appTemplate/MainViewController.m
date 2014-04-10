@@ -39,7 +39,7 @@ NSMutableDictionary *dic;
     /*
         start with token validation
      */
-    _connection = [coimSDK sendTo:coimCheckTokenURI withParameter:nil delegate:self];
+    _connection = [coimSDK sendTo:@"core/user/profile" withParameter:nil delegate:self];
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
     
     /*

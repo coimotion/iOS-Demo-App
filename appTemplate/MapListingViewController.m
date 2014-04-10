@@ -147,7 +147,7 @@
         [_connection cancel];
         _connection = nil;
     }
-    _connection = [coimSDK sendTo:coimSearchURI withParameter:parameters delegate:self];
+    _connection = [coimSDK sendTo:@"twCtBus/busStop/search" withParameter:parameters delegate:self];
     [_connection setAccessibilityLabel:SEARCH_CONNECTION_LABEL];
     
 }

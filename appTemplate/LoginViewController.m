@@ -94,7 +94,7 @@
             
             //  create connection to login API
             NSLog(@"_pass: %@", _passwordText.text );
-            _connection = [coimSDK loginTo:coimLoginURI withParameter:parameters delegate:self];
+            _connection = [coimSDK loginTo:@"core/user/login" withParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
             
             //  disable UI util receive results
@@ -129,6 +129,7 @@
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {
+    NSLog(@"login: %@", responseData);
     //  check accessibilityLabel to tell data comes from which API
     if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
         //  register connection
