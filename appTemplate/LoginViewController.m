@@ -81,7 +81,6 @@
             //  create connection to register API
             _connection = [coimSDK registerWithParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
-            
             //  disable UI util receive results
             [self setDisable];
         }

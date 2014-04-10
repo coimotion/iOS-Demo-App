@@ -46,30 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSLog(@"data: %@", _data);
     _selected = 0;
-    /*
-    //  init addrText component
-    _locationText.layer.borderColor = [UIColor grayColor].CGColor;
-    _locationText.layer.borderWidth = 1.0f;
-    _locationText.layer.cornerRadius = 5.0f;
-    
-    //  init summaryText component
-    _saleText.layer.borderColor = [UIColor grayColor].CGColor;
-    _saleText.layer.borderWidth = 1.0f;
-    _saleText.layer.cornerRadius = 5.0f;
-    
-    //  init bodyText component
-    _descText.layer.borderColor = [UIColor grayColor].CGColor;
-    _descText.layer.borderWidth = 1.0f;
-    _descText.layer.cornerRadius = 5.0f;
-    
-    //  init bodyText component
-    _periodText.layer.borderColor = [UIColor grayColor].CGColor;
-    _periodText.layer.borderWidth = 1.0f;
-    _periodText.layer.cornerRadius = 5.0f;
-    */
     [_locationText setBackgroundColor:[UIColor clearColor]];
     [_saleText setBackgroundColor:[UIColor clearColor]];
     [_descText setBackgroundColor:[UIColor clearColor]];
@@ -79,14 +56,18 @@
                                    action:@selector(showPicker)];
     [_dismissPickerView addGestureRecognizer:tap];
     [_pickerView setHidden:YES];
+    
     //  set title of the view
     [self setTitle:@"活動資訊"];
     _showTitle.text = [_data valueForKey:coimResParams.title];
+    
     //  prepare URL for detail info API
     _detailURL = [[NSString alloc] initWithFormat:@"twShow/show/info/%@", [_data objectForKey:@"spID"]];
     NSLog(@"detail url: %@", _detailURL);
+    
     //  prepare parameter of detail info API
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1", coimReqParams.detail, nil];
+    
     //  create connection of the API
     _connection = [coimSDK sendTo:_detailURL withParameter:param delegate:self];
     [_connection setAccessibilityLabel:DETAIL_CONNECTION_LABEL];
@@ -96,20 +77,25 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-    NSLog(@"=======memory warning=========");
 }
 #pragma mark - IBActions
+/*
+    open map to show location of activity
+ */
 - (IBAction)openMapView:(id)sender {
     MapListingViewController *mapView = [MapListingViewController new];
     mapView.data = _dic;
     [self.navigationController pushViewController:mapView animated:YES];
 }
-
+/*
+    open browser to ticket site
+ */
 - (IBAction)buyTicket:(id)sender {
-    NSLog(@"open saleURL");
     [[UIApplication sharedApplication]openURL:[[NSURL alloc] initWithString:_saleURL]];
 }
-
+/*
+    check the selection
+ */
 - (IBAction)check:(id)sender {
     [self showPicker];
     _selected = [_picker selectedRowInComponent:0];
@@ -120,7 +106,9 @@
     NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [_dic objectForKey:@"placeName"], [_dic objectForKey:@"addr"]];
     _locationText.text = location;
 }
-
+/*
+    cancel the selection
+ */
 - (IBAction)cancel:(id)sender {
     [self showPicker];
     [_picker selectRow:_selected inComponent:0 animated:NO];
@@ -132,9 +120,11 @@
     _locationText.text = location;
 }
 #pragma mark - subfunctions
+/*
+    Show picker
+ */
 -(void) showPicker
 {
-    NSLog(@"show picker, %d", [_pickerView isHidden]);
     if([_pickerView isHidden]) {
         [_pickerView setHidden: NO];
         [self.navigationController setNavigationBarHidden:YES];    // it hides
@@ -190,12 +180,12 @@
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {
-    NSLog(@"response Data: %@", responseData);
     _showInfos = [[responseData objectForKey:@"value"] objectForKey:@"showInfo"];
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
         [_picker reloadAllComponents];
         NSLog(@"# showinfos %d",[_showInfos count] );
         NSDictionary *showInfo = [_showInfos objectAtIndex:0];
+        //  show right nav button if shows more than 1
         if([_showInfos count] > 1) {
             /*
              set logout button on right of navigationBar
@@ -204,6 +194,7 @@
             self.navigationItem.rightBarButtonItem = rightButton;
             
         }
+        //  displaying information
         _locationText.text = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
         _descText.text = ([[[responseData objectForKey:@"value"] objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[[responseData objectForKey:@"value"]  objectForKey:@"descTx"];
 
@@ -223,15 +214,12 @@
             [_saleText setHidden:YES];
         }
         NSString *timeLabel = [[showInfo objectForKey:@"time"] stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-        NSLog(@"time: %@", timeLabel);
         [_timeLabel setText:[NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
         NSString *t1 = [[responseData objectForKey:@"value"] objectForKey:@"startDate"], *t2 = [[responseData objectForKey:@"value"] objectForKey:@"endDate"];
         t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
         t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
         _periodText.text = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", t1 , t2];
         _dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
-        
-        //}
     }
 }
 @end

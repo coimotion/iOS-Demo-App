@@ -16,8 +16,6 @@
 @synthesize activityIndicator = _activityIndicator;
 @synthesize connection = _connection;
 
-// used to save progress information
-NSMutableDictionary *dic;
 #pragma mark - view control flows
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,11 +39,6 @@ NSMutableDictionary *dic;
      */
     _connection = [coimSDK sendTo:@"core/user/profile" withParameter:nil delegate:self];
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
-    
-    /*
-        start with app itself
-     */
-    //[appUtil  enterApp];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,7 +49,6 @@ NSMutableDictionary *dic;
 /*
     get result of token validation
 */
-//- (void)coimConnection:(NSURLConnection *)conn didReceiveData: (NSData *) incomingData
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {

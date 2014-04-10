@@ -12,6 +12,7 @@
 #import "MapListingViewController.h"
 
 @interface LoginViewController : UIViewController
+
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segControl;
 @property (strong, nonatomic) IBOutlet UIButton *loginButton;
 @property (strong, nonatomic) IBOutlet UITextField *usernameText;
@@ -20,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loginIndicator;
 @property (strong, nonatomic) NSURLConnection *connection;
 @property bool regMode;
+
 - (IBAction)login:(id)sender;
 - (IBAction)segChange:(id)sender;
 

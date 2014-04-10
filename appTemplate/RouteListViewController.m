@@ -38,7 +38,6 @@
     _stopIndex = 0;
     [self.tableView setBackgroundColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
     [self.navigationController.navigationBar setBarTintColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
-    //  set bar on navigation item
 
     //  start search routes for tsIDs
     [self searchIthTSID:0];
@@ -116,32 +115,19 @@
     /*
         modifying refresh controller
      */
-    //NSDictionary *searchInfo = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    //NSLog(@"data: %@", responseData);
     if ([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
-        //if ([[searchInfo objectForKey:coimResParams.errCode] integerValue] == 0) {
-            NSArray *list = [[responseData objectForKey:@"value"] objectForKey:@"list"];
-            //NSLog(@"list length: %d", [list count]);
-            //[_routes removeAllObjects];
-            for (int i = 0; i <[list count]; i++) {
-                
-                if(![_routes containsObject:[list[i] objectForKey:@"rtName"]]) {
-                    
-                    
-                    [_routes addObject:[list[i] objectForKey:@"rtName"]];
-                    [_dataArray addObject:list[i]];
-                    NSLog(@"%d rtName: %@, brID: %@",[_routes count], [list[i] objectForKey:@"rtName"], [[_dataArray objectAtIndex:[_dataArray count]-1] objectForKey:@"brID"]);
-                }
+        NSArray *list = [[responseData objectForKey:@"value"] objectForKey:@"list"];
+        for (int i = 0; i <[list count]; i++) {
+            if(![_routes containsObject:[list[i] objectForKey:@"rtName"]]) {
+                [_routes addObject:[list[i] objectForKey:@"rtName"]];
+                [_dataArray addObject:list[i]];
+                NSLog(@"%d rtName: %@, brID: %@",[_routes count], [list[i] objectForKey:@"rtName"], [[_dataArray objectAtIndex:[_dataArray count]-1] objectForKey:@"brID"]);
             }
-            NSLog(@"# routes: %d", [_routes count]);
-            NSLog(@"# datas: %d", [_dataArray count]);
-            [self.tableView reloadData];
-            if(++_stopIndex < [_tsIDs count]) {
-                [self searchIthTSID:_stopIndex];
-            }
-            else {
-            }
-        //}
+        }
+        [self.tableView reloadData];
+        if(++_stopIndex < [_tsIDs count]) {
+            [self searchIthTSID:_stopIndex];
+        }
     }
 }
 

@@ -132,18 +132,6 @@
 }
 
 #pragma mark - coimotion delegate
-/*- (void)coimConnection:(NSURLConnection *)conn didReceiveData:(NSData *)data
-{
-    if(data != nil){
-        NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-        [_myData appendData:data];
-    }
-    else {
-        [conn cancel];
-    }
-    
-}*/
-
 - (void)coimConnection:(NSURLConnection *)conn didFailWithError:(NSError *)err
 {
     NSLog(@"err: %@", err);

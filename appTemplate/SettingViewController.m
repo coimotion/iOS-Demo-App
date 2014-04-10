@@ -43,7 +43,7 @@
 
 #pragma mark - IBActions
 - (IBAction)logout:(id)sender {
-    [coimSDK logoutFrom:@"drinks/account/logout" delegate:self];
+    [coimSDK logoutFrom:@"core/user/logout" delegate:self];
 }
 
 #pragma mark - coimotion delegaet

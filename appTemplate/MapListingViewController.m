@@ -43,7 +43,8 @@
     _dataArray = [NSMutableArray new];
     _stopRouteList = [NSMutableArray new];
     _rightButton = [[UIBarButtonItem alloc] initWithTitle:@"路線清單" style:UIBarButtonItemStylePlain target:self action:@selector(listStopRoutes)];
-
+    
+    //  set navi controller not translucent while load
     [self.navigationController.navigationBar setBarTintColor: [[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
     
     //  set the button as rightBarButton
@@ -70,12 +71,14 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:YES];
+    //  set navi controller translucent when this view disapear
     self.navigationController.navigationBar.translucent = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    //  set navi controller no translucent when it appear
     self.navigationController.navigationBar.translucent = NO;
 }
 
@@ -88,7 +91,6 @@
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
     //  get annotationview of clicked annotaion
-    
     if([view.annotation subtitle] == nil) {
         _tmpAnnView = [mapView viewForAnnotation:view.annotation];
         _selected = ((mapAnnotaion *)view.annotation).ind;
@@ -100,10 +102,10 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     
-    MKPinAnnotationView* pinView = [[MKPinAnnotationView alloc]
-                                 initWithAnnotation:annotation reuseIdentifier:nil];
+    MKPinAnnotationView* pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:nil];
     pinView.animatesDrop=YES;
     pinView.canShowCallout=YES;
+    
     if ([[annotation title] isEqualToString:[_targetDic objectForKey:@"title"]]) {
         NSLog(@"view for annotation green");
         pinView.pinColor = MKPinAnnotationColorGreen;
@@ -179,7 +181,6 @@
         NSMutableArray *list = [[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.list];
         
         //  generating new annotations and dataArray for displaying
-        NSLog(@"target Dic: %@", _targetDic);
         [_dataArray addObject:_targetDic];
         {
             CLLocationCoordinate2D pinCenter;
@@ -190,14 +191,8 @@
             annotation.ind = 0;
             [_mapView addAnnotation:annotation];
         }
-        NSLog(@"data length : %d", [list count]);
         for (int i = 0; i < [list count]; i++) {
-            NSLog(@"list %d: %@", i, list[i]);
             NSString *stopName = [NSString stringWithFormat:@"%@(%@)",[list[i] objectForKey:@"stName"], [list[i] objectForKey:@"stCode"]];
-            //[stopRouteList setObject:[NSMutableArray new] forKey:[list[i] objectForKey:stopName]];
-            //NSMutableDictionary *d = [NSMutableDictionary new];
-            
-            //[d setObject:[NSMutableArray new] forKey:stopName];
             [_stopRouteList addObject:[list[i] objectForKey:@"tsID"]];
             
             CLLocationCoordinate2D pinCenter;
@@ -209,13 +204,11 @@
             [_mapView addAnnotation:annotation];
             [_dataArray addObject:list[i]];
         }
-        NSLog(@"stop route list: %d", [_stopRouteList count]);
         if([list count] > 1)
             self.navigationItem.rightBarButtonItem = _rightButton;
     }
     
     if([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
-        NSLog(@"%@", responseData);
         NSArray *routes = [[responseData objectForKey:@"value"] objectForKey:@"list"];
         NSMutableString *routeStr = [NSMutableString new];
         for(int i = 0; i<[routes count]; i++) {
@@ -224,8 +217,6 @@
             }
             [routeStr appendString:[[routes objectAtIndex:i] objectForKey:@"rtName"]];
         }
-        NSLog(@"routes: %@", routeStr);
-        NSLog(@"routes: %d", _selected);
         [(mapAnnotaion *)_tmpAnnView.annotation setSubtitle:routeStr];
     }
 }

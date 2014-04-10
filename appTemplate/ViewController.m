@@ -47,24 +47,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //  initialize
     _catFlag = NO;
     _myData = [NSMutableData new];
     _pickerValue = [[NSArray alloc] initWithObjects:@"一週活動",  @"兩週活動",  @"三週活動", @"四週活動", nil];
     _catPickerValue = [[NSArray alloc] initWithObjects:@"音樂表演",  @"戲劇表演",  @"舞蹈表演", @"親子活動", @"展覽活動", @"講座", @"電影", @"演唱會", @"其它資訊", nil];
     _catIDArray = [[NSArray alloc] initWithObjects:@"1",  @"2",  @"3", @"4", @"6", @"7", @"8", @"17", @"15", nil];
     [_pickerView setHidden:YES];
-    [_table registerNib:[UINib nibWithNibName:@"myCell" bundle:nil]
-         forCellReuseIdentifier:@"coimCell"];
-    
+    [_table registerNib:[UINib nibWithNibName:@"myCell" bundle:nil] forCellReuseIdentifier:@"coimCell"];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     _dic = [NSMutableDictionary new];
-    
     _dataArray = [NSMutableArray new];
-    
     self.navigationController.navigationBar.translucent = YES;
     /*
-     set logout button on right of navigationBar
+        set title as button to choose category
      */
     _selectedPeriod = 0;
     UIView *tmpView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 140.0f, 44.0f)];
@@ -75,12 +71,9 @@
     [_titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
     [_titleLabel setTextAlignment:NSTextAlignmentCenter];
     [_titleLabel setTextColor:[UIColor colorWithRed:152.0f/255.0f green:58.0f/255.0f blue:44.0f/255.0f alpha:1.0f]];
-    [_titleLabel setText: [NSString stringWithFormat:@"%@", [_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]]];//]]@"一週活動"];
+    [_titleLabel setText: [NSString stringWithFormat:@"%@", [_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]]];
     [tmpView addSubview:imgView];
     [tmpView addSubview:_titleLabel];
-    
-    //UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Trend"]];
-
     UITapGestureRecognizer *singleFingerTap1 =
     [[UITapGestureRecognizer alloc] initWithTarget:self
                                             action:@selector(catPicker)];
@@ -91,20 +84,20 @@
     [_dismissView addGestureRecognizer:singleFingerTap2];
     [self.navigationItem setTitleView:tmpView];
     
+    //  set right nav button for choosing search period 1~4 weeks
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"一週活動" style:UIBarButtonItemStylePlain target:self action:@selector(datePicker)];
+    self.navigationItem.rightBarButtonItem = rightButton;
+    
     /*
-     set background image
+        set style of navigation bar
      */
-    //UIColor *background = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"bg.png"]];
-    //_table.backgroundColor = background;
     [_table setBackgroundColor:[UIColor clearColor]];
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
-                             forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
-    [self searchListForCat:_catID andWeeks:_selectedPeriod];
     
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"一週活動" /*[_catPickerValue objectAtIndex:[_catIDArray indexOfObject:_catID]]*/ style:UIBarButtonItemStylePlain target:self action:@selector(datePicker)];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    //  searching
+    [self searchListForCat:_catID andWeeks:_selectedPeriod];
 }
 
 - (void)didReceiveMemoryWarning
@@ -157,7 +150,6 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //  setting title of a row
-    
     myCell *mCell =((myCell *)cell);
     [mCell.label setTextColor:[UIColor blackColor]];
     mCell.label.text = [_dataArray[indexPath.row] objectForKey:coimResParams.title];
@@ -174,8 +166,6 @@
 #pragma mark - coimotion delegate
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection withData:(NSDictionary *)responseData
 {
-    NSLog(@"finish loading:");
-    NSLog(@"label: %@", [_connection accessibilityLabel]);
     if ([[_connection accessibilityLabel] isEqualToString:@"logout"]) {
         [appUtil enterLogin];
     }
@@ -227,10 +217,8 @@
         {
             NSLog(@"check cat");
             _catID = [_catIDArray objectAtIndex:[_picker selectedRowInComponent:0]];
-            //[[[self navigationItem] rightBarButtonItem] setTitle:[_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];
             [_titleLabel setTextAlignment:NSTextAlignmentCenter];
             _titleLabel.text = [NSString stringWithFormat:@"%@", [_catPickerValue objectAtIndex:[_picker selectedRowInComponent:0]]];//∨
-            //_titleLabel.text = [_pickerValue objectAtIndex:0];
             [[[self navigationItem] rightBarButtonItem] setTitle:[_pickerValue objectAtIndex:0]];
             _myData = [NSMutableData new];
             _selectedPeriod = 0;
@@ -242,7 +230,6 @@
         if (_selectedPeriod != [_picker selectedRowInComponent:0]) {
             NSLog(@"check");
             _selectedPeriod = [_picker selectedRowInComponent:0];
-            //_titleLabel.text = [_pickerValue objectAtIndex:_selectedPeriod];
             [[[self navigationItem] rightBarButtonItem] setTitle:[_pickerValue objectAtIndex:_selectedPeriod]];
             _myData = [NSMutableData new];
             [self searchListForCat:_catID andWeeks:_selectedPeriod];
@@ -252,8 +239,8 @@
     [_pickerView setHidden: YES];
 }
 
-- (IBAction)cancel:(id)sender {
-    
+- (IBAction)cancel:(id)sender
+{
     [_picker selectRow:_selectedPeriod inComponent:0 animated:YES];
     [self.navigationController setNavigationBarHidden:NO];
     [_pickerView setHidden:YES];
@@ -280,17 +267,6 @@
     }
     _connection = [coimSDK sendTo:@"twShow/show/byCity/15" withParameter:parameters delegate:self];
     
-}
-
-- (void)logout
-{
-    if(_connection != nil) {
-        [_connection cancel];
-        _connection = nil;
-        _myData = [NSMutableData new];
-    }
-    _connection = [coimSDK logoutFrom:coimLogoutURI delegate:self];
-    [_connection setAccessibilityLabel:@"logout"];
 }
 
 - (void)dismissPicker

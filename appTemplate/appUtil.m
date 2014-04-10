@@ -10,11 +10,6 @@
 
 @implementation appUtil
 
-NSString *const coimLoginURI = @"core/user/login";
-NSString *const coimLogoutURI = @"core/user/logout";
-NSString *const coimSearchURI = @"twCtBus/busStop/search";
-NSString *const coimCheckTokenURI = @"core/user/profile";
-
 const struct requestKeysForCoimotionAPI coimReqParams = {
     .lat = @"lat",
     .lng = @"lng",
@@ -63,9 +58,7 @@ const struct responseKeysFromCoimotionAPI coimResParams = {
 */
 + (void)enterApp
 {
-    //TableListingViewController *tableListVC = [TableListingViewController new];
     GridViewController *VC = [GridViewController new];
-    
     UINavigationController *naviVC1 = [[UINavigationController alloc] initWithRootViewController:VC];
     [self setRootWindowView:naviVC1];
 }
