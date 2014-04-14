@@ -21,14 +21,14 @@ COIMOTION SDK可由此[下載](http://tw.coimotion.com/wcoim/SDK/COIMOTION-SDK-i
   
 App第一個執行的view，在此會檢查使用者是否是登入狀態，因此在viewDidLoad中對SDK初始化([coimSDK initSDK:^(NSError *err){}])，如果失敗的話可以在傳入的block中取得失敗資訊，接下來以sendTo:withParameter:delegate來做token的檢查，使入的參數為{}，url為"core/user/profile"，並實作coimConnectionDidFinishLoading:withData:委派函式以處理API回傳的資料，如果token是無效的，API會回傳以下內容：  
 
->{  
->    errCode = 0;  
->    message = Ok;  
->    value = {  
->        dspName = guest;  
->        isGuest = 1;  
->    };  
->}  
+>       {  
+>         errCode = 0;  
+>         message = Ok;  
+>         value = {  
+>           dspName = guest;  
+>           isGuest = 1;  
+>         };  
+>       }  
   
 如果是guest的話就顯示登入畫面，反之就進入app主功能畫面。  
   
@@ -36,11 +36,11 @@ App第一個執行的view，在此會檢查使用者是否是登入狀態，因�
   
 此view controller為登入與註冊的處理，使用者可根據是否註冊來選擇切換功能，按下按鈕後會根據功能選擇呼叫(loginTo:withParameter:delegate或是registerWithParameter:delegate)，另外除實作coimConnectionDidFinishLoading:withData:來判斷登入/註冊成功外，同時實作了coimConnection:didFailWithError:來顯示登入或註冊時的錯誤訊息。登入成功會接到以下的API回應：  
 
->{  
->    errCode = 0;  
->    message = "Login Ok.";  
->    token = f700e0396cd48298c0b314592490bbce;  
->}  
+>       {  
+>         errCode = 0;  
+>         message = "Login Ok.";  
+>         token = f700e0396cd48298c0b314592490bbce;  
+>       }  
   
 由於SDK內部已處理過token，開發使用SDK處理登入/註冊的話，即可忽略此處的token處理，直接視為登入成功，進入app主畫面。  
   
@@ -69,4 +69,3 @@ RouteListViewController中點擊table上的路線，會開啟RouteViewController
 ##‧SettingViewController  
   
 此view controller中提供了登出的功能，登出是使用SDK中的logoutFrom:delegate，呼叫此API時，SDK會先將儲存於plist中的token清除，並發送API至"core/user/logout"，此時server端亦同步註銷使用中的token，因此不論成功失敗，app端皆可視為登出，在coimConnectionDidFinishLoading:withData:與coimConnection:didFailWithError:中皆直接在app中顯示登入畫面。
-
