@@ -95,7 +95,15 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"];
+    if([[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"isInBd"] integerValue] == 0){
+        cell.textLabel.text = [NSString stringWithFormat:@"(返)%@",[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"]];
+        [cell setBackgroundColor:[UIColor colorWithRed:0.0f green:163.0f/255.0f blue:175.0f/255.0f alpha:1.0f]];
+    }
+    else {
+        cell.textLabel.text = [NSString stringWithFormat:@"(往)%@",[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"]];
+        [cell setBackgroundColor:[UIColor colorWithRed:246.0f/255.0f green:191.0f/255.0f blue:188.0f/255.0f alpha:1.0f]];
+    }
+        
     cell.detailTextLabel.text = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"arvTime"];
     
 }

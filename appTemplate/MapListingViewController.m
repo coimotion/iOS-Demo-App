@@ -30,7 +30,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = @"活動地點";
+        //self.title = @"活動地點";
     }
     return self;
 }
@@ -59,6 +59,7 @@
     [_data objectForKey:@"latitude"] ,@"lat",
     [_data objectForKey:@"longitude"] ,@"lng",
     [_data objectForKey:@"placeName"] ,@"title", nil];
+    [self setTitle:[_data objectForKey:@"placeName"]];
     // search bus stops
     [self searchAtLat:[[_data objectForKey:@"latitude"] doubleValue] Lng:[[_data objectForKey:@"longitude"] doubleValue]];
 }

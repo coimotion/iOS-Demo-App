@@ -33,6 +33,8 @@
 @synthesize saleURL = _saleURL;
 @synthesize showInfos = _showInfos;
 @synthesize selected = _selected;
+@synthesize descScrollImage = _descScrollImage;
+@synthesize priceScrollImage = _priceScrollImage;
 
 #pragma mark - view control flows
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,6 +53,7 @@
     [_saleText setBackgroundColor:[UIColor clearColor]];
     [_descText setBackgroundColor:[UIColor clearColor]];
     [_periodText setBackgroundColor:[UIColor clearColor]];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(showPicker)];
@@ -135,6 +138,14 @@
     }
 }
 
+- (CGFloat)textViewHeightForAttributedText:(NSAttributedString *)text andWidth:(CGFloat)width
+{
+    UITextView *textView = [[UITextView alloc] init];
+    [textView setAttributedText:text];
+    CGSize size = [textView sizeThatFits:CGSizeMake(width, FLT_MAX)];
+    return size.height;
+}
+
 #pragma mark - picker delegate
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
@@ -197,12 +208,22 @@
         //  displaying information
         _locationText.text = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
         _descText.text = ([[[responseData objectForKey:@"value"] objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[[responseData objectForKey:@"value"]  objectForKey:@"descTx"];
-
+        
+        if([self textViewHeightForAttributedText:[_descText attributedText] andWidth:_descText.frame.size.width] > _descText.frame.size.height){
+            NSLog(@"desc over size");
+            [_descScrollImage setHidden:NO];
+        }
+        
         if([[showInfo objectForKey:@"isFree"] integerValue] == 0) {
             NSString *infoSrc = ([[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"];
             NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
             NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
             _saleText.text = priceInfo;
+            if([self textViewHeightForAttributedText:[_saleText attributedText] andWidth:_saleText.frame.size.width] > _saleText.frame.size.height){
+                NSLog(@"price over size");
+                [_priceScrollImage setHidden:NO];
+            }
+            
             _saleURL = [[responseData objectForKey:@"value"] objectForKey:@"saleURL"];
             if([_saleURL isEqualToString:@""]) {
                 [_saleImg setHidden:YES];

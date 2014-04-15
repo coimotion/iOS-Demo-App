@@ -74,6 +74,7 @@
 		04E7511D18EBDC4B0074CE4E /* RouteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E7511B18EBDC4B0074CE4E /* RouteViewController.m */; };
 		04E7511E18EBDC4B0074CE4E /* RouteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E7511C18EBDC4B0074CE4E /* RouteViewController.xib */; };
 		04E7511F18EBEC8F0074CE4E /* libcoimSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 048EDD4918E4219000073AA8 /* libcoimSDK.a */; };
+		04F03AA518FCB4BF00F45B10 /* scroll.png in Resources */ = {isa = PBXBuildFile; fileRef = 04F03AA418FCB4BF00F45B10 /* scroll.png */; };
 		04F4AD1B18F21AF000231B88 /* Gear-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04F4AD1A18F21AF000231B88 /* Gear-icon.png */; };
 /* End PBXBuildFile section */
 
@@ -172,6 +173,7 @@
 		04E7511A18EBDC4B0074CE4E /* RouteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteViewController.h; sourceTree = "<group>"; };
 		04E7511B18EBDC4B0074CE4E /* RouteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteViewController.m; sourceTree = "<group>"; };
 		04E7511C18EBDC4B0074CE4E /* RouteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RouteViewController.xib; sourceTree = "<group>"; };
+		04F03AA418FCB4BF00F45B10 /* scroll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scroll.png; path = resource/scroll.png; sourceTree = "<group>"; };
 		04F4AD1A18F21AF000231B88 /* Gear-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Gear-icon.png"; path = "resource/Gear-icon.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -287,6 +289,7 @@
 		0476DF3D18B354F600380537 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				04F03AA418FCB4BF00F45B10 /* scroll.png */,
 				04B531EB18FBC3E500C8738F /* ipadIcon.png */,
 				04B531EC18FBC3E500C8738F /* iphoneIcon.png */,
 				04B531ED18FBC3E500C8738F /* ipadIcon2X.png */,
@@ -452,6 +455,7 @@
 				04E7511618EBA5CF0074CE4E /* other_bg.png in Resources */,
 				04C0624D18E5682C009305E6 /* ViewController.xib in Resources */,
 				0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */,
+				04F03AA518FCB4BF00F45B10 /* scroll.png in Resources */,
 				04F4AD1B18F21AF000231B88 /* Gear-icon.png in Resources */,
 				043F1FF718EAB75300D6DAF9 /* logo.png in Resources */,
 				04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */,

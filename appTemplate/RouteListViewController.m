@@ -90,7 +90,8 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [_routes objectAtIndex:indexPath.row];
+    NSLog(@"route: %@", [_routes objectAtIndex:indexPath.row]);
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[_routes objectAtIndex:indexPath.row] objectForKey:@"rtName"], [[_routes objectAtIndex:indexPath.row] objectForKey:@"descTx"]];
 }
 
 #pragma mark - Table view delegate
@@ -103,7 +104,8 @@
     RouteViewController *VC = [RouteViewController new];
     NSLog(@"brID: %@", brID);
     VC.brID = brID;
-    [VC setTitle:[_routes objectAtIndex:indexPath.row]];
+    
+    [VC setTitle:[NSString stringWithFormat:@"%@(%@)", [[_routes objectAtIndex:indexPath.row] objectForKey:@"rtName"], [[_routes objectAtIndex:indexPath.row] objectForKey:@"descTx"]]];
     [[self navigationController] pushViewController:VC animated:YES];
 }
 
@@ -115,11 +117,16 @@
     /*
         modifying refresh controller
      */
+    NSLog(@"data: %@", responseData);
     if ([[_connection accessibilityLabel] isEqualToString:@"routeSearch"]) {
         NSArray *list = [[responseData objectForKey:@"value"] objectForKey:@"list"];
         for (int i = 0; i <[list count]; i++) {
-            if(![_routes containsObject:[list[i] objectForKey:@"rtName"]]) {
-                [_routes addObject:[list[i] objectForKey:@"rtName"]];
+            NSMutableDictionary *tmpDic = [NSMutableDictionary new];
+            [tmpDic setObject:[list[i] objectForKey:@"rtName"] forKey:@"rtName"];
+            [tmpDic setObject:[list[i] objectForKey:@"descTx"] forKey:@"descTx"];
+            
+            if(![_routes containsObject:tmpDic]) {
+                [_routes addObject:tmpDic];
                 [_dataArray addObject:list[i]];
                 NSLog(@"%d rtName: %@, brID: %@",[_routes count], [list[i] objectForKey:@"rtName"], [[_dataArray objectAtIndex:[_dataArray count]-1] objectForKey:@"brID"]);
             }
