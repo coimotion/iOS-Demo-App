@@ -38,8 +38,6 @@
     [self searchBus];
     [self.tableView setBackgroundColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
     [self.navigationController.navigationBar setBarTintColor: [[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
-    //[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]
-    NSLog(@"brID: %@", _brID);
     /*
      add pull to refresh
      with refreshingView function to trigger search
@@ -134,7 +132,6 @@
         _connection = nil;
     }
     NSString *relativeURL = [NSString stringWithFormat:@"twCtBus/busRoute/next/%@", _brID];
-    NSLog(@"URL: %@", relativeURL);
     _connection = [coimSDK sendTo:relativeURL withParameter:nil delegate:self];
     [_connection setAccessibilityLabel:@"routeSearch"];
 }

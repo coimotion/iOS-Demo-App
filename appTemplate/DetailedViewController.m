@@ -66,7 +66,6 @@
     
     //  prepare URL for detail info API
     _detailURL = [[NSString alloc] initWithFormat:@"twShow/show/info/%@", [_data objectForKey:@"spID"]];
-    NSLog(@"detail url: %@", _detailURL);
     
     //  prepare parameter of detail info API
     NSDictionary *param = [[NSDictionary alloc] initWithObjectsAndKeys:@"1", coimReqParams.detail, nil];
@@ -166,7 +165,6 @@
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    NSLog(@"# rows in component %d", [_showInfos count]);
     return [_showInfos count];
 }
 
@@ -194,7 +192,6 @@
     _showInfos = [[responseData objectForKey:@"value"] objectForKey:@"showInfo"];
     if ([[_connection accessibilityLabel] isEqualToString:DETAIL_CONNECTION_LABEL]) {
         [_picker reloadAllComponents];
-        NSLog(@"# showinfos %d",[_showInfos count] );
         NSDictionary *showInfo = [_showInfos objectAtIndex:0];
         //  show right nav button if shows more than 1
         if([_showInfos count] > 1) {
@@ -210,7 +207,6 @@
         _descText.text = ([[[responseData objectForKey:@"value"] objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[[responseData objectForKey:@"value"]  objectForKey:@"descTx"];
         
         if([self textViewHeightForAttributedText:[_descText attributedText] andWidth:_descText.frame.size.width] > _descText.frame.size.height){
-            NSLog(@"desc over size");
             [_descScrollImage setHidden:NO];
         }
         
@@ -220,7 +216,6 @@
             NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
             _saleText.text = priceInfo;
             if([self textViewHeightForAttributedText:[_saleText attributedText] andWidth:_saleText.frame.size.width] > _saleText.frame.size.height){
-                NSLog(@"price over size");
                 [_priceScrollImage setHidden:NO];
             }
             

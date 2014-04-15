@@ -185,10 +185,12 @@
     </objects>
     <resources>
         <image name="bar.png" width="444" height="3"/>
+        <image name="bar.png" width="444" height="3"/>
         <image name="delete.png" width="28" height="28"/>
         <image name="free.png" width="90" height="47"/>
         <image name="map.png" width="42" height="42"/>
         <image name="ok.png" width="28" height="28"/>
+        <image name="scroll.png" width="64" height="64"/>
         <image name="scroll.png" width="64" height="64"/>
         <image name="shopping.png" width="42" height="42"/>
     </resources>
