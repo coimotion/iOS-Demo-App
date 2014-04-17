@@ -16,7 +16,8 @@
 
 @synthesize saleText = _saleText;
 @synthesize saleImg = _saleImg;
-@synthesize locationText = _locationText;
+@synthesize placeLabel = _placeLabel;
+@synthesize addrLabel = _addrLabel;
 @synthesize descText = _descText;
 @synthesize data = _data;
 @synthesize detailURL = _detailURL;
@@ -35,6 +36,8 @@
 @synthesize selected = _selected;
 @synthesize descScrollImage = _descScrollImage;
 @synthesize priceScrollImage = _priceScrollImage;
+@synthesize orgLabel = _orgLabel;
+@synthesize srcInfoLabel = _srcInfoLabel;
 
 #pragma mark - view control flows
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -49,10 +52,8 @@
 {
     [super viewDidLoad];
     _selected = 0;
-    [_locationText setBackgroundColor:[UIColor clearColor]];
     [_saleText setBackgroundColor:[UIColor clearColor]];
     [_descText setBackgroundColor:[UIColor clearColor]];
-    [_periodText setBackgroundColor:[UIColor clearColor]];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
@@ -105,8 +106,13 @@
     NSString *timeLabel = [_dic objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
     [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
-    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [_dic objectForKey:@"placeName"], [_dic objectForKey:@"addr"]];
-    _locationText.text = location;
+    
+    _placeLabel.text = [NSString stringWithFormat:@"地點：%@", [_dic objectForKey:@"placeName"]];
+    _addrLabel.text = [NSString stringWithFormat:@"地址：%@", [_dic objectForKey:@"addr"]];
+    
+    NSString *price = ([[_dic objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[_dic objectForKey:@"priceInfo"];
+    NSString *priceInfo = [NSString stringWithFormat:@"票價：\n%@", price];
+    _saleText.text = priceInfo;
 }
 /*
     cancel the selection
@@ -118,8 +124,12 @@
     NSString *timeLabel = [d objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
     [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
-    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
-    _locationText.text = location;
+    _placeLabel.text = [NSString stringWithFormat:@"地點：%@", [d objectForKey:@"placeName"]];
+    _addrLabel.text = [NSString stringWithFormat:@"地址：%@", [d objectForKey:@"addr"]];
+    
+    NSString *price = ([[d objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[d objectForKey:@"priceInfo"];
+    NSString *priceInfo = [NSString stringWithFormat:@"票價：\n%@", price];
+    _saleText.text = priceInfo;
 }
 #pragma mark - subfunctions
 /*
@@ -148,14 +158,18 @@
 #pragma mark - picker delegate
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    //selected = [_picker selectedRowInComponent:0];
     NSDictionary *d = [_showInfos objectAtIndex:[_picker selectedRowInComponent:0]];
+    
+    NSString *price = ([[d objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[d objectForKey:@"priceInfo"];
+    NSString *priceInfo = [NSString stringWithFormat:@"票價：\n%@", price];
+    _saleText.text = priceInfo;
+    
     NSString *timeLabel = [d objectForKey:@"time"];
     timeLabel = [timeLabel stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
     
     [_timeLabel setText: [NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
-    NSString *location = [NSString stringWithFormat:@"地點：%@\n地址：%@", [d objectForKey:@"placeName"], [d objectForKey:@"addr"]];
-    _locationText.text = location;
+    _placeLabel.text = [NSString stringWithFormat:@"地點：%@", [d objectForKey:@"placeName"]];
+    _addrLabel.text = [NSString stringWithFormat:@"地址：%@", [d objectForKey:@"addr"]];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -172,7 +186,7 @@
 {
     NSString *title = [[_showInfos objectAtIndex:row] objectForKey:@"time"];
     title = [title stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-    //[title substringToIndex:([title length]-3)];
+    
     NSAttributedString *attString = [[NSAttributedString alloc] initWithString:[title substringToIndex:([title length]-3)] attributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     
     return attString;
@@ -203,17 +217,24 @@
             
         }
         //  displaying information
-        _locationText.text = [NSString stringWithFormat:@"地點：%@\n地址：%@", [showInfo objectForKey:@"placeName"], [showInfo objectForKey:@"addr"]];
+        _placeLabel.text = [NSString stringWithFormat:@"地點：%@", [showInfo objectForKey:@"placeName"]];
+        _addrLabel.text = [NSString stringWithFormat:@"地址：%@", [showInfo objectForKey:@"addr"]];
         _descText.text = ([[[responseData objectForKey:@"value"] objectForKey:@"descTx"] isEqualToString:@""])?@"未提供":[[responseData objectForKey:@"value"]  objectForKey:@"descTx"];
         
+        NSString *infoSrc = ([[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"];
+        _srcInfoLabel.text = [NSString stringWithFormat:@"售票：%@", infoSrc];
+        
+        _orgLabel.text = [NSString stringWithFormat:@"主辦：%@", [[responseData objectForKey:@"value"] objectForKey:@"organizer"]];
         if([self textViewHeightForAttributedText:[_descText attributedText] andWidth:_descText.frame.size.width] > _descText.frame.size.height){
             [_descScrollImage setHidden:NO];
         }
         
         if([[showInfo objectForKey:@"isFree"] integerValue] == 0) {
-            NSString *infoSrc = ([[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"] isEqualToString:@""])?@"N/A":[[responseData objectForKey:@"value"] objectForKey:@"infoSrc"];
+            
+            
+            
             NSString *price = ([[showInfo objectForKey:@"priceInfo"] isEqualToString:@""])?@"N/A":[showInfo objectForKey:@"priceInfo"];
-            NSString *priceInfo = [NSString stringWithFormat:@"售票單位：%@\n票價：%@", infoSrc, price];
+            NSString *priceInfo = [NSString stringWithFormat:@"票價：\n%@", price];
             _saleText.text = priceInfo;
             if([self textViewHeightForAttributedText:[_saleText attributedText] andWidth:_saleText.frame.size.width] > _saleText.frame.size.height){
                 [_priceScrollImage setHidden:NO];
@@ -230,11 +251,11 @@
             [_saleText setHidden:YES];
         }
         NSString *timeLabel = [[showInfo objectForKey:@"time"] stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-        [_timeLabel setText:[NSString stringWithFormat:@"場次: %@", [timeLabel substringToIndex:[timeLabel length]-3]]];
+        [_timeLabel setText:[NSString stringWithFormat:@"場次：%@", [timeLabel substringToIndex:[timeLabel length]-3]]];
         NSString *t1 = [[responseData objectForKey:@"value"] objectForKey:@"startDate"], *t2 = [[responseData objectForKey:@"value"] objectForKey:@"endDate"];
         t1 = [t1 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
         t2 = [t2 stringByReplacingOccurrencesOfString:@"-" withString:@"/"];
-        _periodText.text = [NSString stringWithFormat:@"表演/展出期間： %@ - %@ ", t1 , t2];
+        _periodText.text = [NSString stringWithFormat:@"期間：%@ - %@", t1 , t2];
         _dic = [[NSMutableDictionary alloc]initWithDictionary:showInfo copyItems:YES];
     }
 }

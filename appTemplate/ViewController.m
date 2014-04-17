@@ -162,6 +162,7 @@
     else {
         [mCell.image setImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[_dataArray[indexPath.row] objectForKey:@"imgURL"]]]]];
     }
+    mCell.backgroundView = [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"list_bg.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] ];
 }
 #pragma mark - coimotion delegate
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection withData:(NSDictionary *)responseData

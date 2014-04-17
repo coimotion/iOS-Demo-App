@@ -17,8 +17,7 @@
 @synthesize brID = _brID;
 @synthesize myData = _myData;
 @synthesize dataArray = _dataArray;
-//NSMutableArray *dataArray;
-//NSMutableData *myData;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -38,6 +37,9 @@
     [self searchBus];
     [self.tableView setBackgroundColor:[[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
     [self.navigationController.navigationBar setBarTintColor: [[UIColor alloc] initWithRed:239.0f/255.0f green:235.0f/255.0f blue:232.0f/255.0f alpha:1.0f]];
+    
+    [self.tableView registerNib:[UINib nibWithNibName:@"rCell" bundle:nil] forCellReuseIdentifier:@"rCell"];
+    
     /*
      add pull to refresh
      with refreshingView function to trigger search
@@ -93,32 +95,28 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    rCell *rcell = (rCell *)cell;
+    
     if([[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"isInBd"] integerValue] == 0){
-        cell.textLabel.text = [NSString stringWithFormat:@"(返)%@",[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"]];
-        [cell setBackgroundColor:[UIColor colorWithRed:0.0f green:163.0f/255.0f blue:175.0f/255.0f alpha:1.0f]];
+        [rcell.icon setImage:[UIImage imageNamed:@"go.png"]];
+        
+        rcell.backgroundView = [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"bg_pink.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:5.0] ];
+        
     }
     else {
-        cell.textLabel.text = [NSString stringWithFormat:@"(往)%@",[[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"]];
-        [cell setBackgroundColor:[UIColor colorWithRed:246.0f/255.0f green:191.0f/255.0f blue:188.0f/255.0f alpha:1.0f]];
+        [rcell.icon setImage:[UIImage imageNamed:@"back.png"]];
+        rcell.backgroundView = [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"bg_green.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:5.0] ];
     }
-        
-    cell.detailTextLabel.text = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"arvTime"];
+    rcell.stopLabel.text = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"stName"];
+    rcell.timeLabel.text = [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"arvTime"];
     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-        [[cell textLabel] setTextColor:[UIColor blackColor]];
-        [[cell detailTextLabel] setTextColor:[UIColor blackColor]];
-        [cell setBackgroundColor:[UIColor clearColor]];
-    }
-    
-    // Configure the cell...
-    
+    //static NSString *CellIdentifier = @"rCell";
+    rCell *cell = (rCell *)[tableView dequeueReusableCellWithIdentifier:@"rCell"];
+    cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
 
@@ -147,7 +145,6 @@
     NSLog(@"finish");
     [[self refreshControl] endRefreshing];
     if([[responseData objectForKey:@"errCode"] integerValue] == 0) {
-        //[_dataArray removeAllObjects];
         _dataArray = [[responseData objectForKey:@"value"] objectForKey:@"list"];
         [[self tableView] reloadData];
         

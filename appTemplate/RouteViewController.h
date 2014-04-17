@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "rCell.h"
 
 @interface RouteViewController : UITableViewController
 @property (strong, nonatomic) NSURLConnection *connection;

@@ -20,12 +20,15 @@
 @property int selected;
 @property (strong, nonatomic) NSString *detailURL;
 @property (strong, nonatomic) NSURLConnection *connection;
+@property (strong, nonatomic) IBOutlet UILabel *orgLabel;
+@property (strong, nonatomic) IBOutlet UILabel *srcInfoLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *descScrollImage;
 @property (strong, nonatomic) IBOutlet UIImageView *priceScrollImage;
 @property (strong, nonatomic) IBOutlet UITextView *saleText;
-@property (strong, nonatomic) IBOutlet UITextView *locationText;
+@property (strong, nonatomic) IBOutlet UILabel *placeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *addrLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descText;
-@property (strong, nonatomic) IBOutlet UITextView *periodText;
+@property (strong, nonatomic) IBOutlet UILabel *periodText;
 @property (strong, nonatomic) IBOutlet UILabel *showTitle;
 @property (strong, nonatomic) IBOutlet UIPickerView *picker;
 @property (strong, nonatomic) IBOutlet UIButton *saleImg;

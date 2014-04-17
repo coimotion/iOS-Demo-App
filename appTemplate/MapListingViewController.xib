@@ -28,9 +28,15 @@
                     </connections>
                 </mapView>
                 <view contentMode="scaleToFill" id="ldG-LU-Yg4">
-                    <rect key="frame" x="204" y="75" width="96" height="51"/>
+                    <rect key="frame" x="217" y="31" width="96" height="51"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <subviews>
+                        <view alpha="0.80000000000000004" contentMode="scaleToFill" id="RMX-Bu-HEI">
+                            <rect key="frame" x="0.0" y="0.0" width="96" height="51"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <color key="tintColor" red="0.93725490196078431" green="0.92156862745098034" blue="0.90980392156862744" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
                         <view contentMode="scaleToFill" id="7He-rn-XL3">
                             <rect key="frame" x="5" y="5" width="15" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

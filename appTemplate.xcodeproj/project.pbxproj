@@ -64,6 +64,14 @@
 		04C0625D18E57B4D009305E6 /* myCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04C0625C18E57B4D009305E6 /* myCell.xib */; };
 		04DB662B18B6F805003C769F /* MapListingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DB662918B6F804003C769F /* MapListingViewController.m */; };
 		04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DB662A18B6F804003C769F /* MapListingViewController.xib */; };
+		04DC2C5718FF543A00F155CC /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C5618FF543A00F155CC /* line.png */; };
+		04DC2C5B18FF5BE600F155CC /* bg_green.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C5818FF5BE600F155CC /* bg_green.png */; };
+		04DC2C5C18FF5BE600F155CC /* bg_pink.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C5918FF5BE600F155CC /* bg_pink.png */; };
+		04DC2C5D18FF5BE600F155CC /* list_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C5A18FF5BE600F155CC /* list_bg.png */; };
+		04DC2C6018FF60F500F155CC /* rCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04DC2C5F18FF60F500F155CC /* rCell.m */; };
+		04DC2C6218FF610C00F155CC /* rCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C6118FF610C00F155CC /* rCell.xib */; };
+		04DC2C6518FF84B500F155CC /* back.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C6318FF84B500F155CC /* back.png */; };
+		04DC2C6618FF84B500F155CC /* go.png in Resources */ = {isa = PBXBuildFile; fileRef = 04DC2C6418FF84B500F155CC /* go.png */; };
 		04E7510F18EB8EA50074CE4E /* title_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E7510C18EB8EA50074CE4E /* title_bg.png */; };
 		04E7511018EB8EA50074CE4E /* shopping.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E7510D18EB8EA50074CE4E /* shopping.png */; };
 		04E7511118EB8EA50074CE4E /* map.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E7510E18EB8EA50074CE4E /* map.png */; };
@@ -161,6 +169,15 @@
 		04DB662818B6F804003C769F /* MapListingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapListingViewController.h; sourceTree = "<group>"; };
 		04DB662918B6F804003C769F /* MapListingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapListingViewController.m; sourceTree = "<group>"; };
 		04DB662A18B6F804003C769F /* MapListingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapListingViewController.xib; sourceTree = "<group>"; };
+		04DC2C5618FF543A00F155CC /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = line.png; path = resource/line.png; sourceTree = "<group>"; };
+		04DC2C5818FF5BE600F155CC /* bg_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg_green.png; path = resource/bg_green.png; sourceTree = "<group>"; };
+		04DC2C5918FF5BE600F155CC /* bg_pink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg_pink.png; path = resource/bg_pink.png; sourceTree = "<group>"; };
+		04DC2C5A18FF5BE600F155CC /* list_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = list_bg.png; path = resource/list_bg.png; sourceTree = "<group>"; };
+		04DC2C5E18FF60F500F155CC /* rCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rCell.h; sourceTree = "<group>"; };
+		04DC2C5F18FF60F500F155CC /* rCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = rCell.m; sourceTree = "<group>"; };
+		04DC2C6118FF610C00F155CC /* rCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = rCell.xib; sourceTree = "<group>"; };
+		04DC2C6318FF84B500F155CC /* back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = back.png; path = resource/back.png; sourceTree = "<group>"; };
+		04DC2C6418FF84B500F155CC /* go.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = go.png; path = resource/go.png; sourceTree = "<group>"; };
 		04E1B19418BC45A100BC41B1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		04E1B19518BC45A100BC41B1 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		04E7510C18EB8EA50074CE4E /* title_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = title_bg.png; path = resource/title_bg.png; sourceTree = "<group>"; };
@@ -282,6 +299,9 @@
 				0453AC7218ED68A200976BE1 /* SettingViewController.h */,
 				0453AC7318ED68A200976BE1 /* SettingViewController.m */,
 				0453AC7418ED68A200976BE1 /* SettingViewController.xib */,
+				04DC2C5E18FF60F500F155CC /* rCell.h */,
+				04DC2C5F18FF60F500F155CC /* rCell.m */,
+				04DC2C6118FF610C00F155CC /* rCell.xib */,
 			);
 			path = appTemplate;
 			sourceTree = "<group>";
@@ -289,6 +309,12 @@
 		0476DF3D18B354F600380537 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				04DC2C6318FF84B500F155CC /* back.png */,
+				04DC2C6418FF84B500F155CC /* go.png */,
+				04DC2C5818FF5BE600F155CC /* bg_green.png */,
+				04DC2C5918FF5BE600F155CC /* bg_pink.png */,
+				04DC2C5A18FF5BE600F155CC /* list_bg.png */,
+				04DC2C5618FF543A00F155CC /* line.png */,
 				04F03AA418FCB4BF00F45B10 /* scroll.png */,
 				04B531EB18FBC3E500C8738F /* ipadIcon.png */,
 				04B531EC18FBC3E500C8738F /* iphoneIcon.png */,
@@ -434,19 +460,23 @@
 				04E7511818EBA5CF0074CE4E /* free.png in Resources */,
 				04E7511E18EBDC4B0074CE4E /* RouteViewController.xib in Resources */,
 				043F1FF218EAB75300D6DAF9 /* 5.png in Resources */,
+				04DC2C5B18FF5BE600F155CC /* bg_green.png in Resources */,
 				043F1FF418EAB75300D6DAF9 /* 3.png in Resources */,
 				0490A4F818F4E2060048398F /* banner.png in Resources */,
 				043F1FFE18EAB7C400D6DAF9 /* GridViewController.xib in Resources */,
 				043F1FF518EAB75300D6DAF9 /* 1.png in Resources */,
+				04DC2C6518FF84B500F155CC /* back.png in Resources */,
 				043F1FEE18EAB75300D6DAF9 /* 9.png in Resources */,
 				043F1FF818EAB75300D6DAF9 /* img.png in Resources */,
 				0476DF4B18B354F600380537 /* Default@2x.png in Resources */,
 				0476DF4D18B354F600380537 /* Default-568h@2x.png in Resources */,
 				04E7511918EBA5CF0074CE4E /* ok.png in Resources */,
 				04E7511718EBA5CF0074CE4E /* delete.png in Resources */,
+				04DC2C5D18FF5BE600F155CC /* list_bg.png in Resources */,
 				0476DF7518B3556300380537 /* MainViewController.xib in Resources */,
 				043F1FF318EAB75300D6DAF9 /* 4.png in Resources */,
 				0476DF7A18B3591300380537 /* LoginViewController.xib in Resources */,
+				04DC2C5718FF543A00F155CC /* line.png in Resources */,
 				0476DF7F18B35ABF00380537 /* RouteListViewController.xib in Resources */,
 				0490A4FA18F4EF7A0048398F /* bar.png in Resources */,
 				043F1FF018EAB75300D6DAF9 /* 7.png in Resources */,
@@ -456,9 +486,12 @@
 				04C0624D18E5682C009305E6 /* ViewController.xib in Resources */,
 				0476DF8418B361B000380537 /* DetailedViewController.xib in Resources */,
 				04F03AA518FCB4BF00F45B10 /* scroll.png in Resources */,
+				04DC2C5C18FF5BE600F155CC /* bg_pink.png in Resources */,
+				04DC2C6218FF610C00F155CC /* rCell.xib in Resources */,
 				04F4AD1B18F21AF000231B88 /* Gear-icon.png in Resources */,
 				043F1FF718EAB75300D6DAF9 /* logo.png in Resources */,
 				04DB662C18B6F805003C769F /* MapListingViewController.xib in Resources */,
+				04DC2C6618FF84B500F155CC /* go.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,6 +530,7 @@
 				04C0625B18E57B31009305E6 /* myCell.m in Sources */,
 				048EDD4618E4171400073AA8 /* appUtil.m in Sources */,
 				0476DF4718B354F600380537 /* AppDelegate.m in Sources */,
+				04DC2C6018FF60F500F155CC /* rCell.m in Sources */,
 				0476DF5018B354F600380537 /* appTemplate.xcdatamodeld in Sources */,
 				0476DF7418B3556300380537 /* MainViewController.m in Sources */,
 				04C0624C18E5682C009305E6 /* ViewController.m in Sources */,

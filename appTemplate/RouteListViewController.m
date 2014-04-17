@@ -92,6 +92,7 @@
 {
     NSLog(@"route: %@", [_routes objectAtIndex:indexPath.row]);
     cell.textLabel.text = [NSString stringWithFormat:@"%@ (%@)", [[_routes objectAtIndex:indexPath.row] objectForKey:@"rtName"], [[_routes objectAtIndex:indexPath.row] objectForKey:@"descTx"]];
+    cell.backgroundView = [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"list_bg.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] ];
 }
 
 #pragma mark - Table view delegate
