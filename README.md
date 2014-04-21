@@ -11,7 +11,7 @@ iOS Demo App
 #使用COIMOTION iOS SDK
 
 [COIMOTION SDK](http://tw.coimotion.com/bkIndexPapers/view/7743?id=21366)目前提供開發者http request相關的函式，包裝開發過程中對token/app_key的操作，開發者在處理資料時就不用另外處理token的更新，另外提供註冊/登入的API function，會以salt的方式強化使用者的密碼再送出，如果開發者要在其它平台提供相同的會員服務的話，要注意登入時的密碼處理。
-COIMOTION SDK可由此[下載](http://tw.coimotion.com/wcoim/SDK/COIMOTION-SDK-iOS.zip)，解壓縮後資料夾(版本號)中會有api使用文件(iOScoimSDK文件.pdf)、SDK標頭檔(coimSDK.h)與兩個包含libcoimSDK.a的資料夾，分別是給實機/模擬器用的lib，使用時只要將標頭檔與lib檔新增至xcode project中，並在"Supporting Files"中的[_project-name_]-Prefix.pch中加入#include "coimSDK.h"，如此coimSDK.h便可以在此project下生效，不用在每個class中去include；另外COIMOTION API的使用會需要app code產生url與app key來做為驗證，SDK在初始化時會從app的[project-name]-info.plist中讀取，因此開發者使用SDK時要先在plit中新增coim\_app\_key(程式金鑰)與coim\_app\_code(app代碼)兩行，值可至COIMOTION網站的"APP管理"下的"基本資料"取得。  
+COIMOTION SDK可由此[下載](http://tw.coimotion.com/wcoim/SDK/COIMOTION-SDK-iOS.zip)，解壓縮後資料夾(版本號)中會有api使用文件(iOScoimSDK文件.pdf)、SDK標頭檔(coimSDK.h)與兩個包含libcoimSDK.a的資料夾，分別是給實機(release-iphoneos)/模擬器(release-iphonesimulator)用的lib，本demo app中使用的lib檔為模擬器用的，使用時只要將標頭檔與lib檔新增至xcode project中，並在"Supporting Files"中的[_project-name_]-Prefix.pch中加入#include "coimSDK.h"，如此coimSDK.h便可以在此project下生效，不用在每個class中去include，另外，本demo app使用的libcoimSDK.a為模擬器版本，如果開發者想把此demo app安裝至實機上使用，請下載iOS coimotion sdk 並以 release-iphoneos 下的 libcoimSDK.a 覆蓋此專案中的libcoimSDK.a即可成功編譯；另外COIMOTION API的使用會需要app code產生url與app key來做為驗證，SDK在初始化時會從app的[project-name]-info.plist中讀取，因此開發者使用SDK時要先在plit中新增coim\_app\_key(程式金鑰)與coim\_app\_code(app代碼)兩行，值可至COIMOTION網站的"APP管理"下的"基本資料"取得。  
   
 #App中的API/SDK使用  
 
