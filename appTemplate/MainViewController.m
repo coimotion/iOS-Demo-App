@@ -37,9 +37,14 @@
     /*
         start with token validation
      */
+    int x = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"coim_timeout"] intValue];
+    NSLog(@"x: %d", x);
+    
     _connection = [coimSDK sendTo:@"core/user/profile" withParameter:nil delegate:self];
+
     [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -52,7 +57,7 @@
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {
-    NSLog(@"reponseData: %@", responseData);
+    NSLog(@"conn: %@", [[[connection currentRequest] URL] path]);
     if ([[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
         //  valid token is not belongs to a guest
         if (![[[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.dspName] isEqual:@"Guest"]) {
@@ -64,5 +69,9 @@
         }
     }
 }
-
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error
+{
+    NSLog(@"error: %@", [error localizedDescription]);
+}
 @end

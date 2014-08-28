@@ -13,6 +13,7 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
+@synthesize connection = _connection;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -20,6 +21,8 @@
     // Override point for customization after application launch.
     
     // start app with MainViewController
+    NSLog(@"locale: %@", ([[[NSLocale preferredLanguages] objectAtIndex:0] rangeOfString:@"zh"].location == NSNotFound)? @"1" : @"2");
+    
     MainViewController *mainVC = [[MainViewController alloc] init];
     self.window.rootViewController = mainVC;
     [self.window makeKeyAndVisible];
@@ -41,6 +44,27 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
+    //check token
+    
+    _connection = [coimSDK sendTo:@"core/user/profile" withParameter:nil delegate:self];
+    [_connection setAccessibilityLabel:CHECK_TOKEN_CONNECTION_LABEL];
+}
+
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData
+{
+    NSLog(@"reponseData: %@", responseData);
+    if (![[_connection accessibilityLabel] isEqualToString:CHECK_TOKEN_CONNECTION_LABEL]) {
+        //  valid token is not belongs to a guest
+        if ([[[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.dspName] isEqual:@"Guest"]) {
+            
+            [appUtil  enterApp];
+        }
+        else {
+            [appUtil enterLogin];
+        }
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

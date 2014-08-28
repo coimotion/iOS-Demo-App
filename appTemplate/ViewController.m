@@ -171,8 +171,9 @@
         [appUtil enterLogin];
     }
     [_dataArray removeAllObjects];
-    NSArray *list = [[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.list];
+    NSArray *list = [coimSDK getListFrom:responseData];//[[responseData objectForKey:coimResParams.value] objectForKey:coimResParams.list];
     NSMutableString *tmp = [NSMutableString new];
+    NSLog(@"list size: %d", [list count]);
     for (int i = 0; i < [list count]; i++) {
         if (![[[list objectAtIndex:i] objectForKey:@"title"] isEqualToString:tmp]) {
             tmp = [[list objectAtIndex:i] objectForKey:@"title"];

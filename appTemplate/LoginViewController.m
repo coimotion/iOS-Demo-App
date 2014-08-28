@@ -76,8 +76,6 @@
                                         _passwordText.text, coimReqParams.passwd,
                                         _confirmText.text, coimReqParams.passwd2,
                                         nil];
-            NSLog(@"_pass: %@", _passwordText.text );
-            NSLog(@"_pass2: %@", _confirmText.text );
             //  create connection to register API
             _connection = [coimSDK registerWithParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:REGISTER_CONNECTION_LABEL];
@@ -92,7 +90,6 @@
                                         nil];
             
             //  create connection to login API
-            NSLog(@"_pass: %@", _passwordText.text );
             _connection = [coimSDK loginTo:@"core/user/login" withParameter:parameters delegate:self];
             [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
             
@@ -128,30 +125,42 @@
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {
-    NSLog(@"login: %@", responseData);
-    //  check accessibilityLabel to tell data comes from which API
-    if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
-        //  register connection
-        [appUtil enterApp];
+    NSLog(@"connection: %@", connection);
+    NSLog(@"res data: %@", responseData);
+    //if([[responseData objectForKey:@"errCode"] intValue] == 0) {
+    if([coimSDK getErrCodeFrom:responseData] == 0){
+        if ([[_connection accessibilityLabel] isEqualToString:REGISTER_CONNECTION_LABEL]) {
+            //[appUtil enterApp];
+            NSDictionary *parameters = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                       _usernameText.text, coimReqParams.accName,
+                                        _passwordText.text, coimReqParams.passwd,
+                                        nil];
+            _connection = [coimSDK loginTo:@"core/user/login" withParameter:parameters delegate:self];
+            [_connection setAccessibilityLabel:LOGIN_CONNECTION_LABEL];
+            
+        }
+        else if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
+            [appUtil enterApp];
+        }
     }
-    else if ([[_connection accessibilityLabel] isEqualToString:LOGIN_CONNECTION_LABEL]) {
-        //  login connection
-        [appUtil enterApp];
+    else {
+        [coimSDK alertMessage:[coimSDK getMessageFrom:responseData]];
     }
     [self setEnable];
+        
 }
 
 - (void)coimConnection:(NSURLConnection *)connection
       didFailWithError:(NSError *)error
 {
-    NSLog(@"err: %@", [error localizedDescription]);
-    NSLog(@"err: %d", [error code]);
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登入/註冊錯誤"
+    /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"登入/註冊錯誤"
                                                     message:[error localizedDescription]
                                                    delegate:nil
                                           cancelButtonTitle:@"確定"
                                           otherButtonTitles:nil];
-    [alert show];
+    [alert show];*/
+    NSLog(@"alert message");
+    [coimSDK alertMessage:[error localizedDescription]];
     [self setEnable];
 }
 
